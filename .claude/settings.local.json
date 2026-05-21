@@ -9,7 +9,10 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\lu.DESKTOP-HRO3RNS\\\\.claude\" -Recurse -File | Select-Object FullName, @{n=\"Lines\";e={\\(Get-Content $_.FullName -ErrorAction SilentlyContinue | Measure-Object -Line\\).Lines}} | Format-Table -AutoSize)",
       "Skill(superpowers:brainstorming)",
       "Skill(superpowers:brainstorming:*)",
-      "Bash(not exist *)"
+      "Bash(not exist *)",
+      "Bash(find \"D:\\\\MIT\\\\CLAUDE CODE PROJECT\\\\TiktokGo SS\" -type f \\\\\\( -name \".git\" -o -name \".gitconfig\" -o -name \"*.git\" -o -name \"DEPLOY.md\" -o -name \".cpanel.yml\" -o -name \"*.yml\" \\\\\\) 2>/dev/null)",
+      "Bash(ls -la \"D:\\\\MIT\\\\CLAUDE CODE PROJECT\\\\TiktokGo SS\" 2>/dev/null | head -50)",
+      "PowerShell(-join \\(\\(1..32\\) | ForEach-Object { '{0:x2}' -f \\(Get-Random -Maximum 256\\) }\\))"
     ]
   }
 }

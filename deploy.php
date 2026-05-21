@@ -1,12 +1,9 @@
 <?php
 // ─── GitHub Webhook Auto-Deploy ───────────────────────────────────────────
-// Taruh file ini di: public_html/ops/deploy.php
-// Akses via: https://ops.sukashawarma.com/deploy.php
+// URL: https://ops.sukashawarma.com/deploy.php
 
 define('WEBHOOK_SECRET', '2da5950d3a93d951b28bcbac364a8efb1517ba52fc9ef0a546b39cf42d5a357a');
-define('REPO_PATH',      '/home/sukashaw/repositories/checklistform-ss');
-define('DEPLOY_PATH',    '/home/sukashaw/public_html/ops');
-define('LOG_FILE',       DEPLOY_PATH . '/logs/deploy.log');
+define('REPO_PATH',      '/home/sukashaw/public_html/ops');
 
 // ─── Hanya terima POST ───────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -37,46 +34,19 @@ if ($ref !== 'refs/heads/main') {
     exit('Ignored: not main branch');
 }
 
-// ─── Cek exec() tersedia ──────────────────────────────────────────────────
+// ─── Git pull ─────────────────────────────────────────────────────────────
 $timestamp = date('Y-m-d H:i:s');
-$debug     = [];
+$output    = [];
 
-if (!function_exists('exec') || !is_callable('exec')) {
-    http_response_code(500);
-    exit("[{$timestamp}] ERROR: exec() dinonaktifkan di server ini");
-}
+exec('cd ' . escapeshellarg(REPO_PATH) . ' && git pull origin main 2>&1', $output, $exitCode);
 
-$debug[] = "exec() tersedia";
-$debug[] = "REPO_PATH=" . REPO_PATH;
-$debug[] = "repo_exists=" . (is_dir(REPO_PATH) ? 'ya' : 'TIDAK ADA');
-$debug[] = "DEPLOY_PATH=" . DEPLOY_PATH;
-$debug[] = "deploy_exists=" . (is_dir(DEPLOY_PATH) ? 'ya' : 'TIDAK ADA');
+$log = "[{$timestamp}] git pull exit={$exitCode} | " . implode(' | ', $output) . "\n";
+@file_put_contents(REPO_PATH . '/logs/deploy.log', $log, FILE_APPEND | LOCK_EX);
 
-// ─── Jalankan git pull ────────────────────────────────────────────────────
-$pullOutput = [];
-exec('cd ' . escapeshellarg(REPO_PATH) . ' && git pull origin main 2>&1', $pullOutput, $pullExit);
-$debug[] = "git pull exit={$pullExit}";
-$debug[] = implode(' | ', $pullOutput);
-
-if ($pullExit === 0) {
-    // Copy semua file ke public_html/ops
-    $rsyncOutput = [];
-    exec(
-        'rsync -a --exclude=".git" --exclude="deploy.php" --exclude=".env" ' .
-        escapeshellarg(REPO_PATH . '/') . ' ' . escapeshellarg(DEPLOY_PATH . '/') . ' 2>&1',
-        $rsyncOutput,
-        $rsyncExit
-    );
-    $debug[] = "rsync exit={$rsyncExit}";
-    $debug[] = implode(' | ', $rsyncOutput);
-
-    $log = "[{$timestamp}] SUCCESS\n" . implode("\n", $debug) . "\n---\n";
-    @file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
+if ($exitCode === 0) {
     http_response_code(200);
-    echo "Deploy OK\n" . implode("\n", $debug);
+    echo 'Deploy OK — ' . implode(' ', $output);
 } else {
-    $log = "[{$timestamp}] FAILED\n" . implode("\n", $debug) . "\n---\n";
-    @file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
     http_response_code(500);
-    echo "Deploy FAILED\n" . implode("\n", $debug);
+    echo 'Deploy FAILED — ' . implode(' ', $output);
 }
