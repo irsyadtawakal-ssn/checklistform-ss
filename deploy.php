@@ -3,7 +3,7 @@
 // Taruh file ini di: public_html/ops/deploy.php
 // Akses via: https://ops.sukashawarma.com/deploy.php
 
-define('WEBHOOK_SECRET', 'GANTI_DENGAN_SECRET_KAMU');
+define('WEBHOOK_SECRET', '2da5950d3a93d951b28bcbac364a8efb1517ba52fc9ef0a546b39cf42d5a357a');
 define('REPO_PATH',      '/home/sukashaw/repositories/checklistform-ss');
 define('DEPLOY_PATH',    '/home/sukashaw/public_html/ops');
 define('LOG_FILE',       DEPLOY_PATH . '/logs/deploy.log');
