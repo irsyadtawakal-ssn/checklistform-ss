@@ -1,0 +1,72 @@
+Options -Indexes
+DirectoryIndex index.php
+DirectorySlash Off
+
+RewriteEngine On
+
+# ── Force HTTPS (aktifkan di cPanel production, komentari di localhost) ──
+# RewriteCond %{HTTPS} off
+# RewriteCond %{HTTP_HOST} ^ops\.sukashawarma\.com$ [NC]
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Blokir akses ke folder sensitif
+RewriteRule ^(src|db|config|logs|backup|scripts)(\/|$) - [F,L]
+RewriteRule ^\.env$ - [F,L]
+RewriteRule ^\.git - [F,L]
+
+# Root request → public/index.php
+RewriteRule ^/?$ /public/index.php [L]
+
+# File API yang punya folder dengan nama sama — harus di-route lebih dulu
+# sebelum Apache redirect ke trailing slash
+RewriteRule ^api/checklists$ api/checklists.php [L]
+RewriteRule ^api/spv-visits$ api/spv-visits.php [L]
+RewriteRule ^api/me$ api/me.php [L]
+RewriteRule ^api/health$ api/health.php [L]
+
+# Halaman publik yang butuh route eksplisit (LiteSpeed chain rewrite issue)
+RewriteRule ^spv-visit-report$        public/spv-visit-report.php [QSA,L]
+RewriteRule ^spv-visits-history$      public/spv-visits-history.php [QSA,L]
+
+# Sub-resource API routes (sebelum rule generic)
+RewriteRule ^api/spv-visits/([0-9]+)/photos$ api/spv-visits.php [L]
+RewriteRule ^api/spv-attach$ api/spv-attach.php [QSA,L]
+RewriteRule ^api/admin/spv-visits/([0-9]+)$ api/admin/spv-visits.php [QSA,L]
+RewriteRule ^api/admin/spv-visits$ api/admin/spv-visits.php [QSA,L]
+RewriteRule ^api/checklists/([0-9]+)/unlock$ api/checklists.php [L]
+
+# API: tambahkan .php — cek file .php dulu sebelum cek direktori
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteCond %{DOCUMENT_ROOT}/%1.php -f [NC]
+RewriteRule ^(api/.+)$ $1.php [L]
+
+# API: tambahkan .php fallback
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# API: file langsung ada, serve apa adanya
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Semua non-api, non-public → public/
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Blokir file sensitif
+<FilesMatch "\.(sql|sql\.gz|bak|log)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

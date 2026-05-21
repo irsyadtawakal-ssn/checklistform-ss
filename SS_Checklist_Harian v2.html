@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff">
+<title>SS Checklist Harian</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+:root{--bg:#ffffff;--bg2:#f7f6f3;--bg3:#eeede9;--bg4:#e4e3de;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#111110;--text2:#4a4a47;--text3:#888882;--amber:#e8a020;--amber-bg:rgba(232,160,32,0.1);--amber-border:rgba(232,160,32,0.28);--red:#e05540;--red-bg:rgba(224,85,64,0.1);--red-border:rgba(224,85,64,0.28);--green:#3a9e50;--green-bg:rgba(58,158,80,0.08);--green-border:rgba(58,158,80,0.25);--blue:#3a7bd5;--blue-bg:rgba(58,123,213,0.08);--blue-border:rgba(58,123,213,0.22);--radius:10px;--radius-lg:14px;--font-d:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'DM Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh}
+.app-header{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 16px 0;position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{width:34px;height:34px;background:var(--amber);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:13px;color:#fff}
+.brand-name{font-family:var(--font-d);font-weight:700;font-size:14px}
+.brand-sub{font-size:10px;color:var(--text3);font-family:var(--font-m)}
+.header-meta{text-align:right;cursor:pointer}
+.outlet-name{font-size:12px;font-weight:700;color:var(--amber);font-family:var(--font-m)}
+.date-disp{font-size:11px;color:var(--text3);margin-top:1px}
+.shift-nav{display:grid;grid-template-columns:repeat(3,1fr)}
+.shift-btn{padding:9px 4px;border:none;background:transparent;color:var(--text3);font-family:var(--font-b);font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.04em}
+.shift-btn.active{color:var(--amber);border-bottom-color:var(--amber)}
+.prog-wrap{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 16px}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-lbl{font-size:11px;color:var(--text3);font-family:var(--font-m)}
+.prog-pct{font-size:12px;font-weight:600;font-family:var(--font-m);color:var(--amber)}
+.prog-track{height:3px;background:var(--bg4);border-radius:99px;overflow:hidden}
+.prog-fill{height:3px;background:var(--amber);border-radius:99px;transition:width 0.35s ease;width:0%}
+.prog-pills{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.pill{font-size:10px;font-family:var(--font-m);padding:2px 8px;border-radius:99px;border:1px solid;display:flex;align-items:center;gap:3px}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.pill-red{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
+.pill-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg)}
+.pill-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg)}
+.main{padding:14px 16px 110px}
+.data-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:14px}
+.data-card-title{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.df label{font-size:11px;color:var(--text3);display:block;margin-bottom:4px;font-family:var(--font-m)}
+.df input[type=number],.df input[type=text],.df textarea,.df select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-b);font-size:13px;border-radius:7px;padding:7px 10px;outline:none;-webkit-appearance:none}
+.df input:focus,.df textarea:focus,.df select:focus{border-color:var(--amber)}
+.df textarea{resize:vertical;min-height:56px;font-size:12px;line-height:1.5}
+.section{margin-bottom:10px}
+.sec-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;user-select:none}
+.sec-hdr.open{border-radius:var(--radius) var(--radius) 0 0;border-bottom-color:transparent}
+.sec-tag{font-size:10px;font-family:var(--font-m);font-weight:500;padding:2px 7px;border-radius:5px;border:1px solid;white-space:nowrap}
+.tag-fatal{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
+.tag-ops{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg)}
+.tag-fin{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg)}
+.tag-hygiene{color:var(--green);border-color:var(--green-border);background:var(--green-bg)}
+.tag-admin{color:var(--text2);border-color:var(--border2);background:var(--bg3)}
+.sec-title{font-size:13px;font-weight:600;flex:1}
+.sec-count{font-size:11px;font-family:var(--font-m);color:var(--text3)}
+.sec-arrow{font-size:14px;color:var(--text3);transition:transform 0.2s}
+.sec-hdr.open .sec-arrow{transform:rotate(180deg)}
+.sec-body{background:var(--bg);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;max-height:0;transition:max-height 0.3s ease}
+.sec-body.open{max-height:9999px}
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+.item:last-child{border-bottom:none}
+.item:active{background:var(--bg2)}
+.item.done{opacity:0.5}
+.cb{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:var(--bg);margin-top:1px}
+.cb.done{background:var(--green);border-color:var(--green)}
+.cb svg{display:none}
+.cb.done svg{display:block}
+.item-content{flex:1;min-width:0}
+.item-text{font-size:13px;line-height:1.5;color:var(--text)}
+.item.done .item-text{text-decoration:line-through;color:var(--text3)}
+.item-note{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4;font-family:var(--font-m)}
+.item-note.warn{color:var(--amber)}
+.item-note.danger{color:var(--red)}
+.ibadge{font-size:10px;font-family:var(--font-m);padding:2px 6px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:3px}
+.ibadge-crit{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
+.ibadge-rec{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg)}
+.ibadge-score{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg)}
+.subdiv{font-size:10px;font-family:var(--font-m);letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);padding:9px 12px 4px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.sign-section{background:var(--bg2);border:1px solid var(--amber-border);border-radius:var(--radius-lg);padding:14px;margin-top:14px}
+.sign-title{font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:12px}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.submit-wrap{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 28px;background:linear-gradient(to top,#ffffff 70%,transparent)}
+.submit-btn{width:100%;padding:14px;background:var(--amber);color:#fff;border:none;border-radius:var(--radius-lg);font-family:var(--font-d);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(232,160,32,0.25);-webkit-appearance:none;transition:all 0.18s}
+.submit-btn:active{transform:scale(0.97)}
+.submit-btn.done{background:var(--green)}
+.submit-btn.incomplete{background:var(--bg3);color:var(--text3);box-shadow:none}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);font-size:13px;padding:9px 16px;border-radius:99px;z-index:999;opacity:0;transition:all 0.22s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.22s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-sheet{background:var(--bg);border-radius:18px 18px 0 0;padding:20px 20px 40px;width:100%;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.34,1.1,0.64,1);border-top:1px solid var(--border)}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:99px;margin:0 auto 16px}
+.modal-title{font-family:var(--font-d);font-size:16px;font-weight:700;margin-bottom:14px}
+.outlet-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.outlet-opt{padding:9px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;text-align:center;color:var(--text2);transition:all 0.15s}
+.outlet-opt.sel{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
+.modal-grp-lbl{font-size:11px;color:var(--text3);font-family:var(--font-m);margin:10px 0 6px;letter-spacing:0.06em;text-transform:uppercase}
+.modal-close{width:100%;padding:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-logo">SS</div>
+      <div>
+        <div class="brand-name">SUKA SHAWARMA</div>
+        <div class="brand-sub">SOP CHECKLIST HARIAN</div>
+      </div>
+    </div>
+    <div class="header-meta" onclick="openModal()">
+      <div class="outlet-name" id="outletDisp">SS KITCHEN ▾</div>
+      <div class="date-disp" id="dateDisp"></div>
+    </div>
+  </div>
+  <div class="shift-nav">
+    <button class="shift-btn active" id="tab-open" onclick="setShift('open')">Pembukaan</button>
+    <button class="shift-btn" id="tab-ops" onclick="setShift('ops')">Operasional</button>
+    <button class="shift-btn" id="tab-close" onclick="setShift('close')">Penutupan</button>
+  </div>
+</header>
+
+<div class="prog-wrap">
+  <div class="prog-row">
+    <span class="prog-lbl" id="progLbl">0 dari 0 item selesai</span>
+    <span class="prog-pct" id="progPct">0%</span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-pills" id="progPills"></div>
+</div>
+
+<main class="main" id="mainArea"></main>
+
+<div class="submit-wrap">
+  <button class="submit-btn incomplete" id="submitBtn" onclick="handleSubmit()">Selesaikan Checklist</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="outletModal" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Pilih Outlet</div>
+    <div class="modal-grp-lbl">Internal</div>
+    <div class="outlet-grid" id="intGrid"></div>
+    <div class="modal-grp-lbl">Mitra</div>
+    <div class="outlet-grid" id="mitGrid"></div>
+    <button class="modal-close" onclick="closeModal()">Selesai</button>
+  </div>
+</div>
+
+<script>
+const OUTLETS_INT=['SS Kitchen','SS Empang','SS Paledang','SS Cimanggu','SS Depok Sukmajaya','SS Jagakarsa','SS Beji','SS Sawangan','SS Pajajaran','SS Jatiwaringin','SS Cirendeu','SS Jatiasih','SS Dramaga'];
+const OUTLETS_MIT=['Mitra Cibinong','Mitra Citayam','Mitra Tebet','Mitra Ciseeng','Mitra Pekayon','Mitra Kalisari'];
+
+// MASTER CHECKLIST — based on Google Docs latest version
+const CHECKLIST = {
+  open: [
+    {
+      id:'o1', title:'Keamanan & Akses', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'o1a', text:'Cek kondisi fisik outlet: pintu, kunci, jendela — tidak ada tanda pembobolan', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'o1b', text:'CCTV interior (2 unit) aktif dan merekam normal', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'o1c', text:'CCTV exterior (1 unit) aktif dan merekam normal', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'o1d', text:'Cek instalasi gas: regulator set (4 set), selang, tabung — tidak ada kebocoran', badge:'ibadge-crit', btext:'kritikal', note:'Bau gas = jangan nyalakan apapun, buka ventilasi, hubungi supervisor segera', noteType:'danger'},
+        {id:'o1e', text:'Fire extinguisher: posisi aman, segel utuh, tanggal belum expired', badge:'ibadge-crit', btext:'kritikal', note:'Expired = outlet tidak boleh buka', noteType:'danger'},
+        {id:'o1f', text:'Nyalakan exhaust fan (2 unit) & kipas angin (2 unit), sirkulasi udara normal'},
+        {id:'o1g', text:'Gembok (2 pcs) dikembalikan ke tempat setelah outlet dibuka'},
+      ]
+    },
+    {
+      id:'o2', title:'Stok & Bahan Baku', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'o2a', text:'Cek suhu freezer ≤ -18°C — catat di log', badge:'ibadge-crit', btext:'kritikal', note:'Di luar range = jangan gunakan bahan, lapor segera', noteType:'danger'},
+        {id:'o2b', text:'Hitung stok daging spit (kg): sisa kemarin + kiriman hari ini', badge:'ibadge-rec', btext:'catat'},
+        {id:'o2c', text:'Timbang daging dengan timbangan digital (2 unit) — catat berat awal spit'},
+        {id:'o2d', text:'Cek tanggal kadaluarsa semua bahan: roti, saus, sayuran — buang yang expired', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'o2e', text:'Pasang daging ke spit: tidak ada sisa hangus atau busuk dari kemarin'},
+        {id:'o2f', text:'Mise en place: sayuran dicuci & dipotong, saus dalam botol bersih berlabel tanggal'},
+        {id:'o2g', text:'Cek stok botol saus (6), mayo (6), tomat (4), samyang (1) — isi ulang jika perlu'},
+        {id:'o2h', text:'Cek stok tabung gas — minimal 8 tabung tersedia sebelum buka', note:'Jika < 5 tabung, hubungi supplier sebelum outlet buka', noteType:'warn'},
+        {id:'o2i', text:'Verifikasi DO dari central kitchen (jika ada): cocokkan fisik dengan surat jalan', badge:'ibadge-rec', btext:'catat'},
+      ]
+    },
+    {
+      id:'o3', title:'Peralatan Masak', tag:'tag-ops', tagText:'OPERASIONAL',
+      items:[
+        {id:'o3a', text:'Grill stove / kompor bakar (2 unit): nyala normal, tidak ada kebocoran api'},
+        {id:'o3b', text:'Single fryer (1 unit) & double fryer (1 unit): minyak bersih, suhu stabil'},
+        {id:'o3c', text:'Spatula bakar (4 pcs) & spatula kulit (2 pcs): kondisi baik, tidak ada yang bengkok/rusak'},
+        {id:'o3d', text:'Pisau (4 pcs): tajam, bersih, tersimpan di tempat yang benar'},
+        {id:'o3e', text:'Cutting board / talenan (2 pcs): bersih, tidak retak'},
+        {id:'o3f', text:'Stainless tray full (2), tray ½ (4), tray ¼ (4): bersih, tidak penyok'},
+        {id:'o3g', text:'Service tong / jepitan (2 pcs), ladle (3 pcs), saringan minyak (2 pcs): tersedia dan bersih'},
+        {id:'o3h', text:'Keranjang sayur (1 unit): bersih'},
+        {id:'o3i', text:'Stockpot besar (1) & kecil (1): bersih, siap pakai'},
+        {id:'o3j', text:'Blender (1 unit): bersih, pisau blender tidak longgar'},
+        {id:'o3k', text:'MUG elektrik (1 unit): bersih, berfungsi normal'},
+      ]
+    },
+    {
+      id:'o4', title:'Kebersihan Pre-Opening', tag:'tag-hygiene', tagText:'HIGIENE',
+      items:[
+        {id:'o4a', text:'Lap & sanitasi semua permukaan counter dengan food-grade sanitizer'},
+        {id:'o4b', text:'Kain lap (6 pcs): tersedia bersih untuk shift ini'},
+        {id:'o4c', text:'Exhaust hood & drip tray di bawah spit: dibersihkan dari sisa lemak kemarin', badge:'ibadge-crit', btext:'kritikal', note:'Drip tray kotor = fire hazard. Wajib dibersihkan setiap hari.', noteType:'danger'},
+        {id:'o4d', text:'Area cuci piring: sabun tersedia, air mengalir normal'},
+        {id:'o4e', text:'Tempat sampah (3 pcs): sudah dikosongkan, plastik baru terpasang'},
+        {id:'o4f', text:'Kamar mandi: keran OK, closet bersih, lampu nyala'},
+        {id:'o4g', text:'Semua karyawan: seragam bersih, rambut terikat / hairnet, sudah cuci tangan', badge:'ibadge-crit', btext:'kritikal'},
+      ]
+    },
+    {
+      id:'o5', title:'Kasir, Digital & Signage', tag:'tag-fin', tagText:'FINANSIAL',
+      items:[
+        {id:'o5a', text:'Hitung uang kembalian (kas kecil): nominal lengkap sesuai standar', badge:'ibadge-rec', btext:'catat'},
+        {id:'o5b', text:'Cash drawer (1 unit): berfungsi, terkunci'},
+        {id:'o5c', text:'Printer struk (2 unit): ada kertas, berfungsi normal'},
+        {id:'o5d', text:'Tablet (1 unit) + stand tab: menyala, app kasir / Pawoon loaded'},
+        {id:'o5e', text:'Sound box Pawoon (1 unit): berfungsi, volume sesuai'},
+        {id:'o5f', text:'Mesin EDC (1 unit): berfungsi, koneksi normal'},
+        {id:'o5g', text:'Handphone outlet (1 unit): baterai cukup, notifikasi GoFood/GrabFood aktif'},
+        {id:'o5h', text:'GoFood / GrabFood / ShopeeFood: status BUKA, jam operasional benar', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'o5i', text:'Cek semua signage terpasang: Halal, QRIS, Jam Operasional, Price List, CCTV, dll'},
+        {id:'o5j', text:'Neon box (1 unit): menyala normal'},
+        {id:'o5k', text:'Lampu tembak exterior (4 unit) & LED strip: kondisi OK (jika jam buka malam)'},
+      ]
+    },
+    {
+      id:'o6', title:'ATK & Administrasi', tag:'tag-admin', tagText:'ADMIN',
+      items:[
+        {id:'o6a', text:'Buku petty cash tersedia, pulpen (6 pcs) tersedia di meja kasir'},
+        {id:'o6b', text:'Kertas laporan (stok 100 lbr), amplop omset tersedia'},
+        {id:'o6c', text:'Alat shalat tersedia: sajadah, peci, Al-Qur\'an'},
+        {id:'o6d', text:'Alat kebersihan tersedia: sapu (2), kain pel (2), wiper (1), sikat WC (1)'},
+      ]
+    },
+  ],
+  ops: [
+    {
+      id:'p1', title:'Kontrol Produksi & Kualitas', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'p1a', text:'Suhu daging spit cek tiap jam: bagian dalam ≥ 75°C sebelum dipotong', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p1b', text:'Kontrol porsi protein per sajian dengan timbangan digital — bukan estimasi visual', note:'Deviasi > 10g per porsi = lapor supervisor. Food cost langsung terdampak.', noteType:'warn'},
+        {id:'p1c', text:'Kualitas roti pita: tidak gosong, tidak sobek, suhu press sesuai standar'},
+        {id:'p1d', text:'Saus dibuat segar hari ini — tidak pakai sisa kemarin yang sudah > 24 jam', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p1e', text:'Daging yang sudah dipotong tidak boleh di suhu ruang lebih dari 30 menit', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p1f', text:'Catat jam mulai dan jam habis setiap spit daging', badge:'ibadge-rec', btext:'catat'},
+        {id:'p1g', text:'Minyak fryer: cek warna dan bau — ganti jika sudah gelap atau berbau tengik', badge:'ibadge-crit', btext:'kritikal'},
+      ]
+    },
+    {
+      id:'p2', title:'Waste & Food Cost', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'p2a', text:'Catat semua bahan yang dibuang: nama, jumlah, alasan (expired/rusak/salah produksi)', badge:'ibadge-rec', btext:'catat', note:'Waste log = data COGS aktual. Tanpa ini food cost tidak bisa dihitung.', noteType:'warn'},
+        {id:'p2b', text:'Tidak ada bahan expired yang diselamatkan dengan cara dimasak atau dicampur', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p2c', text:'Penjualan lambat: turunkan suhu spit untuk memperlambat pengeringan daging'},
+        {id:'p2d', text:'Catat berat awal vs berat terjual setiap spit habis (actual yield)', badge:'ibadge-rec', btext:'catat'},
+      ]
+    },
+    {
+      id:'p3', title:'Pelayanan & Standar', tag:'tag-ops', tagText:'OPERASIONAL',
+      items:[
+        {id:'p3a', text:'Waktu tunggu dine-in: maksimal 5 menit dari order ke penyajian'},
+        {id:'p3b', text:'Online order: tidak ada auto-cancel karena keterlambatan dapur'},
+        {id:'p3c', text:'Setiap sajian sesuai resep standar: komposisi, saus, tampilan konsisten'},
+        {id:'p3d', text:'Komplain ditangani langsung: dengarkan, minta maaf, ganti jika layak — catat di log', badge:'ibadge-rec', btext:'catat'},
+        {id:'p3e', text:'Pantau ulasan GoFood / GrabFood tiap 2 jam — respon negatif dalam 30 menit'},
+        {id:'p3f', text:'Pastikan sign "CREW SEDANG SHALAT" dipakai saat waktu shalat — bukan tutup tanpa penjelasan'},
+      ]
+    },
+    {
+      id:'p4', title:'Monitoring Stok Mid-Shift', tag:'tag-ops', tagText:'OPERASIONAL',
+      items:[
+        {id:'p4a', text:'Stock count cepat jam 14:00: daging, roti, saus, gas — catat di log', badge:'ibadge-rec', btext:'catat'},
+        {id:'p4b', text:'Sisa daging < 2 spit: segera hubungi central kitchen untuk pengiriman sore'},
+        {id:'p4c', text:'Update stok di platform online agar tidak oversell', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p4d', text:'Cek level minyak fryer: tambah atau ganti jika perlu'},
+        {id:'p4e', text:'Botol saus: isi ulang jika < 30% — jangan biarkan kosong saat peak hour'},
+      ]
+    },
+    {
+      id:'p5', title:'Transaksi & Penjualan', tag:'tag-fin', tagText:'FINANSIAL',
+      items:[
+        {id:'p5a', text:'Semua transaksi masuk kasir / Pawoon — tidak ada penjualan off-system tanpa struk', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p5b', text:'Rekap penjualan per jam: jam ramai tapi penjualan rendah = red flag segera lapor'},
+        {id:'p5c', text:'Hitung fisik uang tunai vs laporan kasir setiap 4 jam — catat selisih', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p5d', text:'Tidak ada diskon atau promo tanpa otorisasi manajemen', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'p5e', text:'Amplop omset disiapkan untuk setoran akhir shift'},
+      ]
+    },
+    {
+      id:'p6', title:'Kebersihan Mid-Shift', tag:'tag-hygiene', tagText:'HIGIENE',
+      items:[
+        {id:'p6a', text:'Lap permukaan counter setiap 2 jam atau setelah tumpahan'},
+        {id:'p6b', text:'Drip tray spit: cek level lemak — buang jika sudah 70% penuh', note:'Drip tray overflow = fire hazard.', noteType:'warn'},
+        {id:'p6c', text:'Tempat sampah: kosongkan jika sudah 80% penuh, jangan tunggu penuh'},
+        {id:'p6d', text:'Parkiran: cek tidak ada genangan atau sampah berserakan yang mengganggu pelanggan'},
+      ]
+    },
+  ],
+  close: [
+    {
+      id:'c1', title:'Rekap Keuangan Akhir Hari', tag:'tag-fin', tagText:'FINANSIAL',
+      items:[
+        {id:'c1a', text:'Print / screenshot laporan penjualan harian dari kasir / Pawoon', badge:'ibadge-rec', btext:'catat'},
+        {id:'c1b', text:'Hitung fisik uang tunai, cocokkan dengan sistem — catat selisih over/(short)', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c1c', text:'Masukkan uang ke amplop omset, segel, tulis nominal dan tanggal'},
+        {id:'c1d', text:'Setor ke brankas sesuai prosedur — dilarang membawa uang outlet keluar', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c1e', text:'Catat total penjualan per channel (tunai, QRIS, GoFood, GrabFood, ShopeeFood)', badge:'ibadge-rec', btext:'catat'},
+        {id:'c1f', text:'Submit daily sales report ke supervisor sebelum keluar', badge:'ibadge-crit', btext:'kritikal'},
+      ]
+    },
+    {
+      id:'c2', title:'Rekap Stok & Waste Akhir Hari', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'c2a', text:'Timbang sisa daging spit dengan timbangan digital — catat sebagai stok akhir', badge:'ibadge-rec', btext:'catat'},
+        {id:'c2b', text:'Hitung sisa roti pita, saus, sayuran — catat semua dengan jujur', badge:'ibadge-rec', btext:'catat', note:'Manipulasi data stok = food cost tidak akurat = audit gagal.', noteType:'danger'},
+        {id:'c2c', text:'Pisahkan bahan layak (simpan freezer/chiller) vs dibuang — jangan campur'},
+        {id:'c2d', text:'Label ulang semua container sisa: nama bahan, tanggal, jam simpan'},
+        {id:'c2e', text:'Lengkapi waste log hari ini: total bahan terbuang dalam Rp estimasi', badge:'ibadge-rec', btext:'catat'},
+        {id:'c2f', text:'Cek stok gas sisa: jika < 5 tabung, order sekarang untuk besok'},
+      ]
+    },
+    {
+      id:'c3', title:'Pembersihan Akhir Hari', tag:'tag-hygiene', tagText:'HIGIENE',
+      items:[
+        {id:'c3a', text:'Grill stove / kompor bakar: matikan, bersihkan dari sisa pembakaran'},
+        {id:'c3b', text:'Spit rotisserie: matikan, lepas drip tray, buang lemak, lap dengan degreaser', note:'Drip tray tidak dibersihkan tiap hari = fire hazard serius.', noteType:'danger', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c3c', text:'Fryer (single & double): matikan, saring minyak, bersihkan basket'},
+        {id:'c3d', text:'Sanitasi seluruh permukaan counter, meja, talenan'},
+        {id:'c3e', text:'Cuci semua peralatan masak (tray, bowl, ladle, spatula, pisau), keringkan, simpan'},
+        {id:'c3f', text:'Sapu dan pel lantai dapur dan area pelanggan dengan larutan pembersih'},
+        {id:'c3g', text:'Kosongkan semua tempat sampah (3 pcs), bawa ke tempat pembuangan'},
+        {id:'c3h', text:'Bersihkan kamar mandi: sikat WC, lap, kuras bak jika perlu'},
+        {id:'c3i', text:'Tidak ada bahan makanan tertinggal di luar freezer/chiller setelah tutup', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c3j', text:'Cek exterior: parkiran bersih, tidak ada sampah berserakan'},
+      ]
+    },
+    {
+      id:'c4', title:'Keamanan Akhir Hari', tag:'tag-fatal', tagText:'KRITIKAL',
+      items:[
+        {id:'c4a', text:'Matikan semua kompor & tutup katup tabung gas rapat-rapat', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c4b', text:'Matikan semua peralatan listrik: fryer, mug elektrik, lampu display, exhaust fan — kecuali freezer', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c4c', text:'CCTV interior (2 unit) & exterior (1 unit): masih aktif dan merekam'},
+        {id:'c4d', text:'Matikan kipas angin (2 unit) dan lampu interior (4 pcs) sebelum keluar'},
+        {id:'c4e', text:'Kunci semua pintu dan jendela — cek dua kali, pasang gembok (2 pcs)', badge:'ibadge-crit', btext:'kritikal'},
+        {id:'c4f', text:'Foto kondisi outlet saat ditinggalkan sebagai bukti kondisi', badge:'ibadge-rec', btext:'foto'},
+      ]
+    },
+    {
+      id:'c5', title:'Evaluasi & Handover', tag:'tag-ops', tagText:'OPERASIONAL',
+      items:[
+        {id:'c5a', text:'Isi form handover: masalah hari ini, stok kritis, peralatan bermasalah', badge:'ibadge-rec', btext:'catat'},
+        {id:'c5b', text:'Laporkan insiden atau keluhan pelanggan yang belum terselesaikan ke supervisor'},
+        {id:'c5c', text:'Catat kebutuhan stok besok berdasarkan tren penjualan hari ini'},
+        {id:'c5d', text:'Konfirmasi jadwal karyawan shift besok — tidak ada kekosongan posisi kritis'},
+        {id:'c5e', text:'Buku petty cash: catat pengeluaran hari ini, saldo akhir'},
+      ]
+    },
+  ]
+};
+
+const DATA_FIELDS = {
+  open:[
+    {id:'stok_daging_awal', label:'Stok daging awal (kg)', type:'number'},
+    {id:'kiriman_daging', label:'Kiriman central kitchen (kg)', type:'number'},
+    {id:'suhu_freezer', label:'Suhu freezer (°C)', type:'number'},
+    {id:'stok_gas', label:'Stok tabung gas', type:'number'},
+    {id:'kas_kecil', label:'Uang kas kecil awal (Rp)', type:'number'},
+    {id:'stok_roti', label:'Stok roti pita awal (pcs)', type:'number'},
+  ],
+  ops:[
+    {id:'penjualan_jam12', label:'Penjualan s/d jam 12:00 (Rp)', type:'number'},
+    {id:'spit_sisa_jam14', label:'Sisa spit jam 14:00', type:'number'},
+    {id:'suhu_spit', label:'Suhu daging spit (°C)', type:'number'},
+    {id:'waste_ops', label:'Total waste bahan (Rp)', type:'number'},
+    {id:'komplain', label:'Jumlah komplain', type:'number'},
+    {id:'catatan_ops', label:'Catatan operasional', type:'text'},
+  ],
+  close:[
+    {id:'total_penjualan', label:'Total penjualan harian (Rp)', type:'number'},
+    {id:'penjualan_online', label:'Penjualan platform online (Rp)', type:'number'},
+    {id:'selisih_kas', label:'Selisih kas over/(short) (Rp)', type:'number'},
+    {id:'stok_daging_sisa', label:'Sisa stok daging akhir (kg)', type:'number'},
+    {id:'total_waste', label:'Total waste hari ini (Rp)', type:'number'},
+    {id:'jumlah_spit', label:'Spit yang digunakan hari ini', type:'number'},
+    {id:'catatan_tutup', label:'Catatan insiden / masalah', type:'text'},
+  ]
+};
+
+let state = { shift:'open', outlet:'SS Kitchen', checks:{}, inputs:{} };
+
+function init() {
+  const d = new Date();
+  document.getElementById('dateDisp').textContent = d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  buildOutletModal();
+  render();
+}
+
+function setShift(s) {
+  state.shift = s;
+  ['open','ops','close'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===s));
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildOutletModal() {
+  document.getElementById('intGrid').innerHTML = OUTLETS_INT.map(o =>
+    `<div class="outlet-opt${o===state.outlet?' sel':''}" onclick="selOutlet('${o}')">${o}</div>`).join('');
+  document.getElementById('mitGrid').innerHTML = OUTLETS_MIT.map(o =>
+    `<div class="outlet-opt${o===state.outlet?' sel':''}" onclick="selOutlet('${o}')">${o}</div>`).join('');
+}
+
+function selOutlet(o) {
+  state.outlet = o;
+  document.getElementById('outletDisp').textContent = o.toUpperCase() + ' ▾';
+  buildOutletModal();
+}
+
+function openModal() { document.getElementById('outletModal').classList.add('open'); }
+function closeModal(e) { if(!e || e.target===document.getElementById('outletModal')) document.getElementById('outletModal').classList.remove('open'); }
+
+function toggleCheck(id) { state.checks[id]=!state.checks[id]; render(); }
+function saveInput(id,v) { state.inputs[id]=v; }
+
+function toggleSection(id) {
+  const hdr=document.getElementById('shdr-'+id);
+  const body=document.getElementById('sbody-'+id);
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  hdr.classList.toggle('open',!isOpen);
+}
+
+function getStats() {
+  const secs=CHECKLIST[state.shift];
+  let total=0,done=0,critTotal=0,critDone=0;
+  secs.forEach(sec=>sec.items.forEach(item=>{
+    total++;
+    if(state.checks[item.id])done++;
+    if(item.badge==='ibadge-crit'){critTotal++;if(state.checks[item.id])critDone++;}
+  }));
+  return{total,done,critTotal,critDone};
+}
+
+function render() {
+  const{total,done,critTotal,critDone}=getStats();
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progLbl').textContent=done+' dari '+total+' item selesai';
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPills').innerHTML=
+    `<span class="pill pill-red"><span class="pill-dot"></span>${critDone}/${critTotal} kritikal</span>`+
+    `<span class="pill pill-amber"><span class="pill-dot"></span>${done} selesai</span>`+
+    `<span class="pill pill-green"><span class="pill-dot"></span>${total-done} tersisa</span>`;
+
+  const btn=document.getElementById('submitBtn');
+  if(done===total&&total>0){btn.classList.remove('incomplete');btn.classList.add('done');btn.textContent='Submit & Kirim ke Supervisor';}
+  else{btn.classList.add('incomplete');btn.classList.remove('done');btn.textContent=done+'/'+total+' — Selesaikan Checklist';}
+
+  const fields=DATA_FIELDS[state.shift];
+  const secs=CHECKLIST[state.shift];
+  let html='';
+
+  // Data card
+  html+=`<div class="data-card"><div class="data-card-title">Data & Angka Shift Ini</div><div class="data-grid">`;
+  fields.forEach(f=>{
+    const v=state.inputs[f.id]||'';
+    if(f.type==='text'){
+      html+=`<div class="df" style="grid-column:1/-1"><label>${f.label}</label><textarea oninput="saveInput('${f.id}',this.value)" placeholder="Tulis catatan...">${v}</textarea></div>`;
+    } else {
+      html+=`<div class="df"><label>${f.label}</label><input type="number" value="${v}" placeholder="0" oninput="saveInput('${f.id}',this.value)"></div>`;
+    }
+  });
+  html+=`</div></div>`;
+
+  // Sections
+  secs.forEach((sec,si)=>{
+    const secDone=sec.items.filter(i=>state.checks[i.id]).length;
+    const isOpen=si===0||secDone<sec.items.length;
+    html+=`<div class="section">
+      <div class="sec-hdr${isOpen?' open':''}" id="shdr-${sec.id}" onclick="toggleSection('${sec.id}')">
+        <span class="sec-tag ${sec.tag}">${sec.tagText}</span>
+        <span class="sec-title">${sec.title}</span>
+        <span class="sec-count">${secDone}/${sec.items.length}</span>
+        <span class="sec-arrow">▾</span>
+      </div>
+      <div class="sec-body${isOpen?' open':''}" id="sbody-${sec.id}">`;
+
+    sec.items.forEach(item=>{
+      const done=!!state.checks[item.id];
+      html+=`<div class="item${done?' done':''}" onclick="toggleCheck('${item.id}')">
+        <div class="cb${done?' done':''}"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5l3.5 3.5 5.5-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="item-content">
+          <div class="item-text">${item.text}</div>
+          ${item.note?`<div class="item-note${item.noteType?' '+item.noteType:''}">${item.note}</div>`:''}
+        </div>
+        ${item.badge?`<span class="ibadge ${item.badge}">${item.btext}</span>`:''}
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+
+  // Sign section
+  html+=`<div class="sign-section">
+    <div class="sign-title">Verifikasi Shift</div>
+    <div class="sign-grid">
+      <div class="df"><label>Nama PIC / Kasir Shift</label><input type="text" placeholder="Nama lengkap" value="${state.inputs['pic_name']||''}" oninput="saveInput('pic_name',this.value)"></div>
+      <div class="df"><label>Nama Supervisor</label><input type="text" placeholder="Nama lengkap" value="${state.inputs['spv_name']||''}" oninput="saveInput('spv_name',this.value)"></div>
+      <div class="df" style="grid-column:1/-1"><label>Catatan untuk shift berikutnya</label><textarea placeholder="Stok kritis, peralatan bermasalah, info penting..." oninput="saveInput('handover',this.value)">${state.inputs['handover']||''}</textarea></div>
+    </div>
+  </div>`;
+
+  document.getElementById('mainArea').innerHTML=html;
+}
+
+function handleSubmit() {
+  const{critTotal,critDone,total,done}=getStats();
+  const critLeft=critTotal-critDone;
+  if(critLeft>0){showToast(critLeft+' item KRITIKAL belum selesai!');return;}
+  if(!state.inputs['pic_name']){showToast('Isi nama PIC shift terlebih dahulu.');return;}
+  if(done<total){if(!confirm(total-done+' item belum dicentang. Tetap submit?'))return;}
+  const btn=document.getElementById('submitBtn');
+  btn.textContent='Tersimpan ✓';
+  btn.style.background='var(--green)';
+  btn.style.boxShadow='0 4px 20px rgba(58,158,80,0.28)';
+  showToast('Checklist berhasil disimpan!');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+init();
+</script>
+</body>
+</html>

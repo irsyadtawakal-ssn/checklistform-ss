@@ -1,0 +1,89 @@
+{
+  "inventory": [
+    {
+      "cat": "Dapur — Utama",
+      "items": [
+        {"name":"Kompor bakar","std":2,"unit":"unit"},
+        {"name":"Double fryer","std":1,"unit":"unit"},
+        {"name":"Blender","std":1,"unit":"unit"},
+        {"name":"Timbangan digital","std":2,"unit":"pcs"},
+        {"name":"Stockpot besar","std":1,"unit":"pcs"},
+        {"name":"Stockpot kecil","std":1,"unit":"pcs"},
+        {"name":"MUG elektrik","std":1,"unit":"unit"}
+      ]
+    },
+    {
+      "cat": "Peralatan Masak",
+      "items": [
+        {"name":"Spatula bakar","std":4,"unit":"pcs"},
+        {"name":"Spatula kulit","std":2,"unit":"pcs"},
+        {"name":"Pisau","std":4,"unit":"pcs"},
+        {"name":"Cutting board / talenan","std":2,"unit":"pcs"},
+        {"name":"Stainless tray full","std":2,"unit":"pcs"},
+        {"name":"Stainless tray ½","std":4,"unit":"pcs"},
+        {"name":"Stainless tray ¼","std":4,"unit":"pcs"},
+        {"name":"Service tong / jepitan","std":2,"unit":"pcs"},
+        {"name":"Ladle","std":3,"unit":"pcs"},
+        {"name":"Saringan minyak","std":2,"unit":"pcs"},
+        {"name":"Keranjang sayur","std":1,"unit":"unit"},
+        {"name":"Botol saus","std":6,"unit":"pcs"},
+        {"name":"Kain lap","std":6,"unit":"pcs"}
+      ]
+    },
+    {
+      "cat": "Penyimpanan & Utilitas",
+      "items": [
+        {"name":"Freezer","std":1,"unit":"unit"},
+        {"name":"Tabung gas","std":10,"unit":"tabung"},
+        {"name":"Regulator set","std":4,"unit":"pcs"},
+        {"name":"Tempat sampah","std":3,"unit":"pcs"},
+        {"name":"Exhaust fan","std":2,"unit":"unit"},
+        {"name":"Kipas angin","std":2,"unit":"unit"},
+        {"name":"Fire extinguisher","std":1,"unit":"unit"}
+      ]
+    },
+    {
+      "cat": "Kasir & Teknologi",
+      "items": [
+        {"name":"Cash drawer","std":1,"unit":"unit"},
+        {"name":"Printer struk","std":2,"unit":"unit"},
+        {"name":"Tablet + stand","std":1,"unit":"unit"},
+        {"name":"Sound box Pawoon","std":1,"unit":"unit"},
+        {"name":"Mesin EDC","std":1,"unit":"unit"},
+        {"name":"Handphone outlet","std":1,"unit":"unit"},
+        {"name":"CCTV interior","std":2,"unit":"unit"}
+      ]
+    },
+    {
+      "cat": "Exterior & Signage",
+      "items": [
+        {"name":"Neon box","std":1,"unit":"unit"},
+        {"name":"Lampu tembak exterior","std":4,"unit":"unit"},
+        {"name":"CCTV exterior","std":1,"unit":"unit"},
+        {"name":"Gembok","std":2,"unit":"pcs"},
+        {"name":"Kursi plastik","std":6,"unit":"pcs"}
+      ]
+    },
+    {
+      "cat": "Kamar Mandi & Kebersihan",
+      "items": [
+        {"name":"Keran air","std":1,"unit":"unit"},
+        {"name":"Sapu","std":2,"unit":"pcs"},
+        {"name":"Kain pel","std":2,"unit":"pcs"},
+        {"name":"Wiper","std":1,"unit":"pcs"},
+        {"name":"Sikat WC","std":1,"unit":"pcs"}
+      ]
+    }
+  ],
+  "photoTags": [
+    "exterior", "dapur", "stok", "kasir", "drip-tray", "karyawan", "rusak", "bersih", "kotor", "lainnya"
+  ],
+  "evalCriteria": [
+    {"key":"punctual","label":"Ketepatan waktu & kehadiran"},
+    {"key":"uniform","label":"Kerapian seragam & higienitas"},
+    {"key":"speed","label":"Kecepatan & efisiensi kerja"},
+    {"key":"quality","label":"Konsistensi kualitas produk"},
+    {"key":"attitude","label":"Sikap & pelayanan pelanggan"},
+    {"key":"sop","label":"Kepatuhan SOP & prosedur"}
+  ]
+}

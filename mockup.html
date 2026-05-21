@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>SS OPS — Mockup Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Demo page wrapper */
+    body {
+      min-height: 100vh;
+      background: #200500;
+      background-image:
+        radial-gradient(ellipse at 15% 15%, rgba(122,18,0,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(232,146,74,0.12) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 20px 50px;
+    }
+    /* Demo label & switcher */
+    .demo-label { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.28); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+    .demo-switcher { display: flex; gap: 5px; margin-bottom: 28px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
+    .demo-btn { padding: 9px 22px; border: none; border-radius: 10px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px; cursor: pointer; transition: all 0.22s ease; color: rgba(255,255,255,0.4); background: transparent; }
+    .demo-btn.active { background: var(--red); color: white; box-shadow: 0 4px 18px rgba(122,18,0,0.55); }
+    .demo-btn:hover:not(.active) { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); }
+    /* Phone frame */
+    .phone-frame { width: 375px; height: 780px; background: #0D0D0D; border-radius: 50px; padding: 14px; box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 0 2px rgba(0,0,0,0.6), 0 50px 120px rgba(0,0,0,0.85); position: relative; }
+    .phone-notch { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: 130px; height: 32px; background: #0D0D0D; border-radius: 0 0 20px 20px; z-index: 100; }
+    .phone-screen { width: 100%; height: 100%; border-radius: 38px; overflow: hidden; background: var(--bg); position: relative; }
+    /* Screens */
+    .screen { position: absolute; inset: 0; display: none; flex-direction: column; }
+    .screen.active { display: flex; }
+    /* Screen-specific bg */
+    #screen-login { background: linear-gradient(168deg, #200500 0%, #7A1200 45%, #E8924A 100%); }
+    #screen-login .status-bar { background: transparent; color: rgba(255,255,255,0.80); position: relative; z-index: 1; }
+    #screen-login .login-top { padding: 0 30px 10px; }
+    #screen-pic { background: var(--bg); }
+    #screen-supervisor { background: var(--bg); }
+    #screen-owner { background: var(--bg); }
+    #screen-admin { background: var(--bg); }
+  </style>
+</head>
+<body>
+
+  <div class="demo-label">Preview Mockup — Pilih Screen</div>
+
+  <div class="demo-switcher">
+    <button class="demo-btn active" onclick="sw('screen-login',this)">Login</button>
+    <button class="demo-btn"        onclick="sw('screen-pic',this)">PIC</button>
+    <button class="demo-btn"        onclick="sw('screen-supervisor',this)">Supervisor</button>
+    <button class="demo-btn"        onclick="sw('screen-owner',this)">Owner</button>
+    <button class="demo-btn"        onclick="sw('screen-admin',this)">Admin</button>
+  </div>
+
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+
+
+      <!-- ══════════════════════════════════
+           SCREEN 1 — LOGIN
+      ══════════════════════════════════ -->
+      <div id="screen-login" class="screen active">
+        <div class="login-pattern"></div>
+
+        <div class="status-bar" style="background:transparent; color:rgba(255,255,255,0.80); position:relative; z-index:1;">
+          <span>09:41</span>
+          <div class="status-icons">
+            <span style="font-size:10px;">●●●</span>
+            <span>WiFi</span>
+            <span>🔋</span>
+          </div>
+        </div>
+
+        <div class="login-top">
+          <div class="ss-logo">
+            <img src="assets/logo.png" alt="Suka Shawarma Logo">
+          </div>
+          <div class="login-brand">SUKA SHAWARMA</div>
+          <div class="login-brand-sub">Sistem Operasional</div>
+          <div class="login-tagline">Pantau. Kelola. Raih Standar Terbaik.</div>
+          <div class="ornament">
+            <div class="ornament-line"></div>
+            <div class="ornament-dot"></div>
+            <div class="ornament-line"></div>
+          </div>
+        </div>
+
+        <div class="login-card">
+          <div class="login-card-title">Masuk ke Akun</div>
+          <div class="login-card-sub">Gunakan akun yang diberikan oleh admin pusat</div>
+
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" type="text" value="pic.depok" placeholder="contoh: pic.depok">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" value="ss1234!" placeholder="••••••••">
+          </div>
+
+          <button class="btn-login" onclick="sw('screen-pic', document.querySelectorAll('.demo-btn')[1])">
+            MASUK →
+          </button>
+
+          <div class="login-help">
+            Lupa password? <a href="#">Hubungi Admin</a>
+          </div>
+        </div>
+      </div><!-- /screen-login -->
+
+
+      <!-- ══════════════════════════════════
+           SCREEN 2 — PIC CHECKLIST
+      ══════════════════════════════════ -->
+      <div id="screen-pic" class="screen">
+
+        <div class="status-bar" style="background:#200500; color:rgba(255,255,255,0.82);">
+          <span>09:41</span>
+          <div class="status-icons"><span style="font-size:10px;">●●●</span><span>🔋</span></div>
+        </div>
+
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-brand">
+                <div class="header-logo"><img src="assets/logo.png" alt="SS"></div>
+                <span class="header-brand-text">SS OPS</span>
+              </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="header-notif">🔔<div class="notif-badge">2</div></div>
+              <div class="header-avatar">👤</div>
+            </div>
+          </div>
+
+          <div class="pic-outlet">Cabang Depok Margonda</div>
+          <div class="pic-date">Jumat, 16 Mei 2026 &nbsp;·&nbsp; Shift Pagi 07.00–15.00</div>
+
+          <div class="progress-box">
+            <div class="progress-top">
+              <span class="prog-label-text">Progress Hari Ini</span>
+              <span class="prog-number" id="pic-count">12<span class="denom">/20</span></span>
+            </div>
+            <div class="prog-bar-bg">
+              <div class="prog-bar-fill" id="pic-bar" style="width:60%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-body" id="pic-checklist-body">
+
+          <!-- OPENING -->
+          <div class="cl-section">
+            <div class="cl-section-header">
+              <div class="cl-section-icon icon-opening">🌅</div>
+              <div class="cl-section-title">Opening</div>
+              <div class="cl-section-count">7/7</div>
+            </div>
+            <div class="cl-card">
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Kebersihan area dapur</div>
+                <div class="cl-time">07:05</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Cek &amp; catat stok bahan baku</div>
+                <div class="cl-time">07:12</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Siapkan peralatan masak</div>
+                <div class="cl-time">07:18</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Kebersihan meja &amp; kursi area makan</div>
+                <div class="cl-time">07:25</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Uji coba mesin kasir &amp; printer</div>
+                <div class="cl-time">07:30</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Pengecekan AC, listrik &amp; gas</div>
+                <div class="cl-time">07:35</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Briefing tim &amp; assign tugas pagi</div>
+                <div class="cl-time">07:45</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDDAY -->
+          <div class="cl-section">
+            <div class="cl-section-header">
+              <div class="cl-section-icon icon-midday">☀️</div>
+              <div class="cl-section-title">Midday</div>
+              <div class="cl-section-count">4/6</div>
+            </div>
+            <div class="cl-card">
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Cek kualitas &amp; suhu makanan</div>
+                <div class="cl-time">12:05</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Kebersihan area makan jam sibuk</div>
+                <div class="cl-time">12:15</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Cek stok kemasan &amp; bahan siang</div>
+                <div class="cl-time">12:20</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Pengecekan kebersihan toilet</div>
+                <div class="cl-time">12:30</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Update stok ke sistem</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Input laporan penjualan siang</div>
+                <div class="cl-time"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLOSING -->
+          <div class="cl-section">
+            <div class="cl-section-header">
+              <div class="cl-section-icon icon-closing">🌙</div>
+              <div class="cl-section-title">Closing</div>
+              <div class="cl-section-count">1/7</div>
+            </div>
+            <div class="cl-card">
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check done">✓</div>
+                <div class="cl-text done">Briefing evaluasi penutupan</div>
+                <div class="cl-time">14:30</div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Kebersihan total dapur &amp; alat</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Simpan &amp; beri label bahan sisa</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Laporan kasir &amp; rekap harian</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Matikan semua peralatan &amp; gas</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Kunci outlet &amp; aktifkan CCTV</div>
+                <div class="cl-time"></div>
+              </div>
+              <div class="cl-item" onclick="toggleCheck(this)">
+                <div class="cl-check"></div>
+                <div class="cl-text">Foto kondisi outlet &amp; upload</div>
+                <div class="cl-time"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /checklist-body -->
+
+        <div class="bnav">
+          <div class="bnav-item active">
+            <div class="bnav-icon">📋</div>
+            <div class="bnav-label">Checklist</div>
+            <div class="bnav-dot"></div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">📊</div>
+            <div class="bnav-label">Laporan</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">👤</div>
+            <div class="bnav-label">Profil</div>
+          </div>
+        </div>
+
+      </div><!-- /screen-pic -->
+
+
+      <!-- ══════════════════════════════════
+           SCREEN 3 — SUPERVISOR
+      ══════════════════════════════════ -->
+      <div id="screen-supervisor" class="screen">
+
+        <div class="status-bar" style="background:#200500; color:rgba(255,255,255,0.82);">
+          <span>09:41</span>
+          <div class="status-icons"><span style="font-size:10px;">●●●</span><span>🔋</span></div>
+        </div>
+
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-brand">
+                <div class="header-logo"><img src="assets/logo.png" alt="SS"></div>
+                <span class="header-brand-text">SS OPS</span>
+              </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="header-notif">🔔<div class="notif-badge">3</div></div>
+              <div class="header-avatar">👤</div>
+            </div>
+          </div>
+          <div class="sup-greeting">Selamat pagi,</div>
+          <div class="sup-name">Kak Rini — Supervisor Jabodetabek</div>
+          <div class="sup-mini-stats">
+            <div class="sup-stat">
+              <div class="sup-stat-num">5</div>
+              <div class="sup-stat-lbl">Outlet</div>
+            </div>
+            <div class="sup-stat">
+              <div class="sup-stat-num" style="color:#A5D6A7;">3</div>
+              <div class="sup-stat-lbl">On Track</div>
+            </div>
+            <div class="sup-stat">
+              <div class="sup-stat-num" style="color:#FF8A80;">2</div>
+              <div class="sup-stat-lbl">Perlu Aksi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="outlet-list">
+
+          <div class="ol-card ok">
+            <div class="ol-top">
+              <div>
+                <div class="ol-name">Bekasi Timur Galaxy</div>
+                <div class="ol-pic-name">PIC: Sari Wahyuni</div>
+              </div>
+              <div class="ol-badge badge-ok">✅ SELESAI</div>
+            </div>
+            <div class="ol-bar-row">
+              <div class="ol-bar-bg"><div class="ol-bar-fill fill-ok" style="width:100%;"></div></div>
+              <div class="ol-pct pct-ok">100%</div>
+            </div>
+            <div class="ol-footer">
+              <div class="ol-chip chip-done">✓ 20 selesai</div>
+            </div>
+          </div>
+
+          <div class="ol-card ok">
+            <div class="ol-top">
+              <div>
+                <div class="ol-name">Depok Margonda</div>
+                <div class="ol-pic-name">PIC: Ahmad Fajar</div>
+              </div>
+              <div class="ol-badge badge-ok">ON TRACK</div>
+            </div>
+            <div class="ol-bar-row">
+              <div class="ol-bar-bg"><div class="ol-bar-fill fill-ok" style="width:85%;"></div></div>
+              <div class="ol-pct pct-ok">85%</div>
+            </div>
+            <div class="ol-footer">
+              <div class="ol-chip chip-done">✓ 17 selesai</div>
+              <div class="ol-chip chip-pend">⏳ 3 belum</div>
+            </div>
+          </div>
+
+          <div class="ol-card warn">
+            <div class="ol-top">
+              <div>
+                <div class="ol-name">Bogor Pajajaran</div>
+                <div class="ol-pic-name">PIC: Dimas Prayoga</div>
+              </div>
+              <div class="ol-badge badge-warn">⚠ LAMBAT</div>
+            </div>
+            <div class="ol-bar-row">
+              <div class="ol-bar-bg"><div class="ol-bar-fill fill-warn" style="width:60%;"></div></div>
+              <div class="ol-pct pct-warn">60%</div>
+            </div>
+            <div class="ol-footer">
+              <div class="ol-chip chip-done">✓ 12 selesai</div>
+              <div class="ol-chip chip-miss">✗ 8 belum</div>
+            </div>
+          </div>
+
+          <div class="ol-card crit">
+            <div class="ol-top">
+              <div>
+                <div class="ol-name">Tangerang Selatan</div>
+                <div class="ol-pic-name">PIC: Rina Kusuma</div>
+              </div>
+              <div class="ol-badge badge-crit">🔴 KRITIS</div>
+            </div>
+            <div class="ol-bar-row">
+              <div class="ol-bar-bg"><div class="ol-bar-fill fill-crit" style="width:40%;"></div></div>
+              <div class="ol-pct pct-crit">40%</div>
+            </div>
+            <div class="ol-footer">
+              <div class="ol-chip chip-done">✓ 8 selesai</div>
+              <div class="ol-chip chip-miss">✗ 12 belum</div>
+            </div>
+          </div>
+
+          <div class="ol-card crit">
+            <div class="ol-top">
+              <div>
+                <div class="ol-name">Jaksel Blok M</div>
+                <div class="ol-pic-name">PIC: — (tidak hadir)</div>
+              </div>
+              <div class="ol-badge badge-crit">🚨 DARURAT</div>
+            </div>
+            <div class="ol-bar-row">
+              <div class="ol-bar-bg"><div class="ol-bar-fill fill-crit" style="width:15%;"></div></div>
+              <div class="ol-pct pct-crit">15%</div>
+            </div>
+            <div class="ol-footer">
+              <div class="ol-chip chip-done">✓ 3 selesai</div>
+              <div class="ol-chip chip-miss">✗ 17 belum</div>
+            </div>
+          </div>
+
+        </div><!-- /outlet-list -->
+
+        <div class="bnav">
+          <div class="bnav-item active">
+            <div class="bnav-icon">📊</div>
+            <div class="bnav-label">Dashboard</div>
+            <div class="bnav-dot"></div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">🏪</div>
+            <div class="bnav-label">Outlet</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">📋</div>
+            <div class="bnav-label">Laporan</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">👤</div>
+            <div class="bnav-label">Profil</div>
+          </div>
+        </div>
+
+      </div><!-- /screen-supervisor -->
+
+
+      <!-- ══════════════════════════════════
+           SCREEN 4 — OWNER
+      ══════════════════════════════════ -->
+      <div id="screen-owner" class="screen">
+
+        <div class="status-bar" style="background:#200500; color:rgba(255,255,255,0.82);">
+          <span>09:41</span>
+          <div class="status-icons"><span style="font-size:10px;">●●●</span><span>🔋</span></div>
+        </div>
+
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-brand">
+                <div class="header-logo"><img src="assets/logo.png" alt="SS"></div>
+                <span class="header-brand-text">SS OPS</span>
+              </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="header-notif">🔔<div class="notif-badge">5</div></div>
+              <div class="header-avatar">👑</div>
+            </div>
+          </div>
+          <div class="owner-title">DASHBOARD OPERASIONAL</div>
+          <div class="owner-sub">19 Outlet &nbsp;·&nbsp; Jumat, 16 Mei 2026 &nbsp;·&nbsp; 09:41 WIB</div>
+        </div>
+
+        <div class="owner-body">
+
+          <!-- BIG STATS -->
+          <div class="big-stats">
+            <div class="bs-card bs-aman">
+              <div class="bs-num">14</div>
+              <div class="bs-label">Aman</div>
+              <div class="bs-sub">Outlet</div>
+            </div>
+            <div class="bs-card bs-perhatian">
+              <div class="bs-num">3</div>
+              <div class="bs-label">Perhatian</div>
+              <div class="bs-sub">Outlet</div>
+            </div>
+            <div class="bs-card bs-kritis">
+              <div class="bs-num">2</div>
+              <div class="bs-label">Kritis</div>
+              <div class="bs-sub">Outlet</div>
+            </div>
+          </div>
+
+          <!-- COMPLIANCE -->
+          <div class="sc">
+            <div class="sc-title">Rata-rata Kepatuhan Hari Ini</div>
+            <div class="compliance-row">
+              <div class="compliance-big">
+                <div class="comp-num">87</div>
+                <div class="comp-pct">%</div>
+              </div>
+              <div class="compliance-right">
+                <div class="comp-trend">↑ +2.3%</div>
+                <div class="comp-sub">vs kemarin 84.7%</div>
+              </div>
+            </div>
+            <div class="comp-bar-bg">
+              <div class="comp-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- CHART -->
+          <div class="sc">
+            <div class="sc-title">Tren 7 Hari Terakhir</div>
+            <div class="chart-wrap">
+              <!-- heights = nilai% / 100 * 70px -->
+              <div class="c-col">
+                <div class="c-val">78%</div>
+                <div class="c-bar" style="height:55px;"></div>
+                <div class="c-day">SEN</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">82%</div>
+                <div class="c-bar" style="height:57px;"></div>
+                <div class="c-day">SEL</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">75%</div>
+                <div class="c-bar" style="height:53px;"></div>
+                <div class="c-day">RAB</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">88%</div>
+                <div class="c-bar" style="height:62px;"></div>
+                <div class="c-day">KAM</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">91%</div>
+                <div class="c-bar" style="height:64px;"></div>
+                <div class="c-day">JUM</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">85%</div>
+                <div class="c-bar" style="height:60px;"></div>
+                <div class="c-day">SAB</div>
+              </div>
+              <div class="c-col">
+                <div class="c-val">87%</div>
+                <div class="c-bar today-bar" style="height:61px;"></div>
+                <div class="c-day" style="color:#E8924A; font-weight:900;">HARI</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOP OUTLETS -->
+          <div class="sc">
+            <div class="sc-title">Top Outlet Hari Ini</div>
+            <div class="top-row">
+              <div class="rank-badge rank-1">1</div>
+              <div class="rank-name">Bekasi Timur Galaxy</div>
+              <div class="rank-pct">100%</div>
+            </div>
+            <div class="top-row">
+              <div class="rank-badge rank-2">2</div>
+              <div class="rank-name">Depok Sawangan</div>
+              <div class="rank-pct">95%</div>
+            </div>
+            <div class="top-row">
+              <div class="rank-badge rank-3">3</div>
+              <div class="rank-name">Bogor Sentul City</div>
+              <div class="rank-pct">93%</div>
+            </div>
+            <div class="top-row">
+              <div class="rank-badge rank-n">4</div>
+              <div class="rank-name">Tangerang Gading Serpong</div>
+              <div class="rank-pct">91%</div>
+            </div>
+            <div class="top-row">
+              <div class="rank-badge rank-n">5</div>
+              <div class="rank-name">Jakut Kelapa Gading</div>
+              <div class="rank-pct">90%</div>
+            </div>
+          </div>
+
+          <!-- ALERTS -->
+          <div class="sc">
+            <div class="sc-title">🔔 Alert Aktif</div>
+            <div class="alert-row">
+              <div class="alert-dot"></div>
+              <div class="alert-txt">Jaksel Blok M — PIC tidak absen sejak buka</div>
+              <div class="alert-time">09:40</div>
+            </div>
+            <div class="alert-row">
+              <div class="alert-dot"></div>
+              <div class="alert-txt">Tangerang Sel. — Checklist baru 40%</div>
+              <div class="alert-time">09:35</div>
+            </div>
+          </div>
+
+        </div><!-- /owner-body -->
+
+        <div class="bnav">
+          <div class="bnav-item active">
+            <div class="bnav-icon">📊</div>
+            <div class="bnav-label">Dashboard</div>
+            <div class="bnav-dot"></div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">🏪</div>
+            <div class="bnav-label">Outlet</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">📋</div>
+            <div class="bnav-label">Laporan</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">⚙️</div>
+            <div class="bnav-label">Pengaturan</div>
+          </div>
+        </div>
+
+      </div><!-- /screen-owner -->
+
+
+      <!-- ══════════════════════════════════
+           SCREEN 5 — ADMIN PANEL
+      ══════════════════════════════════ -->
+      <div id="screen-admin" class="screen">
+
+        <div class="status-bar" style="background:#200500; color:rgba(255,255,255,0.82);">
+          <span>09:41</span>
+          <div class="status-icons"><span style="font-size:10px;">●●●</span><span>🔋</span></div>
+        </div>
+
+        <div class="app-header">
+          <div class="header-row">
+            <div class="header-brand">
+              <div class="header-logo"><img src="assets/logo.png" alt="SS"></div>
+              <span class="header-brand-text">SS OPS</span>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="header-avatar">⚙️</div>
+            </div>
+          </div>
+          <div class="admin-greeting">ADMIN PANEL</div>
+          <div class="admin-name">Halo, Admin Pusat 👋</div>
+          <div class="admin-stats">
+            <div class="admin-stat">
+              <div class="admin-stat-num">24</div>
+              <div class="admin-stat-lbl">Total User</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num">19</div>
+              <div class="admin-stat-lbl">Outlet</div>
+            </div>
+            <div class="admin-stat">
+              <div class="admin-stat-num" style="color:#A5D6A7;">18</div>
+              <div class="admin-stat-lbl">Login Hari Ini</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-body">
+
+          <!-- MENU GRID -->
+          <div class="sc" style="padding: 14px 14px 6px;">
+            <div class="sc-title">Kelola Data</div>
+            <div class="admin-menu-grid">
+
+              <div class="admin-menu-card color-red">
+                <div class="admin-menu-icon">👥</div>
+                <div class="admin-menu-title">Users</div>
+                <div class="admin-menu-sub">24 akun terdaftar</div>
+              </div>
+
+              <div class="admin-menu-card color-orange">
+                <div class="admin-menu-icon">🏪</div>
+                <div class="admin-menu-title">Outlet</div>
+                <div class="admin-menu-sub">19 cabang aktif</div>
+              </div>
+
+              <div class="admin-menu-card color-green">
+                <div class="admin-menu-icon">✅</div>
+                <div class="admin-menu-title">Checklist Items</div>
+                <div class="admin-menu-sub">60 item tugas</div>
+              </div>
+
+              <div class="admin-menu-card color-blue">
+                <div class="admin-menu-icon">📊</div>
+                <div class="admin-menu-title">Laporan</div>
+                <div class="admin-menu-sub">Export PDF / Excel</div>
+              </div>
+
+              <div class="admin-menu-card color-purple">
+                <div class="admin-menu-icon">🔑</div>
+                <div class="admin-menu-title">Reset Password</div>
+                <div class="admin-menu-sub">Atur ulang akses user</div>
+              </div>
+
+              <div class="admin-menu-card color-brown">
+                <div class="admin-menu-icon">⚙️</div>
+                <div class="admin-menu-title">Pengaturan</div>
+                <div class="admin-menu-sub">Konfigurasi sistem</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RECENT ACTIVITY -->
+          <div class="sc">
+            <div class="sc-title">🕐 Aktivitas Terakhir</div>
+            <div class="activity-feed">
+
+              <div class="activity-item">
+                <div class="activity-avatar av-pic">👤</div>
+                <div class="activity-info">
+                  <div class="activity-user">pic.depok <span class="role-badge role-pic">PIC</span></div>
+                  <div class="activity-desc">Login — Cabang Depok Margonda</div>
+                </div>
+                <div class="activity-time">09:38</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-avatar av-sup">👤</div>
+                <div class="activity-info">
+                  <div class="activity-user">supervisor.jbdtbk <span class="role-badge role-supervisor">SPV</span></div>
+                  <div class="activity-desc">Login — Area Jabodetabek</div>
+                </div>
+                <div class="activity-time">09:35</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-avatar av-admin">⚙️</div>
+                <div class="activity-info">
+                  <div class="activity-user">admin <span class="role-badge role-admin">ADMIN</span></div>
+                  <div class="activity-desc">Reset password — pic.tangerang</div>
+                </div>
+                <div class="activity-time">09:20</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-avatar av-pic">👤</div>
+                <div class="activity-info">
+                  <div class="activity-user">pic.bekasi <span class="role-badge role-pic">PIC</span></div>
+                  <div class="activity-desc">Login — Cabang Bekasi Timur</div>
+                </div>
+                <div class="activity-time">08:55</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-avatar av-owner">👑</div>
+                <div class="activity-info">
+                  <div class="activity-user">owner <span class="role-badge role-owner">OWNER</span></div>
+                  <div class="activity-desc">Lihat dashboard operasional</div>
+                </div>
+                <div class="activity-time">08:30</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /admin-body -->
+
+        <div class="bnav">
+          <div class="bnav-item active">
+            <div class="bnav-icon">🏠</div>
+            <div class="bnav-label">Home</div>
+            <div class="bnav-dot"></div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">👥</div>
+            <div class="bnav-label">Users</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">🏪</div>
+            <div class="bnav-label">Outlet</div>
+          </div>
+          <div class="bnav-item">
+            <div class="bnav-icon">📋</div>
+            <div class="bnav-label">Laporan</div>
+          </div>
+        </div>
+
+      </div><!-- /screen-admin -->
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
+
+
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>

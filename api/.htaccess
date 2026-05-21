@@ -1,0 +1,19 @@
+Options -Indexes
+
+# Izinkan upload file (ModSecurity sering blok multipart upload)
+<IfModule mod_security2.c>
+  SecRequestBodyAccess Off
+</IfModule>
+
+RewriteEngine On
+
+# Tambahkan .php jika file tanpa ekstensi tidak ditemukan
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Cache-Control "no-store, no-cache, must-revalidate"
+</IfModule>

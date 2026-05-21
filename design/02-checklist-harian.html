@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#1a1611">
+<title>Checklist Harian · SS Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f1e8; --paper-2:#ede7d6; --paper-3:#e2dac4; --paper-4:#d5cbb1;
+  --ink:#1a1611; --ink-2:#3d352a; --ink-3:#6b6155; --ink-4:#9a8f7f; --ink-5:#c0b7a5;
+  --line:rgba(26,22,17,0.10); --line-2:rgba(26,22,17,0.18); --line-strong:rgba(26,22,17,0.55);
+  --saffron:#c45a1a; --saffron-2:#a84812;
+  --saffron-soft:rgba(196,90,26,0.08); --saffron-edge:rgba(196,90,26,0.32);
+  --ok:#5c6b2e; --ok-soft:rgba(92,107,46,0.10); --ok-edge:rgba(92,107,46,0.30);
+  --warn:#b88412; --warn-soft:rgba(184,132,18,0.12); --warn-edge:rgba(184,132,18,0.34);
+  --danger:#a83621; --danger-soft:rgba(168,54,33,0.10); --danger-edge:rgba(168,54,33,0.32);
+  --info:#3a5468; --info-soft:rgba(58,84,104,0.10); --info-edge:rgba(58,84,104,0.28);
+  --display:'Fraunces',serif; --body:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+body{padding-bottom:120px;min-height:100vh}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(26,22,17,0.03) 1px,transparent 1px),radial-gradient(circle at 80% 60%,rgba(196,90,26,0.025) 1px,transparent 1px);
+  background-size:4px 4px,6px 6px;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+}
+
+/* ============================================================
+   HEADER — Editorial masthead
+   ============================================================ */
+.masthead{
+  background:var(--paper);
+  border-bottom:1px solid var(--line-strong);
+  position:sticky;top:0;z-index:50;
+  position:relative;z-index:50;
+}
+.mast-strip{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 16px;
+  border-bottom:1px solid var(--line);
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  background:var(--ink);
+  color:var(--paper-3);
+}
+.mast-strip .left,
+.mast-strip .right{display:flex;align-items:center;gap:14px}
+.mast-strip .dot{width:5px;height:5px;background:var(--saffron);border-radius:50%}
+.mast-strip .sep{color:var(--ink-4)}
+
+.mast-main{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;
+  gap:12px;
+}
+.mast-brand{
+  display:flex;align-items:center;gap:10px;
+}
+.mast-logo{
+  width:36px;height:36px;
+  background:var(--saffron);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);
+  font-weight:700;
+  color:#fff;
+  font-size:16px;
+  font-variation-settings:"opsz" 24,"SOFT" 0;
+  letter-spacing:-0.04em;
+}
+.mast-text{display:flex;flex-direction:column;line-height:1.1}
+.mast-title{
+  font-family:var(--display);
+  font-weight:500;
+  font-size:15px;
+  letter-spacing:-0.01em;
+  font-variation-settings:"opsz" 14,"SOFT" 20;
+  color:var(--ink);
+}
+.mast-sub{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-top:2px;
+}
+.mast-outlet{
+  text-align:right;cursor:pointer;
+  border-left:1px solid var(--line-2);
+  padding-left:12px;
+}
+.mast-outlet-name{
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  color:var(--saffron);
+}
+.mast-outlet-date{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--ink-3);
+  margin-top:2px;
+}
+
+/* Shift tabs */
+.shift-tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--line);
+}
+.shift-tab{
+  padding:11px 8px 9px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-family:var(--body);
+  font-weight:500;
+  font-size:13px;
+  color:var(--ink-3);
+  letter-spacing:-0.005em;
+  border-bottom:2px solid transparent;
+  position:relative;
+  transition:all 0.18s var(--ease);
+}
+.shift-tab .num{
+  font-family:var(--display);
+  font-size:11px;
+  font-style:italic;
+  color:var(--ink-4);
+  margin-right:6px;
+  font-variation-settings:"opsz" 10,"SOFT" 60;
+}
+.shift-tab.active{
+  color:var(--ink);
+  border-bottom-color:var(--saffron);
+}
+.shift-tab.active .num{color:var(--saffron)}
+.shift-tab:not(.active):hover{color:var(--ink-2);background:var(--paper-2)}
+
+/* Progress strip */
+.prog-strip{
+  padding:12px 16px 14px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper-2);
+  position:relative;z-index:1;
+}
+.prog-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:6px;
+}
+.prog-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:500;
+}
+.prog-pct{
+  font-family:var(--display);
+  font-size:30px;
+  line-height:1;
+  font-weight:500;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+  font-variation-settings:"opsz" 28,"SOFT" 30;
+}
+.prog-pct .small{font-size:14px;color:var(--ink-3)}
+.prog-bar{
+  height:3px;
+  background:var(--paper-4);
+  position:relative;overflow:hidden;
+  margin-bottom:8px;
+}
+.prog-bar-fill{
+  height:100%;
+  background:var(--saffron);
+  width:0%;
+  transition:width 0.4s var(--ease);
+}
+.prog-tags{
+  display:flex;gap:6px;flex-wrap:wrap;
+}
+.tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border:1px solid;
+  white-space:nowrap;line-height:1;
+  padding-block:4px;
+}
+.tag::before{content:'';width:4px;height:4px;background:currentColor;border-radius:50%}
+.tag-danger{color:var(--danger);border-color:var(--danger-edge);background:var(--danger-soft)}
+.tag-warn{color:var(--warn);border-color:var(--warn-edge);background:var(--warn-soft)}
+.tag-ok{color:var(--ok);border-color:var(--ok-edge);background:var(--ok-soft)}
+.tag-info{color:var(--info);border-color:var(--info-edge);background:var(--info-soft)}
+.tag-saffron{color:var(--saffron);border-color:var(--saffron-edge);background:var(--saffron-soft)}
+.tag-ink{color:var(--ink);border-color:var(--line-strong);background:transparent}
+
+/* ============================================================
+   MAIN AREA
+   ============================================================ */
+.page{
+  padding:18px 16px 0;
+  max-width:720px;margin:0 auto;
+  position:relative;z-index:2;
+}
+
+/* Data card — first block */
+.data-card{
+  background:var(--paper);
+  border:1px solid var(--line-2);
+  margin-bottom:18px;
+  position:relative;
+  padding:26px 16px 16px;
+}
+.data-card::before{
+  content:'§ DATA SHIFT — ANGKA HARIAN';
+  position:absolute;top:0;left:0;
+  background:var(--ink);color:var(--paper);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.16em;
+  padding:4px 12px 5px;
+  font-weight:500;
+}
+.data-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:6px;
+}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.span-2{grid-column:1/-1}
+.field label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:500;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.field label .unit{color:var(--ink-4);font-size:9px;letter-spacing:0.08em}
+.input,.textarea{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-bottom:1px solid var(--ink-3);
+  border-radius:0;
+  padding:9px 11px;
+  font-family:var(--mono);
+  font-size:15px;
+  font-weight:500;
+  color:var(--ink);
+  width:100%;
+  outline:none;
+  transition:all 0.15s var(--ease);
+  letter-spacing:-0.01em;
+}
+.input:focus,.textarea:focus{
+  background:#fff;border-color:var(--saffron);border-bottom-color:var(--saffron);
+}
+.textarea{font-family:var(--body);font-size:13px;font-weight:400;resize:vertical;min-height:60px;line-height:1.5}
+
+/* Section block */
+.section{margin-bottom:14px}
+.sec-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:var(--paper);
+  border:1px solid var(--line-2);
+  cursor:pointer;user-select:none;
+  transition:background 0.15s var(--ease);
+}
+.sec-hd:hover{background:var(--paper-2)}
+.sec-hd.open{border-bottom:none}
+.sec-num{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:18px;
+  color:var(--saffron);
+  font-variation-settings:"opsz" 14,"SOFT" 60,"WONK" 1;
+  font-weight:500;
+  line-height:1;
+}
+.sec-ttl{
+  flex:1;
+  font-family:var(--display);
+  font-size:16px;
+  font-weight:500;
+  letter-spacing:-0.01em;
+  font-variation-settings:"opsz" 16,"SOFT" 20;
+  color:var(--ink);
+  line-height:1.2;
+}
+.sec-cnt{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--ink-3);
+  letter-spacing:0.04em;
+}
+.sec-arrow{
+  font-family:var(--display);font-size:14px;color:var(--ink-3);
+  transition:transform 0.2s var(--ease);
+  font-variation-settings:"opsz" 14;
+}
+.sec-hd.open .sec-arrow{transform:rotate(180deg)}
+.sec-body{
+  background:var(--paper);
+  border:1px solid var(--line-2);
+  border-top:none;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.35s var(--ease);
+}
+.sec-body.open{max-height:9999px}
+
+.subdiv{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink-4);
+  padding:8px 14px 4px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper-2);
+}
+
+/* Checklist item */
+.item{
+  display:grid;
+  grid-template-columns:22px 1fr auto;
+  gap:12px;
+  padding:11px 14px;
+  border-bottom:1px solid var(--line);
+  align-items:flex-start;
+  cursor:pointer;
+  transition:background 0.1s var(--ease);
+}
+.item:last-child{border-bottom:none}
+.item:hover{background:var(--paper-2)}
+.item:active{background:var(--paper-3)}
+.cb{
+  width:18px;height:18px;
+  border:1px solid var(--line-strong);
+  background:var(--paper);
+  margin-top:2px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s var(--ease);
+}
+.cb svg{display:none}
+.item.done .cb{background:var(--ok);border-color:var(--ok)}
+.item.done .cb svg{display:block}
+.item.done .item-txt{
+  color:var(--ink-4);
+  text-decoration:line-through;
+  text-decoration-thickness:0.5px;
+}
+.item-txt{font-size:14px;line-height:1.5;color:var(--ink);letter-spacing:-0.003em}
+.item-note{
+  font-family:var(--mono);
+  font-size:11px;
+  margin-top:5px;
+  line-height:1.45;
+  letter-spacing:-0.005em;
+  padding:6px 9px;
+  border-left:2px solid;
+}
+.item-note.warn{color:var(--warn);background:var(--warn-soft);border-left-color:var(--warn)}
+.item-note.danger{color:var(--danger);background:var(--danger-soft);border-left-color:var(--danger)}
+.item-badge{
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:3px 6px;
+  border:1px solid;
+  margin-top:3px;
+  flex-shrink:0;
+  line-height:1;
+  padding-block:4px;
+}
+.item-badge.crit{color:var(--danger);border-color:var(--danger-edge);background:var(--danger-soft)}
+.item-badge.note{color:var(--info);border-color:var(--info-edge);background:var(--info-soft)}
+.item-badge.foto{color:var(--warn);border-color:var(--warn-edge);background:var(--warn-soft)}
+
+/* Sign section — verifikasi */
+.sign-block{
+  background:var(--paper-2);
+  border:1px solid var(--saffron-edge);
+  border-top:3px solid var(--saffron);
+  padding:18px 16px 16px;
+  margin-top:24px;
+  position:relative;
+}
+.sign-block::before{
+  content:'§ VERIFIKASI SHIFT';
+  position:absolute;top:-3px;left:-1px;
+  background:var(--saffron);color:#fff;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.16em;
+  padding:4px 12px 5px;font-weight:500;
+}
+.sign-block .sign-title{
+  font-family:var(--display);
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:-0.01em;
+  font-variation-settings:"opsz" 18,"SOFT" 30,"WONK" 0;
+  margin:8px 0 14px;
+  color:var(--ink);
+  display:flex;align-items:center;gap:10px;
+}
+.sign-block .sign-title em{
+  font-style:italic;color:var(--saffron);
+  font-variation-settings:"opsz" 18,"SOFT" 100;
+}
+.sign-block .req{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--danger);
+  letter-spacing:0.1em;
+  font-weight:600;
+}
+
+/* Submit area (fixed bottom) */
+.submit-bay{
+  position:fixed;bottom:0;left:0;right:0;
+  padding:14px 16px 24px;
+  background:linear-gradient(to top,var(--paper) 70%,rgba(245,241,232,0));
+  z-index:40;
+}
+.submit-btn{
+  width:100%;
+  background:var(--ink);
+  color:var(--paper);
+  border:none;
+  padding:16px 20px;
+  font-family:var(--body);
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:0.04em;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all 0.2s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.submit-btn::before{
+  content:'';position:absolute;inset:0;background:var(--saffron);
+  transform:translateX(-101%);transition:transform 0.32s var(--ease);
+}
+.submit-btn:hover::before{transform:translateX(0)}
+.submit-btn > *{position:relative;z-index:2}
+.submit-btn.incomplete{
+  background:var(--paper-3);color:var(--ink-3);
+}
+.submit-btn.incomplete::before{display:none}
+.submit-btn.done{background:var(--ok)}
+.submit-btn .label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+}
+.submit-btn .ar{font-family:var(--display);font-size:22px;line-height:1;font-variation-settings:"opsz" 24}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:96px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:var(--paper);
+  font-family:var(--mono);font-size:11px;letter-spacing:0.06em;
+  padding:9px 16px;border:1px solid var(--ink);
+  z-index:80;opacity:0;
+  transition:all 0.22s var(--ease);
+  white-space:nowrap;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Larger screens — center column with margin */
+@media (min-width: 720px){
+  .page{padding:24px 24px 0}
+  .data-grid{grid-template-columns:repeat(3,1fr)}
+  .data-card{padding:30px 22px 18px}
+  .data-card::before{padding:5px 14px 6px}
+  .item-txt{font-size:14.5px}
+  .sec-ttl{font-size:18px}
+}
+
+@media (min-width: 1024px){
+  .page{max-width:880px;padding:32px 32px 0}
+  .data-grid{grid-template-columns:repeat(4,1fr)}
+  .submit-bay{padding-bottom:32px}
+}
+
+/* divider with star */
+.divider-star{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0;
+  color:var(--ink-4);
+}
+.divider-star::before,.divider-star::after{
+  content:'';flex:1;height:1px;background:var(--line-2);
+}
+.divider-star .s{
+  width:10px;height:10px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='%23c45a1a'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+</style>
+</head>
+<body>
+
+<!-- ============== MASTHEAD ============== -->
+<header class="masthead">
+  <div class="mast-strip">
+    <div class="left">
+      <span class="dot"></span>
+      <span>Suka Shawarma</span>
+      <span class="sep">·</span>
+      <span>Lembar 02 — Checklist Harian</span>
+    </div>
+    <div class="right">
+      <span id="datelong">Sel, 15 Mei 2026</span>
+    </div>
+  </div>
+  <div class="mast-main">
+    <div class="mast-brand">
+      <div class="mast-logo">SS</div>
+      <div class="mast-text">
+        <div class="mast-title">Jurnal Harian</div>
+        <div class="mast-sub">SOP · Standard Operating Procedure</div>
+      </div>
+    </div>
+    <div class="mast-outlet">
+      <div class="mast-outlet-name">SS KITCHEN ▾</div>
+      <div class="mast-outlet-date">Internal · Bogor</div>
+    </div>
+  </div>
+  <div class="shift-tabs">
+    <button class="shift-tab active" onclick="setShift(0,this)"><span class="num">i.</span>Pembukaan</button>
+    <button class="shift-tab" onclick="setShift(1,this)"><span class="num">ii.</span>Operasional</button>
+    <button class="shift-tab" onclick="setShift(2,this)"><span class="num">iii.</span>Penutupan</button>
+  </div>
+  <div class="prog-strip">
+    <div class="prog-row">
+      <span class="prog-label">Kemajuan shift · 18 dari 32</span>
+      <span class="prog-pct">56<span class="small">%</span></span>
+    </div>
+    <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:56%"></div></div>
+    <div class="prog-tags">
+      <span class="tag tag-danger">9/9 Kritikal</span>
+      <span class="tag tag-warn">14 tersisa</span>
+      <span class="tag tag-ok">18 selesai</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============== PAGE ============== -->
+<main class="page">
+
+  <!-- DATA CARD -->
+  <div class="data-card">
+    <div class="data-grid">
+      <div class="field">
+        <label>Stok daging awal <span class="unit">kg</span></label>
+        <input class="input" type="number" value="28.5" step="0.1">
+      </div>
+      <div class="field">
+        <label>Kiriman pagi <span class="unit">kg</span></label>
+        <input class="input" type="number" value="40">
+      </div>
+      <div class="field">
+        <label>Suhu freezer <span class="unit">°C</span></label>
+        <input class="input" type="number" value="-19.4" step="0.1">
+      </div>
+      <div class="field">
+        <label>Stok gas <span class="unit">tabung</span></label>
+        <input class="input" type="number" value="9">
+      </div>
+      <div class="field">
+        <label>Kas kecil awal <span class="unit">Rp</span></label>
+        <input class="input" type="number" value="500000">
+      </div>
+      <div class="field">
+        <label>Roti pita awal <span class="unit">pcs</span></label>
+        <input class="input" type="number" value="120">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — KEAMANAN -->
+  <div class="section">
+    <div class="sec-hd open" onclick="toggleSec(this)">
+      <span class="sec-num">i.</span>
+      <span class="tag tag-danger">Kritikal</span>
+      <span class="sec-ttl">Keamanan &amp; akses</span>
+      <span class="sec-cnt">5/7</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body open">
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Cek kondisi fisik outlet: pintu, kunci, jendela — tidak ada tanda pembobolan</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">CCTV interior (2 unit) aktif dan merekam normal</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">CCTV exterior (1 unit) aktif dan merekam normal</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Cek instalasi gas: regulator set (4 set), selang, tabung — tidak ada kebocoran</div>
+          <div class="item-note danger">Bau gas = jangan nyalakan apapun, buka ventilasi, hubungi supervisor segera.</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Fire extinguisher: posisi aman, segel utuh, tanggal belum expired</div>
+          <div class="item-note warn">Expired = outlet tidak boleh buka.</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Nyalakan exhaust fan (2 unit) &amp; kipas angin (2 unit), sirkulasi udara normal</div>
+        </div>
+      </div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Gembok (2 pcs) dikembalikan ke tempat setelah outlet dibuka</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — STOK -->
+  <div class="section">
+    <div class="sec-hd open" onclick="toggleSec(this)">
+      <span class="sec-num">ii.</span>
+      <span class="tag tag-danger">Kritikal</span>
+      <span class="sec-ttl">Stok &amp; bahan baku</span>
+      <span class="sec-cnt">3/9</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body open">
+      <div class="subdiv— suhu &amp; freezer">— Suhu &amp; freezer</div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Cek suhu freezer ≤ -18°C — catat di log</div>
+          <div class="item-note danger">Di luar range = jangan gunakan bahan, lapor segera.</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="subdiv">— Daging &amp; protein</div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Hitung stok daging spit (kg): sisa kemarin + kiriman hari ini</div>
+        </div>
+        <span class="item-badge note">Catat</span>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Timbang daging dengan timbangan digital — catat berat awal spit</div>
+        </div>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Cek tanggal kadaluarsa semua bahan: roti, saus, sayuran — buang yang expired</div>
+        </div>
+        <span class="item-badge crit">Kritikal</span>
+      </div>
+      <div class="item done" onclick="toggle(this)">
+        <div class="cb"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="item-txt">Pasang daging ke spit: tidak ada sisa hangus atau busuk dari kemarin</div>
+        </div>
+      </div>
+      <div class="subdiv">— Pendukung &amp; saus</div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Mise en place: sayuran dicuci &amp; dipotong, saus dalam botol bersih berlabel tanggal</div>
+        </div>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Cek stok botol saus (6), mayo (6), tomat (4), samyang (1) — isi ulang jika perlu</div>
+        </div>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Cek stok tabung gas — minimal 8 tabung tersedia sebelum buka</div>
+          <div class="item-note warn">Jika &lt; 5 tabung, hubungi supplier sebelum outlet buka.</div>
+        </div>
+      </div>
+      <div class="item" onclick="toggle(this)">
+        <div class="cb"></div>
+        <div>
+          <div class="item-txt">Verifikasi DO dari central kitchen: cocokkan fisik dengan surat jalan</div>
+        </div>
+        <span class="item-badge note">Catat</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — collapsed -->
+  <div class="section">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="sec-num">iii.</span>
+      <span class="tag tag-info">Operasional</span>
+      <span class="sec-ttl">Peralatan masak</span>
+      <span class="sec-cnt">0/11</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="sec-num">iv.</span>
+      <span class="tag tag-ok">Higiene</span>
+      <span class="sec-ttl">Kebersihan pre-opening</span>
+      <span class="sec-cnt">2/7</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="sec-num">v.</span>
+      <span class="tag tag-saffron">Finansial</span>
+      <span class="sec-ttl">Kasir, digital &amp; signage</span>
+      <span class="sec-cnt">8/11</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="sec-num">vi.</span>
+      <span class="tag tag-ink">Administrasi</span>
+      <span class="sec-ttl">ATK &amp; administrasi</span>
+      <span class="sec-cnt">0/4</span>
+      <span class="sec-arrow">▾</span>
+    </div>
+    <div class="sec-body"></div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider-star"><span class="s"></span></div>
+
+  <!-- SIGN -->
+  <div class="sign-block">
+    <div class="sign-title">
+      Tanda <em>tangan</em> shift
+    </div>
+    <div class="data-grid">
+      <div class="field">
+        <label>Nama PIC shift <span class="req">WAJIB</span></label>
+        <input class="input" type="text" placeholder="Tulis nama lengkap" style="font-family:var(--body);font-size:14px;font-weight:400">
+      </div>
+      <div class="field">
+        <label>Nama SPV penanggung jawab</label>
+        <input class="input" type="text" placeholder="Nama SPV" style="font-family:var(--body);font-size:14px;font-weight:400">
+      </div>
+      <div class="field span-2">
+        <label>Catatan untuk shift berikutnya</label>
+        <textarea class="textarea" placeholder="Stok kritis, peralatan bermasalah, info penting yang harus diketahui shift selanjutnya..."></textarea>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- SUBMIT -->
+<div class="submit-bay">
+  <button class="submit-btn incomplete" id="subBtn" onclick="handleSubmit()">
+    <span class="label">14 item tersisa — Selesaikan dulu</span>
+    <span class="ar">→</span>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('datelong').textContent = new Date().toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+function toggle(el){el.classList.toggle('done');updateCount();}
+function toggleSec(h){
+  h.classList.toggle('open');
+  const body = h.nextElementSibling;
+  body.classList.toggle('open');
+}
+function setShift(i,el){
+  document.querySelectorAll('.shift-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function updateCount(){
+  const items = document.querySelectorAll('.item');
+  const done = document.querySelectorAll('.item.done').length;
+  const total = items.length;
+  // We have only some shown - leave as visual
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function handleSubmit(){
+  showToast('Ada item kritikal yang belum selesai');
+}
+</script>
+</body>
+</html>

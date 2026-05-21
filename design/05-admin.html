@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · SS Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f1e8; --paper-2:#ede7d6; --paper-3:#e2dac4; --paper-4:#d5cbb1;
+  --ink:#1a1611; --ink-2:#3d352a; --ink-3:#6b6155; --ink-4:#9a8f7f; --ink-5:#c0b7a5;
+  --line:rgba(26,22,17,0.10); --line-2:rgba(26,22,17,0.18); --line-strong:rgba(26,22,17,0.55);
+  --saffron:#c45a1a; --saffron-2:#a84812;
+  --saffron-soft:rgba(196,90,26,0.08); --saffron-edge:rgba(196,90,26,0.32);
+  --ok:#5c6b2e; --ok-soft:rgba(92,107,46,0.10); --ok-edge:rgba(92,107,46,0.30);
+  --warn:#b88412; --warn-soft:rgba(184,132,18,0.12); --warn-edge:rgba(184,132,18,0.34);
+  --danger:#a83621; --danger-soft:rgba(168,54,33,0.10); --danger-edge:rgba(168,54,33,0.32);
+  --info:#3a5468; --info-soft:rgba(58,84,104,0.10); --info-edge:rgba(58,84,104,0.28);
+  --display:'Fraunces',serif; --body:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+body{min-height:100vh}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(26,22,17,0.03) 1px,transparent 1px),radial-gradient(circle at 80% 60%,rgba(196,90,26,0.025) 1px,transparent 1px);
+  background-size:4px 4px,6px 6px;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+}
+
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;position:relative;z-index:2}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--ink);color:var(--paper);
+  padding:24px 20px 28px;
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;gap:8px;overflow-y:auto;
+}
+.sb-brand{display:flex;align-items:center;gap:11px;padding-bottom:24px;border-bottom:1px solid var(--ink-2);margin-bottom:24px}
+.sb-logo{width:38px;height:38px;background:var(--saffron);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;color:#fff;font-size:18px;font-variation-settings:"opsz" 24;letter-spacing:-0.04em}
+.sb-bn{display:flex;flex-direction:column;line-height:1.15}
+.sb-bn .a{font-family:var(--display);font-weight:500;font-size:14px;letter-spacing:-0.01em;font-variation-settings:"opsz" 14;color:var(--paper)}
+.sb-bn .b{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-4);margin-top:3px}
+.sb-section{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-4);margin:14px 8px 8px;font-weight:500}
+.sb-item{display:flex;align-items:center;gap:12px;padding:9px 12px;color:var(--paper-3);font-family:var(--body);font-size:13.5px;font-weight:400;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s var(--ease);letter-spacing:-0.005em}
+.sb-item:hover{background:var(--ink-2);color:var(--paper)}
+.sb-item.active{background:var(--ink-2);color:var(--paper);border-left-color:var(--saffron)}
+.sb-item .ic{width:14px;height:14px;flex-shrink:0;opacity:0.7}
+.sb-item.active .ic{opacity:1;color:var(--saffron)}
+.sb-bottom{margin-top:auto;padding-top:18px;border-top:1px solid var(--ink-2)}
+.sb-user{display:flex;align-items:center;gap:11px;padding:8px}
+.sb-avatar{width:32px;height:32px;background:var(--paper-3);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:600;color:var(--ink);font-variation-settings:"opsz" 14}
+.sb-user-meta{display:flex;flex-direction:column;line-height:1.2}
+.sb-user-name{font-size:12.5px;color:var(--paper);letter-spacing:-0.003em}
+.sb-user-role{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-4);margin-top:2px}
+
+/* MAIN */
+.main{padding:32px 36px 48px;max-width:1440px}
+.main-folio{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;border-bottom:1px solid var(--line-strong);margin-bottom:24px}
+.folio-mark{display:flex;align-items:baseline;gap:14px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3)}
+.folio-mark .num{font-family:var(--display);font-weight:500;font-size:22px;font-variation-settings:"opsz" 14;color:var(--ink);letter-spacing:0}
+.folio-meta{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4)}
+
+.page-title{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;gap:24px}
+.pt-l h1{font-family:var(--display);font-weight:400;font-size:60px;line-height:0.96;letter-spacing:-0.03em;font-variation-settings:"opsz" 72,"SOFT" 30;color:var(--ink);margin-bottom:8px}
+.pt-l h1 em{font-style:italic;color:var(--saffron);font-variation-settings:"opsz" 72,"SOFT" 100,"WONK" 1}
+.pt-l p{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;font-variation-settings:"opsz" 18,"SOFT" 100;color:var(--ink-2);letter-spacing:-0.005em}
+
+/* Sub-tabs */
+.sub-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--line-strong);margin-bottom:24px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tab{
+  padding:11px 18px 9px;border:none;background:transparent;cursor:pointer;
+  font-family:var(--body);font-weight:500;font-size:14px;color:var(--ink-3);
+  border-bottom:2px solid transparent;letter-spacing:-0.005em;
+  display:flex;align-items:center;gap:9px;white-space:nowrap;
+  transition:color 0.15s var(--ease);
+}
+.sub-tab .badge{
+  font-family:var(--mono);font-size:10px;color:var(--ink-4);
+  background:var(--paper-2);padding:2px 7px;letter-spacing:0.04em;border:1px solid var(--line);
+}
+.sub-tab.active{color:var(--ink);border-bottom-color:var(--saffron)}
+.sub-tab.active .badge{color:var(--saffron);border-color:var(--saffron-edge);background:var(--saffron-soft)}
+.sub-tab:not(.active):hover{color:var(--ink-2)}
+
+/* Top action bar */
+.action-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;gap:14px;flex-wrap:wrap;
+}
+.search{
+  flex:1;max-width:380px;
+  background:var(--paper);border:1px solid var(--line-2);
+  display:flex;align-items:center;gap:10px;padding:9px 14px;
+}
+.search svg{flex-shrink:0;color:var(--ink-3)}
+.search input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:var(--body);font-size:13.5px;color:var(--ink);
+}
+.search input::placeholder{color:var(--ink-4)}
+
+.chips{display:flex;gap:8px;align-items:center}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.06em;
+  padding:5px 11px;border:1px solid var(--line-2);cursor:pointer;
+  color:var(--ink-2);background:transparent;
+  transition:all 0.15s var(--ease);
+}
+.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip:not(.active):hover{border-color:var(--ink-3)}
+
+.btn-actions{display:flex;gap:8px;align-items:center}
+.btn-primary,.btn-ghost,.btn-danger{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  padding:9px 16px;border:1px solid;cursor:pointer;
+  transition:all 0.18s var(--ease);display:inline-flex;align-items:center;gap:7px;
+}
+.btn-primary{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:var(--saffron);border-color:var(--saffron)}
+.btn-ghost{border-color:var(--line-strong);background:transparent;color:var(--ink-2)}
+.btn-ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn-danger{border-color:var(--danger);background:transparent;color:var(--danger)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+
+/* TABLE */
+.table-card{
+  background:var(--paper);border:1px solid var(--line-2);
+  overflow:hidden;
+}
+.tbl{width:100%;border-collapse:collapse}
+.tbl thead{
+  background:var(--ink);color:var(--paper);
+}
+.tbl thead th{
+  text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;
+  font-weight:500;padding:11px 14px;
+  border-right:1px solid var(--ink-2);
+}
+.tbl thead th:last-child{border-right:none}
+.tbl thead th.r{text-align:right}
+.tbl thead th.c{text-align:center}
+.tbl thead th .sort{
+  display:inline-block;margin-left:5px;color:var(--paper-3);
+  font-family:var(--display);font-style:italic;
+}
+.tbl tbody tr{
+  border-bottom:1px solid var(--line);
+  transition:background 0.12s var(--ease);
+}
+.tbl tbody tr:hover{background:var(--paper-2)}
+.tbl tbody tr:last-child{border-bottom:none}
+.tbl tbody td{
+  padding:13px 14px;vertical-align:middle;
+  border-right:1px solid var(--line);
+}
+.tbl tbody td:last-child{border-right:none}
+.tbl tbody td.r{text-align:right;font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:-0.01em}
+.tbl tbody td.c{text-align:center}
+
+.no-col{
+  font-family:var(--display);font-style:italic;font-size:18px;color:var(--saffron);
+  font-variation-settings:"opsz" 14,"SOFT" 80,"WONK" 1;font-weight:500;width:48px;
+}
+.code-col{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--ink-3);
+  background:var(--paper-2);padding:3px 7px;display:inline-block;
+}
+.outlet-cell .nm{font-size:14px;font-weight:500;color:var(--ink);letter-spacing:-0.005em}
+.outlet-cell .sub{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:2px;letter-spacing:0.04em}
+.user-cell{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:30px;height:30px;background:var(--paper-3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--display);font-size:11px;font-weight:600;color:var(--ink);
+  font-variation-settings:"opsz" 14;letter-spacing:-0.01em;
+}
+.avatar.saffron{background:var(--saffron);color:#fff}
+
+.badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;
+  padding:3px 8px;border:1px solid;line-height:1;padding-block:4px;
+  display:inline-block;
+}
+.bd-internal{color:var(--info);border-color:var(--info-edge);background:var(--info-soft)}
+.bd-mitra{color:var(--saffron);border-color:var(--saffron-edge);background:var(--saffron-soft)}
+.bd-active{color:var(--ok);border-color:var(--ok-edge);background:var(--ok-soft)}
+.bd-disabled{color:var(--ink-4);border-color:var(--line-2);background:var(--paper-2)}
+.bd-role-outlet{color:var(--info);border-color:var(--info-edge);background:var(--info-soft)}
+.bd-role-spv{color:var(--saffron);border-color:var(--saffron-edge);background:var(--saffron-soft)}
+.bd-role-owner{color:var(--danger);border-color:var(--danger-edge);background:var(--danger-soft)}
+.bd-role-admin{color:var(--ink);border-color:var(--line-strong);background:transparent}
+
+/* Inline edit */
+.target-inline{
+  font-family:var(--mono);font-size:13px;color:var(--ink);
+  background:transparent;border:none;border-bottom:1px dashed var(--line-2);
+  padding:2px 4px;width:120px;text-align:right;outline:none;
+  transition:all 0.15s var(--ease);
+}
+.target-inline:focus{border-bottom-color:var(--saffron);background:#fff}
+.target-inline:hover:not(:focus){border-bottom-color:var(--ink-3)}
+
+/* Row actions */
+.row-actions{display:flex;gap:4px;justify-content:flex-end}
+.icon-btn{
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-2);background:transparent;cursor:pointer;
+  color:var(--ink-3);transition:all 0.15s var(--ease);
+}
+.icon-btn:hover{border-color:var(--ink);color:var(--ink);background:var(--paper-3)}
+.icon-btn.danger:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+
+/* TABLE FOOTER */
+.tbl-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 16px;border-top:1px solid var(--line);background:var(--paper-2);
+  font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:var(--ink-3);
+}
+.pager{display:flex;gap:4px;align-items:center}
+.pg-btn{
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-2);background:transparent;cursor:pointer;
+  color:var(--ink-2);font-family:var(--mono);font-size:11px;font-weight:500;
+  transition:all 0.12s var(--ease);
+}
+.pg-btn:hover{border-color:var(--ink);color:var(--ink)}
+.pg-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* AUDIT LOG */
+.audit-card{
+  background:var(--paper);border:1px solid var(--line-2);
+}
+.audit-list{padding:0}
+.audit-item{
+  display:grid;grid-template-columns:90px 1fr auto;gap:14px;
+  padding:14px 18px;border-bottom:1px solid var(--line);align-items:start;
+}
+.audit-item:last-child{border-bottom:none}
+.audit-time{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:0.06em;line-height:1.5}
+.audit-time .d{display:block;color:var(--ink-4);font-size:10px;margin-top:1px}
+.audit-msg{font-size:13.5px;color:var(--ink-2);line-height:1.55;letter-spacing:-0.003em}
+.audit-msg .actor{font-weight:600;color:var(--ink)}
+.audit-msg .action{font-family:var(--mono);font-size:11px;color:var(--saffron);letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;background:var(--saffron-soft);border:1px solid var(--saffron-edge);margin:0 4px}
+.audit-msg .target{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--paper-2);padding:1px 6px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,22,17,0.5);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.22s var(--ease);padding:20px}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--paper);max-width:560px;width:100%;max-height:88vh;overflow-y:auto;border:1px solid var(--ink);padding:0;transform:translateY(20px) scale(0.98);transition:transform 0.28s var(--ease)}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-hd{padding:22px 24px 16px;border-bottom:1px solid var(--line-strong);background:var(--paper-2);display:flex;justify-content:space-between;align-items:flex-start}
+.modal-ttl{font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-0.02em;font-variation-settings:"opsz" 24,"SOFT" 30;color:var(--ink)}
+.modal-ttl em{font-style:italic;color:var(--saffron);font-variation-settings:"opsz" 24,"SOFT" 100,"WONK" 1}
+.modal-meta{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+.modal-close{background:transparent;border:1px solid var(--line-strong);width:32px;height:32px;cursor:pointer;font-family:var(--display);font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--ink);color:var(--paper)}
+.modal-body{padding:22px 24px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field label{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.input{background:var(--paper-2);border:1px solid var(--line);border-bottom:1px solid var(--ink-3);padding:9px 11px;font-family:var(--body);font-size:14px;color:var(--ink);width:100%;outline:none;transition:all 0.15s var(--ease)}
+.input:focus{background:#fff;border-color:var(--saffron);border-bottom-color:var(--saffron)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px 20px;border-top:1px solid var(--line)}
+
+.password-display{
+  background:var(--ink);color:var(--paper);
+  padding:16px 18px;
+  font-family:var(--mono);font-size:18px;letter-spacing:0.08em;font-weight:500;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.password-display button{
+  background:transparent;color:var(--saffron);border:1px solid var(--saffron-edge);
+  padding:6px 12px;font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;
+}
+
+@media (max-width: 1100px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto;flex-direction:row;align-items:center;padding:14px 18px;flex-wrap:wrap}
+  .sb-brand{padding:0;border:none;margin:0;border-right:1px solid var(--ink-2);padding-right:18px;margin-right:14px}
+  .sb-section{display:none}
+  .sb-item{padding:7px 11px;font-size:12px;flex:0 0 auto}
+  .sb-bottom{margin-left:auto;padding:0;border:none}
+  .main{padding:24px 20px 36px}
+  .pt-l h1{font-size:42px}
+  .tbl{font-size:13px}
+  .table-card{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">SS</div>
+      <div class="sb-bn"><span class="a">Suka Shawarma</span><span class="b">Admin Console · 2026</span></div>
+    </div>
+
+    <div class="sb-section">— Master Data</div>
+    <div class="sb-item active">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21 L3 9 L12 3 L21 9 L21 21 Z"/><path d="M9 21 V14 H15 V21"/></svg>
+      Outlet
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M4 21 Q4 14 12 14 T20 21"/></svg>
+      User
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+      Item Checklist
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
+      Audit Log
+    </div>
+
+    <div class="sb-section">— Sistem</div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Pengaturan
+    </div>
+
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">AD</div>
+        <div class="sb-user-meta"><span class="sb-user-name">Adi Nugraha</span><span class="sb-user-role">Admin</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="main-folio">
+      <div class="folio-mark">
+        <span class="num">05</span>
+        <span>Panel Administrasi</span>
+      </div>
+      <div class="folio-meta">Sel · 15 Mei 2026 · 15:08 WIB</div>
+    </div>
+
+    <div class="page-title">
+      <div class="pt-l">
+        <h1>Buku <em>induk</em> sistem.</h1>
+        <p>Outlet, user, target penjualan, dan jejak audit — semuanya bisa ditata di sini.</p>
+      </div>
+    </div>
+
+    <!-- SUB TABS -->
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="goTab(0,this)">Outlet <span class="badge">19</span></button>
+      <button class="sub-tab" onclick="goTab(1,this)">User <span class="badge">22</span></button>
+      <button class="sub-tab" onclick="goTab(2,this)">Item Checklist <span class="badge">96</span></button>
+      <button class="sub-tab" onclick="goTab(3,this)">Audit Log <span class="badge">2,418</span></button>
+    </div>
+
+    <!-- TAB: OUTLET -->
+    <div class="tab-page active">
+      <div class="action-bar">
+        <div class="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.5 16.5"/></svg>
+          <input type="text" placeholder="Cari outlet · nama, kode, kota...">
+        </div>
+        <div class="chips">
+          <span class="chip active">Semua</span>
+          <span class="chip">Internal</span>
+          <span class="chip">Mitra</span>
+          <span class="chip">Aktif</span>
+          <span class="chip">Disabled</span>
+        </div>
+        <div class="btn-actions">
+          <button class="btn-ghost">↓ Export</button>
+          <button class="btn-primary" onclick="openOutletModal()">+ Outlet Baru</button>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:48px">№</th>
+              <th style="width:90px">Kode</th>
+              <th>Outlet</th>
+              <th style="width:120px">Tipe</th>
+              <th style="width:140px">Target / hari</th>
+              <th style="width:100px" class="c">Status</th>
+              <th style="width:120px" class="r">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="no-col">i.</td>
+              <td><span class="code-col">SS-KTC</span></td>
+              <td class="outlet-cell"><div class="nm">SS Kitchen</div><div class="sub">Jl. Pajajaran 12, Bogor</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="6500000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" title="Edit">✎</button>
+                  <button class="icon-btn" title="Lihat user">⊟</button>
+                  <button class="icon-btn danger" title="Disable">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">ii.</td>
+              <td><span class="code-col">SS-EMP</span></td>
+              <td class="outlet-cell"><div class="nm">SS Empang</div><div class="sub">Jl. Empang 45, Bogor</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="4500000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">iii.</td>
+              <td><span class="code-col">SS-PLD</span></td>
+              <td class="outlet-cell"><div class="nm">SS Paledang</div><div class="sub">Jl. Paledang 78, Bogor</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="4200000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">iv.</td>
+              <td><span class="code-col">SS-CMG</span></td>
+              <td class="outlet-cell"><div class="nm">SS Cimanggu</div><div class="sub">Jl. Cimanggu 23, Bogor</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="3800000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">v.</td>
+              <td><span class="code-col">SS-DPS</span></td>
+              <td class="outlet-cell"><div class="nm">SS Depok Sukmajaya</div><div class="sub">Jl. Tole Iskandar, Depok</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="4000000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">vi.</td>
+              <td><span class="code-col">SS-BEJ</span></td>
+              <td class="outlet-cell"><div class="nm">SS Beji</div><div class="sub">Jl. Beji Raya, Depok</div></td>
+              <td><span class="badge bd-internal">Internal</span></td>
+              <td class="r"><input class="target-inline" type="number" value="3500000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">vii.</td>
+              <td><span class="code-col">MT-CBN</span></td>
+              <td class="outlet-cell"><div class="nm">Mitra Cibinong</div><div class="sub">Jl. Tegar Beriman, Cibinong</div></td>
+              <td><span class="badge bd-mitra">Mitra</span></td>
+              <td class="r"><input class="target-inline" type="number" value="2800000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">viii.</td>
+              <td><span class="code-col">MT-CTY</span></td>
+              <td class="outlet-cell"><div class="nm">Mitra Citayam</div><div class="sub">Jl. Raya Citayam, Bogor</div></td>
+              <td><span class="badge bd-mitra">Mitra</span></td>
+              <td class="r"><input class="target-inline" type="number" value="2500000"></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr style="opacity:0.55">
+              <td class="no-col">ix.</td>
+              <td><span class="code-col">MT-TBT</span></td>
+              <td class="outlet-cell"><div class="nm">Mitra Tebet</div><div class="sub">Jl. Tebet Barat, Jakarta</div></td>
+              <td><span class="badge bd-mitra">Mitra</span></td>
+              <td class="r"><input class="target-inline" type="number" value="0"></td>
+              <td class="c"><span class="badge bd-disabled">Disabled</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⊟</button>
+                  <button class="icon-btn">↻</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">
+          <span>Menampilkan 1–9 dari 19 outlet</span>
+          <div class="pager">
+            <button class="pg-btn">‹</button>
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: USER -->
+    <div class="tab-page">
+      <div class="action-bar">
+        <div class="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.5 16.5"/></svg>
+          <input type="text" placeholder="Cari user · nama, username...">
+        </div>
+        <div class="chips">
+          <span class="chip active">Semua</span>
+          <span class="chip">Outlet</span>
+          <span class="chip">SPV</span>
+          <span class="chip">Owner</span>
+          <span class="chip">Admin</span>
+        </div>
+        <div class="btn-actions">
+          <button class="btn-primary" onclick="openUserModal()">+ User Baru</button>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:48px">№</th>
+              <th>Nama / Username</th>
+              <th style="width:120px">Role</th>
+              <th>Outlet</th>
+              <th style="width:140px">Login terakhir</th>
+              <th style="width:100px" class="c">Status</th>
+              <th style="width:160px" class="r">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="no-col">i.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">SK</div>
+                  <div>
+                    <div class="outlet-cell"><div class="nm">SS Kitchen Account</div><div class="sub">@ss_kitchen</div></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-outlet">Outlet</span></td>
+              <td><div class="nm" style="font-size:13px">SS Kitchen</div></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">15 Mei · 06:24</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" title="Edit">✎</button>
+                  <button class="icon-btn" title="Reset password">⟲</button>
+                  <button class="icon-btn danger" title="Disable">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">ii.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">SE</div>
+                  <div class="outlet-cell"><div class="nm">SS Empang Account</div><div class="sub">@ss_empang</div></div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-outlet">Outlet</span></td>
+              <td><div class="nm" style="font-size:13px">SS Empang</div></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">15 Mei · 06:42</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⟲</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">iii.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar saffron">BP</div>
+                  <div class="outlet-cell"><div class="nm">Bayu Pratama</div><div class="sub">@bayu.spv</div></div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-spv">SPV</span></td>
+              <td><span style="color:var(--ink-4);font-family:var(--mono);font-size:11px">Semua outlet</span></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">15 Mei · 10:24</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⟲</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">iv.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar saffron">DR</div>
+                  <div class="outlet-cell"><div class="nm">Dewi Rahmawati</div><div class="sub">@dewi.spv</div></div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-spv">SPV</span></td>
+              <td><span style="color:var(--ink-4);font-family:var(--mono);font-size:11px">Semua outlet</span></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">14 Mei · 18:50</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⟲</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">v.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="background:var(--danger);color:#fff">HS</div>
+                  <div class="outlet-cell"><div class="nm">Hendra Suryadi</div><div class="sub">@owner</div></div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-owner">Owner</span></td>
+              <td><span style="color:var(--ink-4);font-family:var(--mono);font-size:11px">Semua outlet</span></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">15 Mei · 14:32</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⟲</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="no-col">vi.</td>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar" style="background:var(--ink);color:var(--paper)">AD</div>
+                  <div class="outlet-cell"><div class="nm">Adi Nugraha</div><div class="sub">@admin</div></div>
+                </div>
+              </td>
+              <td><span class="badge bd-role-admin">Admin</span></td>
+              <td><span style="color:var(--ink-4);font-family:var(--mono);font-size:11px">—</span></td>
+              <td><span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">15 Mei · 15:08</span></td>
+              <td class="c"><span class="badge bd-active">Aktif</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn">✎</button>
+                  <button class="icon-btn">⟲</button>
+                  <button class="icon-btn danger">×</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">
+          <span>Menampilkan 1–6 dari 22 user</span>
+          <div class="pager">
+            <button class="pg-btn">‹</button>
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">4</button>
+            <button class="pg-btn">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ITEM CHECKLIST placeholder -->
+    <div class="tab-page">
+      <div class="table-card" style="padding:60px 20px;text-align:center;background:var(--paper)">
+        <div style="display:inline-block;width:48px;height:48px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='%23c45a1a'/%3E%3C/svg%3E&quot;);background-size:contain;background-repeat:no-repeat;opacity:0.4;margin-bottom:16px"></div>
+        <div style="font-family:var(--display);font-size:28px;font-weight:500;color:var(--ink);font-variation-settings:'opsz' 28,'SOFT' 30;margin-bottom:6px">Item checklist <em style="font-style:italic;color:var(--saffron);font-variation-settings:'opsz' 28,'SOFT' 100,'WONK' 1">menyusul.</em></div>
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3)">Phase 2 — editable master checklist</div>
+        <p style="margin-top:14px;font-family:var(--display);font-style:italic;font-size:15px;color:var(--ink-3);max-width:420px;margin-inline:auto;line-height:1.5">Sementara waktu, item checklist (96 item, 3 shift) di-load dari file <span style="font-family:var(--mono);font-size:13px;background:var(--paper-2);padding:2px 6px">checklist.json</span> dan harus diedit oleh developer.</p>
+      </div>
+    </div>
+
+    <!-- TAB: AUDIT LOG -->
+    <div class="tab-page">
+      <div class="action-bar">
+        <div class="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.5 16.5"/></svg>
+          <input type="text" placeholder="Cari log · user, action, target...">
+        </div>
+        <div class="chips">
+          <span class="chip active">Semua</span>
+          <span class="chip">Login</span>
+          <span class="chip">Submit</span>
+          <span class="chip">Unlock</span>
+          <span class="chip">Master edit</span>
+        </div>
+        <div class="btn-actions">
+          <button class="btn-ghost">↓ Export CSV</button>
+        </div>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-list">
+          <div class="audit-item">
+            <div class="audit-time">15:08:42<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Adi Nugraha</span><span class="action">login</span>dari IP 103.84.92.18 (Bogor)</div>
+            <span class="badge bd-active">success</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">14:42:18<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Bayu Pratama</span><span class="action">unlock</span>checklist <span class="target">SS Empang · Pembukaan · 15 Mei</span> — koreksi suhu freezer</div>
+            <span class="badge bd-role-spv">SPV</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">14:24:55<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Rina Wulandari</span><span class="action">submit</span>checklist <span class="target">SS Kitchen · Operasional</span> — 32/32 item ✓</div>
+            <span class="badge bd-active">complete</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">13:42:08<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Joko Triono</span><span class="action">submit late</span>checklist <span class="target">SS Cimanggu · Pembukaan</span> — 23/32 item · 3 kritikal terlewat</div>
+            <span class="badge bd-role-owner">late · warn</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">12:50:24<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Bayu Pratama</span><span class="action">submit</span>laporan kunjungan <span class="target">SS Empang · Operasional</span> — 5 temuan</div>
+            <span class="badge bd-role-spv">SPV</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">11:12:14<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Adi Nugraha</span><span class="action">edit outlet</span><span class="target">SS Pajajaran</span> — target harian 3.500.000 → 4.200.000</div>
+            <span class="badge bd-role-admin">admin</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">09:24:08<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">Adi Nugraha</span><span class="action">create user</span>user baru <span class="target">@ss_dramaga</span> dengan role outlet</div>
+            <span class="badge bd-role-admin">admin</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">06:42:50<span class="d">15 Mei</span></div>
+            <div class="audit-msg"><span class="actor">SS Empang Account</span><span class="action">login</span>dari IP 36.78.211.94 (Bogor)</div>
+            <span class="badge bd-active">success</span>
+          </div>
+          <div class="audit-item">
+            <div class="audit-time">22:14:36<span class="d">14 Mei</span></div>
+            <div class="audit-msg"><span class="actor">SS Cimanggu Account</span><span class="action">login fail</span>password salah · attempt 3/5</div>
+            <span class="badge bd-role-owner">warn</span>
+          </div>
+        </div>
+        <div class="tbl-foot">
+          <span>Menampilkan 1–9 dari 2.418 log · retensi 90 hari</span>
+          <div class="pager">
+            <button class="pg-btn">‹</button>
+            <button class="pg-btn active">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">…</button>
+            <button class="pg-btn">269</button>
+            <button class="pg-btn">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL: USER BARU (with generated password) -->
+<div class="modal-overlay" id="userModal" onclick="closeModal(event,'userModal')">
+  <div class="modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-ttl">User <em>baru.</em></div>
+        <div class="modal-meta">Generate kredensial · Phase 1</div>
+      </div>
+      <button class="modal-close" onclick="closeModal(null,'userModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div class="field"><label>Nama lengkap</label><input class="input" type="text" placeholder="Contoh: Siti Maharani"></div>
+        <div class="field"><label>Username</label><input class="input" type="text" placeholder="@ss_dramaga"></div>
+        <div class="field"><label>Role</label>
+          <select class="input">
+            <option>Outlet</option><option>SPV</option><option>Owner</option><option>Admin</option>
+          </select>
+        </div>
+        <div class="field"><label>Outlet (jika role outlet)</label>
+          <select class="input">
+            <option>SS Dramaga</option><option>SS Kitchen</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin-bottom:6px">Password sementara (generate otomatis)</div>
+        <div class="password-display">
+          <span>K7m·Bx2f</span>
+          <button>⎘ Salin</button>
+        </div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--warn);letter-spacing:0.04em;line-height:1.5">⚠ Tunjukkan password ini ke user sekali saja — sistem tidak menyimpan plain-text. User akan diminta ganti password saat login pertama.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal(null,'userModal')">Batal</button>
+      <button class="btn-primary">Buat user</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: OUTLET BARU -->
+<div class="modal-overlay" id="outletModal" onclick="closeModal(event,'outletModal')">
+  <div class="modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-ttl">Outlet <em>baru.</em></div>
+        <div class="modal-meta">Tambah cabang ke buku induk</div>
+      </div>
+      <button class="modal-close" onclick="closeModal(null,'outletModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div class="field"><label>Nama outlet</label><input class="input" type="text" placeholder="SS Bekasi Utara"></div>
+        <div class="field"><label>Kode (3 huruf)</label><input class="input" type="text" placeholder="SS-BKU" style="font-family:var(--mono);text-transform:uppercase"></div>
+        <div class="field"><label>Tipe</label>
+          <select class="input"><option>Internal</option><option>Mitra</option></select>
+        </div>
+        <div class="field"><label>Target harian (Rp)</label><input class="input" type="number" placeholder="3500000"></div>
+        <div class="field" style="grid-column:span 2"><label>Alamat</label><input class="input" type="text" placeholder="Jl. ..."></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal(null,'outletModal')">Batal</button>
+      <button class="btn-primary">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function goTab(i,el){
+  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-page')[i].classList.add('active');
+}
+function openUserModal(){document.getElementById('userModal').classList.add('open')}
+function openOutletModal(){document.getElementById('outletModal').classList.add('open')}
+function closeModal(e,id){
+  if(!e || e.target.id===id || e.target.classList.contains('modal-close')){
+    document.getElementById(id).classList.remove('open');
+  }
+}
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',function(){
+    [...this.parentNode.children].forEach(x=>{if(x.classList.contains('chip'))x.classList.remove('active')});
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

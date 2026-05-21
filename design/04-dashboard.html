@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · SS Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f1e8; --paper-2:#ede7d6; --paper-3:#e2dac4; --paper-4:#d5cbb1;
+  --ink:#1a1611; --ink-2:#3d352a; --ink-3:#6b6155; --ink-4:#9a8f7f; --ink-5:#c0b7a5;
+  --line:rgba(26,22,17,0.10); --line-2:rgba(26,22,17,0.18); --line-strong:rgba(26,22,17,0.55);
+  --saffron:#c45a1a; --saffron-2:#a84812;
+  --saffron-soft:rgba(196,90,26,0.08); --saffron-edge:rgba(196,90,26,0.32);
+  --ok:#5c6b2e; --ok-soft:rgba(92,107,46,0.10); --ok-edge:rgba(92,107,46,0.30);
+  --warn:#b88412; --warn-soft:rgba(184,132,18,0.12); --warn-edge:rgba(184,132,18,0.34);
+  --danger:#a83621; --danger-soft:rgba(168,54,33,0.10); --danger-edge:rgba(168,54,33,0.32);
+  --info:#3a5468; --info-soft:rgba(58,84,104,0.10); --info-edge:rgba(58,84,104,0.28);
+  --display:'Fraunces',serif; --body:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+body{min-height:100vh}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(26,22,17,0.03) 1px,transparent 1px),radial-gradient(circle at 80% 60%,rgba(196,90,26,0.025) 1px,transparent 1px);
+  background-size:4px 4px,6px 6px;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app{
+  display:grid;
+  grid-template-columns: 240px 1fr;
+  min-height:100vh;
+  position:relative;z-index:2;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--ink);color:var(--paper);
+  padding:24px 20px 28px;
+  border-right:1px solid var(--ink-2);
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;gap:8px;
+  overflow-y:auto;
+}
+.sb-brand{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--ink-2);
+  margin-bottom:24px;
+}
+.sb-logo{
+  width:38px;height:38px;background:var(--saffron);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:700;color:#fff;font-size:18px;
+  font-variation-settings:"opsz" 24;letter-spacing:-0.04em;
+}
+.sb-bn{display:flex;flex-direction:column;line-height:1.15}
+.sb-bn .a{font-family:var(--display);font-weight:500;font-size:14px;letter-spacing:-0.01em;font-variation-settings:"opsz" 14;color:var(--paper)}
+.sb-bn .b{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-4);margin-top:3px}
+
+.sb-section{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-4);margin:14px 8px 8px;font-weight:500;
+}
+.sb-item{
+  display:flex;align-items:center;gap:12px;
+  padding:9px 12px;color:var(--paper-3);
+  font-family:var(--body);font-size:13.5px;font-weight:400;
+  cursor:pointer;border-left:2px solid transparent;
+  transition:all 0.15s var(--ease);
+  letter-spacing:-0.005em;
+}
+.sb-item:hover{background:var(--ink-2);color:var(--paper)}
+.sb-item.active{
+  background:var(--ink-2);color:var(--paper);
+  border-left-color:var(--saffron);
+}
+.sb-item .ic{
+  width:14px;height:14px;flex-shrink:0;opacity:0.7;
+}
+.sb-item.active .ic{opacity:1;color:var(--saffron)}
+
+.sb-bottom{margin-top:auto;padding-top:18px;border-top:1px solid var(--ink-2)}
+.sb-user{
+  display:flex;align-items:center;gap:11px;padding:8px;
+}
+.sb-avatar{
+  width:32px;height:32px;background:var(--paper-3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:13px;font-weight:600;color:var(--ink);
+  font-variation-settings:"opsz" 14;
+}
+.sb-user-meta{display:flex;flex-direction:column;line-height:1.2}
+.sb-user-name{font-size:12.5px;color:var(--paper);letter-spacing:-0.003em}
+.sb-user-role{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-4);margin-top:2px}
+
+/* MAIN */
+.main{padding:32px 36px 48px;max-width:1440px}
+.main-folio{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:14px;border-bottom:1px solid var(--line-strong);margin-bottom:24px;
+}
+.folio-mark{
+  display:flex;align-items:baseline;gap:14px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);
+}
+.folio-mark .num{
+  font-family:var(--display);font-weight:500;font-size:22px;
+  font-variation-settings:"opsz" 14;color:var(--ink);letter-spacing:0;
+}
+.folio-meta{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4);
+}
+
+.page-title{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:30px;gap:24px;
+}
+.pt-l h1{
+  font-family:var(--display);font-weight:400;font-size:64px;line-height:0.96;
+  letter-spacing:-0.03em;font-variation-settings:"opsz" 72,"SOFT" 30,"WONK" 0;
+  color:var(--ink);margin-bottom:8px;
+}
+.pt-l h1 em{font-style:italic;color:var(--saffron);font-variation-settings:"opsz" 72,"SOFT" 100,"WONK" 1}
+.pt-l p{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:17px;font-variation-settings:"opsz" 18,"SOFT" 100;
+  color:var(--ink-2);letter-spacing:-0.005em;
+}
+.pt-r{display:flex;gap:8px;align-items:center}
+.btn-ghost,.btn-primary{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  padding:9px 16px;border:1px solid;cursor:pointer;
+  transition:all 0.18s var(--ease);
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn-ghost{border-color:var(--line-strong);background:transparent;color:var(--ink-2)}
+.btn-ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn-primary{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:var(--saffron);border-color:var(--saffron)}
+
+/* FILTER STRIP */
+.filter-strip{
+  display:flex;gap:16px;align-items:center;
+  padding:12px 16px;background:var(--paper);
+  border:1px solid var(--line-2);margin-bottom:24px;
+  flex-wrap:wrap;
+}
+.filter-strip .label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;
+}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.06em;
+  padding:5px 11px;border:1px solid var(--line-2);cursor:pointer;
+  color:var(--ink-2);background:transparent;
+  transition:all 0.15s var(--ease);
+}
+.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip:not(.active):hover{border-color:var(--ink-3)}
+.date-range{
+  display:flex;align-items:center;gap:10px;
+  margin-left:auto;
+  font-family:var(--mono);font-size:12px;color:var(--ink-2);
+}
+.date-range input{
+  background:transparent;border:none;border-bottom:1px solid var(--line-strong);
+  font-family:var(--mono);font-size:12px;padding:4px 0;outline:none;width:130px;
+}
+
+/* KPI ROW */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px;
+}
+.kpi{
+  background:var(--paper);border:1px solid var(--line-2);
+  padding:20px 18px 18px;position:relative;overflow:hidden;
+}
+.kpi-emblem{
+  position:absolute;top:-12px;right:-12px;
+  width:88px;height:88px;opacity:0.06;color:var(--saffron);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='%23c45a1a'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  pointer-events:none;
+}
+.kpi-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;margin-bottom:10px;
+}
+.kpi-val{
+  font-family:var(--display);font-weight:500;font-size:54px;line-height:0.95;
+  letter-spacing:-0.03em;color:var(--ink);
+  font-variation-settings:"opsz" 60,"SOFT" 30;
+  margin-bottom:4px;
+}
+.kpi-val .u{font-size:24px;color:var(--ink-3);font-variation-settings:"opsz" 24}
+.kpi-val.mono{font-family:var(--mono);font-size:36px;font-weight:500;letter-spacing:-0.02em}
+.kpi-val.danger{color:var(--danger)}
+.kpi-delta{
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  display:flex;align-items:center;gap:5px;letter-spacing:-0.005em;
+}
+.kpi-delta.up{color:var(--ok)}
+.kpi-delta.down{color:var(--danger)}
+.kpi-spark{
+  height:24px;margin-top:8px;display:flex;align-items:flex-end;gap:2px;
+}
+.kpi-spark span{
+  flex:1;background:var(--line-2);border-radius:1px;
+}
+.kpi-spark span.up{background:var(--saffron-edge)}
+
+/* SECTION */
+.section{margin-bottom:36px}
+.section-hd{
+  display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
+  padding-bottom:10px;border-bottom:1px solid var(--line-2);margin-bottom:18px;
+}
+.section-num{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--saffron);font-weight:500}
+.section-ttl{
+  font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-0.015em;
+  font-variation-settings:"opsz" 24,"SOFT" 20;color:var(--ink);
+}
+.section-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4)}
+
+/* COMPLIANCE GRID */
+.compliance-wrap{
+  background:var(--paper);border:1px solid var(--line-2);padding:0;
+  overflow-x:auto;
+}
+.comp-head{
+  display:grid;
+  grid-template-columns: 180px repeat(7,1fr);
+  border-bottom:1px solid var(--line-strong);
+  background:var(--ink);color:var(--paper);
+  font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;font-weight:500;
+}
+.comp-head > div{padding:9px 10px;border-right:1px solid var(--ink-2)}
+.comp-head > div:last-child{border-right:none}
+.comp-head .lbl-out{color:var(--paper-3)}
+.comp-head .lbl-day{text-align:center;display:flex;flex-direction:column;gap:1px}
+.comp-head .lbl-day .d{font-family:var(--display);font-size:18px;color:var(--paper);font-variation-settings:"opsz" 18,"SOFT" 30;letter-spacing:-0.01em;font-weight:500}
+.comp-row{
+  display:grid;
+  grid-template-columns: 180px repeat(7,1fr);
+  border-bottom:1px solid var(--line);
+}
+.comp-row:last-child{border-bottom:none}
+.comp-row:hover .comp-out{background:var(--paper-2)}
+.comp-out{
+  padding:8px 12px;border-right:1px solid var(--line-2);
+  display:flex;flex-direction:column;justify-content:center;gap:2px;
+}
+.comp-out-name{font-size:13px;color:var(--ink);font-weight:500;letter-spacing:-0.005em}
+.comp-out-meta{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;color:var(--ink-4)}
+.comp-cell{
+  border-right:1px solid var(--line-2);
+  display:flex;
+  position:relative;
+}
+.comp-cell:last-child{border-right:none}
+.comp-shift{
+  flex:1;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  font-family:var(--mono);font-size:10px;
+  padding:6px 2px;cursor:pointer;
+  border-right:1px solid rgba(26,22,17,0.05);
+  transition:filter 0.15s var(--ease);
+}
+.comp-shift:last-child{border-right:none}
+.comp-shift:hover{filter:brightness(0.92)}
+.comp-shift.ok{background:var(--ok);color:#fff}
+.comp-shift.warn{background:var(--warn-soft);color:var(--warn)}
+.comp-shift.danger{background:var(--danger);color:#fff}
+.comp-shift.idle{background:var(--paper-2);color:var(--ink-4)}
+.comp-shift .pct{font-size:11px;font-weight:600;letter-spacing:-0.01em}
+.comp-shift .lbl{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;margin-top:1px}
+
+/* LEGEND */
+.comp-legend{
+  display:flex;gap:18px;padding:10px 16px;border-top:1px solid var(--line);
+  background:var(--paper-2);font-family:var(--mono);font-size:10px;letter-spacing:0.06em;
+  color:var(--ink-3);align-items:center;
+}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px}
+.ld-ok{background:var(--ok)}
+.ld-warn{background:var(--warn-soft);border:1px solid var(--warn-edge)}
+.ld-danger{background:var(--danger)}
+.ld-idle{background:var(--paper-3)}
+
+/* TWO COLUMN */
+.col2{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;margin-bottom:36px}
+
+/* RANKING TABLE */
+.rank-table{width:100%;border-collapse:collapse}
+.rank-table th{
+  text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--ink-3);
+  padding:10px 12px;border-bottom:1px solid var(--line-strong);font-weight:500;
+}
+.rank-table th.r{text-align:right}
+.rank-table td{
+  padding:13px 12px;border-bottom:1px solid var(--line);
+}
+.rank-table tr:last-child td{border-bottom:none}
+.rank-no{
+  font-family:var(--display);font-style:italic;font-size:18px;color:var(--saffron);
+  font-variation-settings:"opsz" 14,"SOFT" 80,"WONK" 1;width:40px;font-weight:500;
+}
+.rank-name{font-size:13.5px;color:var(--ink);font-weight:500;letter-spacing:-0.005em}
+.rank-sub{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:1px;letter-spacing:0.04em}
+.rank-pct{
+  font-family:var(--mono);font-size:14px;font-weight:500;color:var(--ink);
+  letter-spacing:-0.01em;text-align:right;
+}
+.rank-pct.ok{color:var(--ok)}
+.rank-pct.danger{color:var(--danger)}
+.rank-bar{
+  height:3px;background:var(--paper-3);margin-top:6px;position:relative;width:80px;margin-left:auto;
+}
+.rank-bar > div{height:100%;background:var(--saffron)}
+.rank-bar.ok > div{background:var(--ok)}
+.rank-bar.danger > div{background:var(--danger)}
+
+/* RECENT SUBMISSIONS */
+.sub-card{
+  background:var(--paper);border:1px solid var(--line-2);overflow:hidden;
+}
+.sub-card-hd{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper-2);
+}
+.sub-card-ttl{
+  font-family:var(--display);font-size:15px;font-weight:500;letter-spacing:-0.01em;
+  font-variation-settings:"opsz" 14,"SOFT" 20;color:var(--ink);
+}
+.sub-card-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--ink-3)}
+.sub-list{padding:0}
+.sub-item{
+  display:grid;grid-template-columns:40px 1fr auto;gap:12px;
+  padding:12px 16px;border-bottom:1px solid var(--line);align-items:center;cursor:pointer;
+  transition:background 0.12s var(--ease);
+}
+.sub-item:hover{background:var(--paper-2)}
+.sub-item:last-child{border-bottom:none}
+.sub-time{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:0.04em}
+.sub-outlet{font-size:13px;color:var(--ink);font-weight:500;letter-spacing:-0.005em}
+.sub-sub{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:2px;letter-spacing:0.04em}
+.sub-badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;font-weight:500;
+  padding:3px 8px;border:1px solid;
+}
+.sb-ok{color:var(--ok);border-color:var(--ok-edge);background:var(--ok-soft)}
+.sb-warn{color:var(--warn);border-color:var(--warn-edge);background:var(--warn-soft)}
+.sb-danger{color:var(--danger);border-color:var(--danger-edge);background:var(--danger-soft)}
+
+/* MODAL DRILL-DOWN */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(26,22,17,0.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;opacity:0;pointer-events:none;
+  transition:opacity 0.22s var(--ease);
+  padding:20px;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--paper);max-width:640px;width:100%;max-height:88vh;overflow-y:auto;
+  border:1px solid var(--ink);padding:0;
+  transform:translateY(20px) scale(0.98);
+  transition:transform 0.28s var(--ease);
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-hd{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:22px 24px 16px;border-bottom:1px solid var(--line-strong);
+  background:var(--paper-2);
+}
+.modal-ttl{
+  font-family:var(--display);font-weight:500;font-size:26px;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 28,"SOFT" 30;color:var(--ink);
+}
+.modal-ttl em{font-style:italic;color:var(--saffron);font-variation-settings:"opsz" 28,"SOFT" 100,"WONK" 1}
+.modal-meta{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:4px;
+}
+.modal-close{
+  background:transparent;border:1px solid var(--line-strong);
+  width:32px;height:32px;cursor:pointer;
+  font-family:var(--display);font-size:18px;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{background:var(--ink);color:var(--paper)}
+.modal-body{padding:20px 24px}
+.miss-item{
+  display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line-2);
+}
+.miss-item:last-child{border-bottom:none}
+.miss-dot{width:6px;height:6px;background:var(--danger);border-radius:50%;margin-top:8px;flex-shrink:0}
+.miss-txt{flex:1;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.modal-foot{
+  display:flex;justify-content:flex-end;gap:10px;
+  padding:14px 24px 20px;border-top:1px solid var(--line);
+}
+
+@media (max-width: 1100px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto;flex-direction:row;align-items:center;padding:14px 18px}
+  .sb-brand{padding:0;border:none;margin:0;border-right:1px solid var(--ink-2);padding-right:18px;margin-right:14px}
+  .sb-section{display:none}
+  .sb-item{padding:7px 11px;font-size:12px}
+  .sb-bottom{margin-left:auto;padding:0;border:none}
+  .main{padding:24px 20px 36px}
+  .pt-l h1{font-size:44px}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .col2{grid-template-columns:1fr}
+  .compliance-wrap{overflow-x:auto}
+}
+@media (max-width: 720px){
+  .sidebar{flex-wrap:wrap;gap:6px}
+  .sb-item{display:none}
+  .sb-item.active{display:flex}
+  .pt-l h1{font-size:36px}
+  .kpi-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">SS</div>
+      <div class="sb-bn">
+        <span class="a">Suka Shawarma</span>
+        <span class="b">Ops Console · 2026</span>
+      </div>
+    </div>
+
+    <div class="sb-section">— Pantauan</div>
+    <div class="sb-item active">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16"/><path d="M4 9 H20 M9 4 V20"/></svg>
+      Compliance Grid
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17 L9 11 L13 15 L21 7"/><path d="M14 7 H21 V14"/></svg>
+      Trend &amp; Analitik
+    </div>
+
+    <div class="sb-section">— Arsip</div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+      Checklist Harian
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3 H15 L19 7 V21 H5 Z"/><path d="M14 3 V8 H19"/></svg>
+      Laporan SPV
+    </div>
+    <div class="sb-item">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="9" r="3.5"/><path d="M4 21 Q4 14 12 14 T20 21"/></svg>
+      Outlet
+    </div>
+
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">BP</div>
+        <div class="sb-user-meta">
+          <span class="sb-user-name">Bayu Pratama</span>
+          <span class="sb-user-role">Supervisor</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="main-folio">
+      <div class="folio-mark">
+        <span class="num">04</span>
+        <span>Dashboard Kepatuhan</span>
+      </div>
+      <div class="folio-meta">Sel · 15 Mei 2026 · 14:32 WIB</div>
+    </div>
+
+    <div class="page-title">
+      <div class="pt-l">
+        <h1>Tujuh hari, <em>nineteen.</em></h1>
+        <p>Compliance dari sembilan belas outlet selama satu minggu — termasuk shift yang masih berlangsung.</p>
+      </div>
+      <div class="pt-r">
+        <button class="btn-ghost">↓ Excel</button>
+        <button class="btn-primary">⟲ Refresh</button>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-strip">
+      <span class="label">Filter</span>
+      <span class="chip active">Semua outlet</span>
+      <span class="chip">Internal</span>
+      <span class="chip">Mitra</span>
+      <span class="label" style="margin-left:14px">Shift</span>
+      <span class="chip active">Semua</span>
+      <span class="chip">Pembukaan</span>
+      <span class="chip">Operasional</span>
+      <span class="chip">Penutupan</span>
+      <div class="date-range">
+        <span>Rentang</span>
+        <input type="date" value="2026-05-09">
+        <span>—</span>
+        <input type="date" value="2026-05-15">
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-emblem"></div>
+        <div class="kpi-label">Compliance · 7 hari</div>
+        <div class="kpi-val">94<span class="u">%</span></div>
+        <div class="kpi-delta up">▲ 6.2 pt vs minggu lalu</div>
+        <div class="kpi-spark">
+          <span style="height:50%"></span><span style="height:60%"></span><span class="up" style="height:75%"></span>
+          <span class="up" style="height:80%"></span><span class="up" style="height:88%"></span>
+          <span class="up" style="height:92%"></span><span class="up" style="height:94%"></span>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emblem"></div>
+        <div class="kpi-label">Item kritikal terlewat</div>
+        <div class="kpi-val danger">3</div>
+        <div class="kpi-delta down">2 outlet butuh tindak lanjut</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emblem"></div>
+        <div class="kpi-label">Submission tepat waktu</div>
+        <div class="kpi-val">38<span class="u">/40</span></div>
+        <div class="kpi-delta up">▲ 95% on-time rate</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-emblem"></div>
+        <div class="kpi-label">Visit SPV bulan ini</div>
+        <div class="kpi-val mono">27</div>
+        <div class="kpi-delta">14 outlet sudah dikunjungi</div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE GRID -->
+    <div class="section">
+      <div class="section-hd">
+        <span class="section-num">§ 01</span>
+        <h2 class="section-ttl">The Constellation — Compliance Grid</h2>
+        <span class="section-meta">19 Outlet × 7 Hari · Tap cell untuk drill-down</span>
+      </div>
+
+      <div class="compliance-wrap">
+        <div class="comp-head">
+          <div class="lbl-out">Outlet</div>
+          <div class="lbl-day"><span>Rab</span><span class="d">09</span></div>
+          <div class="lbl-day"><span>Kam</span><span class="d">10</span></div>
+          <div class="lbl-day"><span>Jum</span><span class="d">11</span></div>
+          <div class="lbl-day"><span>Sab</span><span class="d">12</span></div>
+          <div class="lbl-day"><span>Min</span><span class="d">13</span></div>
+          <div class="lbl-day"><span>Sen</span><span class="d">14</span></div>
+          <div class="lbl-day"><span>Sel</span><span class="d">15</span></div>
+        </div>
+
+        <!-- ROW: SS Kitchen -->
+        <div class="comp-row">
+          <div class="comp-out">
+            <span class="comp-out-name">SS Kitchen</span>
+            <span class="comp-out-meta">Bogor · Internal</span>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift warn"><span class="pct">94</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift idle"><span class="pct">—</span><span class="lbl">T</span></div>
+          </div>
+        </div>
+
+        <!-- ROW: SS Empang -->
+        <div class="comp-row">
+          <div class="comp-out">
+            <span class="comp-out-name">SS Empang</span>
+            <span class="comp-out-meta">Bogor · Internal</span>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift warn"><span class="pct">88</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift warn" onclick="openModal()"><span class="pct">81</span><span class="lbl">O</span></div>
+            <div class="comp-shift idle"><span class="pct">—</span><span class="lbl">T</span></div>
+          </div>
+        </div>
+
+        <!-- ROW: SS Cimanggu -->
+        <div class="comp-row">
+          <div class="comp-out">
+            <span class="comp-out-name">SS Cimanggu</span>
+            <span class="comp-out-meta">Bogor · Internal</span>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift warn"><span class="pct">82</span><span class="lbl">O</span></div>
+            <div class="comp-shift danger"><span class="pct">68</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift danger"><span class="pct">71</span><span class="lbl">P</span></div>
+            <div class="comp-shift warn"><span class="pct">88</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift warn"><span class="pct">94</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift warn"><span class="pct">88</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div>
+            <div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div>
+            <div class="comp-shift warn"><span class="pct">94</span><span class="lbl">T</span></div>
+          </div>
+          <div class="comp-cell">
+            <div class="comp-shift danger" onclick="openModal()"><span class="pct">71</span><span class="lbl">P</span></div>
+            <div class="comp-shift warn"><span class="pct">88</span><span class="lbl">O</span></div>
+            <div class="comp-shift idle"><span class="pct">—</span><span class="lbl">T</span></div>
+          </div>
+        </div>
+
+        <!-- ROW: SS Beji -->
+        <div class="comp-row">
+          <div class="comp-out">
+            <span class="comp-out-name">SS Beji</span>
+            <span class="comp-out-meta">Depok · Internal</span>
+          </div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift warn"><span class="pct">94</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift idle"><span class="pct">—</span><span class="lbl">T</span></div></div>
+        </div>
+
+        <!-- ROW: Mitra Cibinong -->
+        <div class="comp-row">
+          <div class="comp-out">
+            <span class="comp-out-name">Mitra Cibinong</span>
+            <span class="comp-out-meta">Cibinong · Mitra</span>
+          </div>
+          <div class="comp-cell"><div class="comp-shift idle"><span class="pct">—</span><span class="lbl">P</span></div><div class="comp-shift warn"><span class="pct">88</span><span class="lbl">O</span></div><div class="comp-shift warn"><span class="pct">82</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift warn"><span class="pct">82</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift warn"><span class="pct">88</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift warn"><span class="pct">94</span><span class="lbl">P</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">O</span></div><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">T</span></div></div>
+          <div class="comp-cell"><div class="comp-shift ok"><span class="pct">100</span><span class="lbl">P</span></div><div class="comp-shift warn"><span class="pct">88</span><span class="lbl">O</span></div><div class="comp-shift idle"><span class="pct">—</span><span class="lbl">T</span></div></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="comp-legend">
+          <div class="legend-item"><span class="legend-dot ld-ok"></span><span>OK · semua kritikal selesai</span></div>
+          <div class="legend-item"><span class="legend-dot ld-warn"></span><span>Warn · kritikal OK, non-kritikal terlewat</span></div>
+          <div class="legend-item"><span class="legend-dot ld-danger"></span><span>Kritikal terlewat</span></div>
+          <div class="legend-item"><span class="legend-dot ld-idle"></span><span>Belum submit</span></div>
+          <div style="margin-left:auto;color:var(--ink-4)">P · Pembukaan · O · Operasional · T · Penutupan</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWO COLUMN: RANKING + RECENT -->
+    <div class="col2">
+      <div class="section">
+        <div class="section-hd">
+          <span class="section-num">§ 02</span>
+          <h2 class="section-ttl">Tabel Peringkat</h2>
+          <span class="section-meta">7 hari · compliance rata-rata</span>
+        </div>
+
+        <table class="rank-table">
+          <thead>
+            <tr><th style="width:40px">№</th><th>Outlet</th><th class="r" style="width:140px">Compliance</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank-no">i.</td>
+              <td><div class="rank-name">SS Kitchen</div><div class="rank-sub">Bogor · Internal</div></td>
+              <td><div class="rank-pct ok">99.1%</div><div class="rank-bar ok"><div style="width:99%"></div></div></td>
+            </tr>
+            <tr>
+              <td class="rank-no">ii.</td>
+              <td><div class="rank-name">SS Beji</div><div class="rank-sub">Depok · Internal</div></td>
+              <td><div class="rank-pct ok">98.6%</div><div class="rank-bar ok"><div style="width:98%"></div></div></td>
+            </tr>
+            <tr>
+              <td class="rank-no">iii.</td>
+              <td><div class="rank-name">SS Pajajaran</div><div class="rank-sub">Bogor · Internal</div></td>
+              <td><div class="rank-pct ok">97.4%</div><div class="rank-bar ok"><div style="width:97%"></div></div></td>
+            </tr>
+            <tr>
+              <td class="rank-no">iv.</td>
+              <td><div class="rank-name">SS Jagakarsa</div><div class="rank-sub">Jakarta Selatan · Internal</div></td>
+              <td><div class="rank-pct">96.2%</div><div class="rank-bar"><div style="width:96%"></div></div></td>
+            </tr>
+            <tr style="background:var(--paper-2)">
+              <td colspan="3" style="text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--ink-4);padding:8px">— PERFORMA RENDAH —</td>
+            </tr>
+            <tr>
+              <td class="rank-no" style="color:var(--danger)">xvii.</td>
+              <td><div class="rank-name">SS Cimanggu</div><div class="rank-sub">Bogor · Internal</div></td>
+              <td><div class="rank-pct danger">82.3%</div><div class="rank-bar danger"><div style="width:82%"></div></div></td>
+            </tr>
+            <tr>
+              <td class="rank-no" style="color:var(--danger)">xviii.</td>
+              <td><div class="rank-name">Mitra Pekayon</div><div class="rank-sub">Bekasi · Mitra</div></td>
+              <td><div class="rank-pct danger">79.8%</div><div class="rank-bar danger"><div style="width:79%"></div></div></td>
+            </tr>
+            <tr>
+              <td class="rank-no" style="color:var(--danger)">xix.</td>
+              <td><div class="rank-name">Mitra Kalisari</div><div class="rank-sub">Jakarta Timur · Mitra</div></td>
+              <td><div class="rank-pct danger">76.5%</div><div class="rank-bar danger"><div style="width:76%"></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-hd">
+          <span class="section-num">§ 03</span>
+          <h2 class="section-ttl">Telegram Terbaru</h2>
+          <span class="section-meta">Submission · 24 jam</span>
+        </div>
+
+        <div class="sub-card">
+          <div class="sub-list">
+            <div class="sub-item">
+              <span class="sub-time">14:24</span>
+              <div>
+                <div class="sub-outlet">SS Kitchen · Operasional</div>
+                <div class="sub-sub">Rina · 32/32 item · on-time</div>
+              </div>
+              <span class="sub-badge sb-ok">OK</span>
+            </div>
+            <div class="sub-item">
+              <span class="sub-time">14:18</span>
+              <div>
+                <div class="sub-outlet">SS Empang · Operasional</div>
+                <div class="sub-sub">Ahmad F · 26/32 item · 1 kritikal terlewat</div>
+              </div>
+              <span class="sub-badge sb-warn">Warn</span>
+            </div>
+            <div class="sub-item">
+              <span class="sub-time">13:42</span>
+              <div>
+                <div class="sub-outlet">SS Cimanggu · Pembukaan</div>
+                <div class="sub-sub">Joko T · 23/32 item · 3 kritikal terlewat · late</div>
+              </div>
+              <span class="sub-badge sb-danger">Kritikal</span>
+            </div>
+            <div class="sub-item">
+              <span class="sub-time">12:50</span>
+              <div>
+                <div class="sub-outlet">Bayu P · Visit Report</div>
+                <div class="sub-sub">SS Empang · 5 temuan · 2 red flag</div>
+              </div>
+              <span class="sub-badge sb-warn">SPV</span>
+            </div>
+            <div class="sub-item">
+              <span class="sub-time">10:24</span>
+              <div>
+                <div class="sub-outlet">SS Beji · Pembukaan</div>
+                <div class="sub-sub">Siti M · 32/32 item · on-time</div>
+              </div>
+              <span class="sub-badge sb-ok">OK</span>
+            </div>
+            <div class="sub-item">
+              <span class="sub-time">09:58</span>
+              <div>
+                <div class="sub-outlet">Mitra Cibinong · Pembukaan</div>
+                <div class="sub-sub">Eko S · 30/32 item · 2 non-kritikal terlewat</div>
+              </div>
+              <span class="sub-badge sb-warn">Warn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- DRILL-DOWN MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-ttl">SS <em>Cimanggu</em></div>
+        <div class="modal-meta">Sel · 15 Mei · Pembukaan · PIC Joko T</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:16px;margin-bottom:18px">
+        <div style="flex:1;background:var(--danger-soft);border-left:3px solid var(--danger);padding:12px 14px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--danger);font-weight:600">Kritikal terlewat</div>
+          <div style="font-family:var(--display);font-size:38px;font-weight:500;color:var(--danger);letter-spacing:-0.02em;font-variation-settings:'opsz' 36,'SOFT' 30;line-height:1;margin-top:4px">3</div>
+        </div>
+        <div style="flex:1;background:var(--paper-2);padding:12px 14px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600">Total compliance</div>
+          <div style="font-family:var(--display);font-size:38px;font-weight:500;letter-spacing:-0.02em;font-variation-settings:'opsz' 36,'SOFT' 30;line-height:1;margin-top:4px">71<span style="font-size:20px;color:var(--ink-3)">%</span></div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line-2)">— Item kritikal yang belum dicentang</div>
+
+      <div class="miss-item">
+        <span class="miss-dot"></span>
+        <div class="miss-txt">Cek instalasi gas: regulator set (4 set), selang, tabung — tidak ada kebocoran</div>
+      </div>
+      <div class="miss-item">
+        <span class="miss-dot"></span>
+        <div class="miss-txt">Fire extinguisher: posisi aman, segel utuh, tanggal belum expired</div>
+      </div>
+      <div class="miss-item">
+        <span class="miss-dot"></span>
+        <div class="miss-txt">Cek tanggal kadaluarsa semua bahan: roti, saus, sayuran — buang yang expired</div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin:18px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line-2)">— Catatan handover dari PIC</div>
+      <p style="font-size:13px;color:var(--ink-2);line-height:1.55;font-style:italic">"Sempat masalah dengan kompor pagi tadi, gas habis. Sudah ganti tabung tapi belum sempat lengkapi checklist semuanya."</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost">Lihat detail lengkap →</button>
+      <button class="btn-primary">↩ Unlock untuk koreksi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(e){
+  if(!e || e.target===document.getElementById('modal') || e.target.classList.contains('modal-close')){
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',function(){
+    [...this.parentNode.children].forEach(x=>{if(x.classList.contains('chip'))x.classList.remove('active')});
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

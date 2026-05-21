@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ffffff">
+<title>SS Report Kunjungan SPV</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+:root{--bg:#ffffff;--bg2:#f7f6f3;--bg3:#eeede9;--bg4:#e4e3de;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#111110;--text2:#4a4a47;--text3:#888882;--amber:#e8a020;--amber-bg:rgba(232,160,32,0.12);--amber-border:rgba(232,160,32,0.3);--red:#e05540;--red-bg:rgba(224,85,64,0.12);--red-border:rgba(224,85,64,0.3);--green:#5ab96a;--green-bg:rgba(90,185,106,0.1);--green-border:rgba(90,185,106,0.28);--blue:#5b9bd6;--blue-bg:rgba(91,155,214,0.1);--blue-border:rgba(91,155,214,0.25);--yellow:#d4b84a;--yellow-bg:rgba(212,184,74,0.1);--yellow-border:rgba(212,184,74,0.25);--radius:10px;--radius-lg:14px;--font-d:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'DM Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;overscroll-behavior:none}
+.app-header{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:100}
+.header-row{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{width:34px;height:34px;background:var(--amber);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:13px;color:#111110}
+.brand-name{font-family:var(--font-d);font-weight:700;font-size:14px}
+.brand-sub{font-size:10px;color:var(--text3);font-family:var(--font-m)}
+.pdf-btn{padding:6px 12px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:var(--font-b)}
+.section-tabs{display:flex;overflow-x:auto;gap:0;border-bottom:1px solid var(--border);scrollbar-width:none;margin-top:2px}
+.section-tabs::-webkit-scrollbar{display:none}
+.stab{padding:9px 13px;border:none;background:transparent;color:var(--text3);font-family:var(--font-b);font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;flex-shrink:0}
+.stab.active{color:var(--amber);border-bottom-color:var(--amber)}
+.progress-bar-wrap{background:var(--bg2);padding:8px 16px;border-bottom:1px solid var(--border)}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.prog-label{font-size:11px;color:var(--text3);font-family:var(--font-m)}
+.prog-pct{font-size:12px;font-weight:600;font-family:var(--font-m);color:var(--amber)}
+.prog-track{height:3px;background:var(--bg4);border-radius:99px;overflow:hidden}
+.prog-fill{height:3px;background:var(--amber);border-radius:99px;transition:width 0.3s ease;width:0%}
+.main{padding:14px 16px 120px}
+.section-page{display:none}
+.section-page.active{display:block}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px}
+.card-title{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.card-title span{color:var(--amber);font-weight:400;text-transform:none;letter-spacing:0}
+.field{margin-bottom:10px}
+.field label{font-size:11px;color:var(--text3);display:block;margin-bottom:4px;font-family:var(--font-m)}
+.field input[type=text],.field input[type=number],.field input[type=date],.field input[type=time],.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-b);font-size:13px;border-radius:8px;padding:8px 11px;outline:none;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--amber)}
+.field textarea{resize:vertical;min-height:64px;font-size:12px;line-height:1.5}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6962' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.status-row{display:flex;gap:6px;margin-top:4px}
+.status-opt{flex:1;padding:7px 4px;border:1px solid var(--border2);border-radius:7px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;transition:all 0.15s;color:var(--text3);font-family:var(--font-m)}
+.status-opt.s-ok{border-color:var(--green-border);color:var(--green);background:var(--green-bg)}
+.status-opt.s-warn{border-color:var(--yellow-border);color:var(--yellow);background:var(--yellow-bg)}
+.status-opt.s-broken{border-color:var(--red-border);color:var(--red);background:var(--red-bg)}
+.inv-table{width:100%;border-collapse:collapse}
+.inv-table th{font-size:10px;font-family:var(--font-m);color:var(--text3);text-align:left;padding:6px 6px;border-bottom:1px solid var(--border2);font-weight:500;white-space:nowrap}
+.inv-table td{font-size:12px;padding:7px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.inv-table tr:last-child td{border-bottom:none}
+.inv-item-name{font-size:12.5px;color:var(--text);line-height:1.3}
+.inv-cat{font-size:10px;color:var(--text3);font-family:var(--font-m);margin-top:1px}
+.qty-input{width:48px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-m);font-size:12px;border-radius:6px;padding:4px 5px;text-align:center;outline:none}
+.qty-input:focus{border-color:var(--amber)}
+.status-pill{font-size:10px;font-family:var(--font-m);padding:3px 7px;border-radius:99px;border:1px solid;white-space:nowrap;cursor:pointer;display:inline-block;transition:all 0.15s}
+.sp-ok{color:var(--green);border-color:var(--green-border);background:var(--green-bg)}
+.sp-warn{color:var(--yellow);border-color:var(--yellow-border);background:var(--yellow-bg)}
+.sp-broken{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.score-card{background:var(--bg3);border-radius:var(--radius);padding:10px 12px;border:1px solid var(--border)}
+.score-label{font-size:10px;color:var(--text3);font-family:var(--font-m);margin-bottom:4px}
+.score-val{font-size:22px;font-weight:700;font-family:var(--font-d);color:var(--amber)}
+.score-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.emp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.emp-header{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:var(--bg3)}
+.emp-avatar{width:32px;height:32px;border-radius:50%;background:var(--amber-bg);border:1px solid var(--amber-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);flex-shrink:0}
+.emp-name{font-size:13px;font-weight:600;flex:1}
+.emp-role{font-size:11px;color:var(--text3);font-family:var(--font-m)}
+.emp-body{padding:12px;display:none}
+.emp-body.open{display:block}
+.eval-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.eval-label{font-size:12px;color:var(--text2);flex:1;line-height:1.4}
+.star-row{display:flex;gap:3px}
+.star{width:27px;height:27px;border-radius:5px;border:1px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all 0.15s;color:var(--text3);font-family:var(--font-m)}
+.star.lit{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.photo-zone{border:1px dashed var(--border2);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;margin-bottom:8px}
+.photo-zone-icon{font-size:22px;margin-bottom:6px;opacity:0.4}
+.photo-zone-label{font-size:12px;color:var(--text3)}
+.photo-zone-sub{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--font-m)}
+.photo-tag{font-size:10px;font-family:var(--font-m);padding:2px 7px;border-radius:99px;border:1px solid;display:inline-block;cursor:pointer;margin:2px;transition:all 0.15s}
+.ptag-normal{color:var(--text3);border-color:var(--border)}
+.ptag-selected{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg)}
+.photo-label-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-b);font-size:11px;border-radius:5px;padding:4px 7px;outline:none;margin-top:6px}
+.photo-label-input:focus{border-color:var(--amber)}
+.flag-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.flag-item:last-child{border-bottom:none}
+.flag-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.flag-red{background:var(--red)}
+.flag-amber{background:var(--amber)}
+.flag-green{background:var(--green)}
+.flag-text{font-size:12.5px;line-height:1.5;flex:1}
+.flag-source{font-size:10px;color:var(--text3);font-family:var(--font-m);margin-top:2px}
+.divider{font-size:10px;font-family:var(--font-m);letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);padding:12px 0 6px;border-top:1px solid var(--border);margin-top:4px}
+.divider:first-child{border-top:none;margin-top:0;padding-top:0}
+.add-btn{width:100%;padding:10px;background:var(--bg3);border:1px dashed var(--border2);border-radius:var(--radius);color:var(--text3);font-size:13px;cursor:pointer;font-family:var(--font-b)}
+.submit-wrap{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 28px;background:linear-gradient(to top,#ffffff 70%,transparent)}
+.submit-btn{width:100%;padding:14px;background:var(--amber);color:#111110;border:none;border-radius:var(--radius-lg);font-family:var(--font-d);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(232,160,32,0.28);-webkit-appearance:none;transition:all 0.18s}
+.submit-btn:active{transform:scale(0.97)}
+.submit-btn.done{background:var(--green);box-shadow:0 4px 20px rgba(90,185,106,0.25)}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:9px 16px;border-radius:99px;z-index:999;opacity:0;transition:all 0.22s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.summary-header{background:var(--bg2);border:1px solid var(--amber-border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;text-align:center}
+.summary-outlet{font-family:var(--font-d);font-size:18px;font-weight:800;color:var(--amber)}
+.summary-meta{font-size:11px;color:var(--text3);font-family:var(--font-m);margin-top:4px}
+.summary-spv{font-size:13px;color:var(--text2);margin-top:6px}
+.note-textarea{width:100%;min-height:100px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-b);font-size:13px;border-radius:8px;padding:10px 12px;outline:none;resize:vertical;line-height:1.6}
+.note-textarea:focus{border-color:var(--amber)}
+@media print{
+  body{background:#fff;color:#000}
+  .app-header,.section-tabs,.progress-bar-wrap,.submit-wrap,.pdf-btn,.add-btn{display:none!important}
+  .section-page{display:block!important}
+  .main{padding:0}
+  .card{border:1px solid #ddd;background:#fff;margin-bottom:8px;break-inside:avoid}
+  .card-title{color:#666}
+  .inv-table td,.inv-table th{font-size:11px}
+  .emp-body{display:block!important}
+  .photo-zone{display:none}
+  :root{--bg:#fff;--bg2:#f8f8f6;--bg3:#f0f0ee;--text:#111110;--text2:#444;--text3:#888}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-logo">SS</div>
+      <div>
+        <div class="brand-name">SUKA SHAWARMA</div>
+        <div class="brand-sub">LAPORAN KUNJUNGAN SPV</div>
+      </div>
+    </div>
+    <button class="pdf-btn" onclick="exportPDF()">Simpan PDF</button>
+  </div>
+  <div class="section-tabs">
+    <button class="stab active" onclick="goTab(0)">Info</button>
+    <button class="stab" onclick="goTab(1)">Inventaris</button>
+    <button class="stab" onclick="goTab(2)">Penjualan</button>
+    <button class="stab" onclick="goTab(3)">Stok</button>
+    <button class="stab" onclick="goTab(4)">Karyawan</button>
+    <button class="stab" onclick="goTab(5)">Foto</button>
+    <button class="stab" onclick="goTab(6)">Ringkasan</button>
+  </div>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="prog-row">
+    <span class="prog-label" id="progLabel">Lengkapi semua bagian</span>
+    <span class="prog-pct" id="progPct">0%</span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+</div>
+
+<main class="main">
+
+<!-- TAB 0: INFO -->
+<div class="section-page active" id="tab-0">
+  <div class="card">
+    <div class="card-title">Info Kunjungan</div>
+    <div class="grid2">
+      <div class="field"><label>Nama SPV</label><input type="text" id="spv_name" placeholder="Nama lengkap" oninput="updateProgress()"></div>
+      <div class="field"><label>Tanggal</label><input type="date" id="visit_date" oninput="updateProgress()"></div>
+      <div class="field"><label>Jam Tiba</label><input type="time" id="time_arrive"></div>
+      <div class="field"><label>Jam Keluar</label><input type="time" id="time_leave"></div>
+    </div>
+    <div class="field"><label>Outlet</label>
+      <select id="outlet_name" onchange="updateProgress()">
+        <option value="">-- Pilih Outlet --</option>
+        <optgroup label="INTERNAL">
+          <option>SS Kitchen</option><option>SS Empang</option><option>SS Paledang</option>
+          <option>SS Cimanggu</option><option>SS Depok Sukmajaya</option><option>SS Jagakarsa</option>
+          <option>SS Beji</option><option>SS Sawangan</option><option>SS Pajajaran</option>
+          <option>SS Jatiwaringin</option><option>SS Cirendeu</option><option>SS Jatiasih</option><option>SS Dramaga</option>
+        </optgroup>
+        <optgroup label="MITRA">
+          <option>Mitra Cibinong</option><option>Mitra Citayam</option><option>Mitra Tebet</option>
+          <option>Mitra Ciseeng</option><option>Mitra Pekayon</option><option>Mitra Kalisari</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field"><label>Shift dikunjungi</label>
+      <select id="visit_shift">
+        <option value="open">Pembukaan</option>
+        <option value="ops" selected>Operasional</option>
+        <option value="close">Penutupan</option>
+        <option value="all">Full Day</option>
+      </select>
+    </div>
+    <div class="field"><label>PIC / Kasir yang bertugas</label><input type="text" id="pic_on_duty" placeholder="Nama karyawan yang ditemui"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Kondisi Umum Outlet</div>
+    <div class="field"><label>Kebersihan area exterior</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'cond_ext','ok')">OK</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_ext','warn')">Perlu Perhatian</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_ext','broken')">Buruk</div>
+      </div>
+    </div>
+    <div class="field"><label>Kebersihan area dapur / interior</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'cond_int','ok')">OK</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_int','warn')">Perlu Perhatian</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_int','broken')">Buruk</div>
+      </div>
+    </div>
+    <div class="field"><label>Kebersihan kamar mandi</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'cond_toilet','ok')">OK</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_toilet','warn')">Perlu Perhatian</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_toilet','broken')">Buruk</div>
+      </div>
+    </div>
+    <div class="field"><label>Kepatuhan seragam & higienitas karyawan</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'cond_uniform','ok')">OK</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_uniform','warn')">Tidak Lengkap</div>
+        <div class="status-opt" onclick="setStatus(this,'cond_uniform','broken')">Tidak Pakai</div>
+      </div>
+    </div>
+    <div class="field"><label>Catatan kondisi umum</label>
+      <textarea id="cond_notes" placeholder="Deskripsikan temuan kondisi outlet..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: INVENTARIS -->
+<div class="section-page" id="tab-1">
+  <div class="card">
+    <div class="card-title">Inventaris Aset <span>— tap kolom Status untuk ubah</span></div>
+    <table class="inv-table">
+      <thead><tr>
+        <th style="width:38%">Aset</th>
+        <th style="width:12%">Std</th>
+        <th style="width:20%">Ada</th>
+        <th style="width:30%">Status</th>
+      </tr></thead>
+      <tbody id="invBody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Catatan Inventaris</div>
+    <div class="field"><label>Aset rusak / hilang yang perlu ditindaklanjuti</label>
+      <textarea id="inv_notes" placeholder="Contoh: Spatula bakar 2pcs rusak — perlu diganti sebelum weekend. CCTV interior harus ditukar segera."></textarea>
+    </div>
+    <div class="field"><label>Estimasi biaya penggantian / perbaikan (Rp)</label>
+      <input type="number" id="inv_repair_cost" placeholder="0">
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: PENJUALAN -->
+<div class="section-page" id="tab-2">
+  <div class="card">
+    <div class="card-title">Data Penjualan</div>
+    <div class="grid2">
+      <div class="field"><label>Total penjualan (Rp)</label><input type="number" id="sales_total" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>Jumlah transaksi</label><input type="number" id="sales_trx" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>Penjualan tunai (Rp)</label><input type="number" id="sales_cash" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>QRIS / transfer (Rp)</label><input type="number" id="sales_qris" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>GoFood (Rp)</label><input type="number" id="sales_gofood" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>GrabFood (Rp)</label><input type="number" id="sales_grab" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>ShopeeFood (Rp)</label><input type="number" id="sales_shopee" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>Kas fisik terhitung (Rp)</label><input type="number" id="cash_counted" placeholder="0" oninput="calcSales()"></div>
+    </div>
+    <div class="score-grid" style="margin-top:4px">
+      <div class="score-card">
+        <div class="score-label">Avg Transaction</div>
+        <div class="score-val" id="avg_trx">Rp 0</div>
+        <div class="score-sub">per transaksi</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Selisih Kas</div>
+        <div class="score-val" id="cash_diff" style="color:var(--green)">Rp 0</div>
+        <div class="score-sub">over / (short)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Target vs Aktual</div>
+    <div class="grid2">
+      <div class="field"><label>Target harian (Rp)</label><input type="number" id="sales_target" placeholder="0" oninput="calcSales()"></div>
+      <div class="field"><label>Pencapaian</label><input type="text" id="sales_ach" placeholder="—" readonly style="background:var(--bg4);color:var(--amber);font-weight:600"></div>
+    </div>
+    <div class="field"><label>Kondisi penjualan hari ini</label>
+      <select id="sales_condition">
+        <option value="">-- Pilih --</option>
+        <option>Di atas ekspektasi</option>
+        <option>Sesuai target</option>
+        <option>Di bawah target</option>
+        <option>Sangat di bawah target</option>
+      </select>
+    </div>
+    <div class="field"><label>Faktor yang mempengaruhi</label>
+      <textarea id="sales_notes" placeholder="Contoh: Hujan deras jam 11–14, penjualan drop. Online dominan hari ini."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: STOK -->
+<div class="section-page" id="tab-3">
+  <div class="card">
+    <div class="card-title">Stok Bahan Baku</div>
+    <div class="divider">Daging & Protein</div>
+    <div class="grid2">
+      <div class="field"><label>Stok daging spit (kg)</label><input type="number" id="s_daging" placeholder="0" step="0.1"></div>
+      <div class="field"><label>Kiriman hari ini (kg)</label><input type="number" id="s_kiriman" placeholder="0" step="0.1"></div>
+      <div class="field"><label>Spit digunakan hari ini</label><input type="number" id="s_spit_used" placeholder="0"></div>
+      <div class="field"><label>Yield rata-rata (%)</label><input type="number" id="s_yield" placeholder="0" step="0.1"></div>
+    </div>
+    <div class="divider">Bahan Pendukung</div>
+    <div class="grid2">
+      <div class="field"><label>Roti pita (pcs)</label><input type="number" id="s_roti" placeholder="0"></div>
+      <div class="field"><label>Saus (botol)</label><input type="number" id="s_saus" placeholder="0"></div>
+      <div class="field"><label>Sayuran (hari)</label><input type="number" id="s_sayur" placeholder="0" step="0.5"></div>
+      <div class="field"><label>Tabung gas</label><input type="number" id="s_gas" placeholder="0"></div>
+    </div>
+    <div class="divider">Packaging</div>
+    <div class="grid2">
+      <div class="field"><label>Wrapping paper (lembar)</label><input type="number" id="s_wrap" placeholder="0"></div>
+      <div class="field"><label>Box kemasan (pcs)</label><input type="number" id="s_box" placeholder="0"></div>
+      <div class="field"><label>Cup saus (pcs)</label><input type="number" id="s_cup" placeholder="0"></div>
+      <div class="field"><label>Sendok plastik (pcs)</label><input type="number" id="s_sendok" placeholder="0"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Penilaian Stok</div>
+    <div class="grid2">
+      <div class="field"><label>Suhu chiller (°C)</label><input type="number" id="s_suhu_chiller" placeholder="0" step="0.1"></div>
+      <div class="field"><label>Suhu freezer (°C)</label><input type="number" id="s_suhu_freezer" placeholder="0" step="0.1"></div>
+    </div>
+    <div class="field"><label>Bahan expired ditemukan?</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'s_expired','ok')">Tidak ada</div>
+        <div class="status-opt" onclick="setStatus(this,'s_expired','warn')">Ada — sudah dibuang</div>
+        <div class="status-opt" onclick="setStatus(this,'s_expired','broken')">Ada — masih dipakai</div>
+      </div>
+    </div>
+    <div class="field"><label>Status stok keseluruhan</label>
+      <div class="status-row">
+        <div class="status-opt" onclick="setStatus(this,'s_overall','ok')">Aman</div>
+        <div class="status-opt" onclick="setStatus(this,'s_overall','warn')">Perlu restock</div>
+        <div class="status-opt" onclick="setStatus(this,'s_overall','broken')">Kritis</div>
+      </div>
+    </div>
+    <div class="field"><label>Total waste hari ini (Rp estimasi)</label><input type="number" id="s_waste" placeholder="0"></div>
+    <div class="field"><label>Catatan stok</label>
+      <textarea id="s_notes" placeholder="Bahan kritis, anomali yield, masalah supplier..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: KARYAWAN -->
+<div class="section-page" id="tab-4">
+  <div class="card">
+    <div class="card-title">Evaluasi Karyawan</div>
+    <div id="empList"></div>
+    <button class="add-btn" onclick="addEmployee()" style="margin-top:8px">+ Tambah Karyawan</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Catatan SDM</div>
+    <div class="grid2">
+      <div class="field"><label>Karyawan hadir</label><input type="number" id="emp_present" placeholder="0"></div>
+      <div class="field"><label>Tidak hadir / izin</label><input type="text" id="emp_absent" placeholder="Nama & alasan"></div>
+    </div>
+    <div class="field"><label>Isu SDM yang perlu ditindaklanjuti</label>
+      <textarea id="emp_issues" placeholder="Performa, kedisiplinan, konflik..."></textarea>
+    </div>
+    <div class="field"><label>Rekomendasi tindakan</label>
+      <select id="emp_action">
+        <option value="">-- Tidak ada --</option>
+        <option>Peringatan lisan</option>
+        <option>Surat peringatan SP1</option>
+        <option>Surat peringatan SP2</option>
+        <option>Rotasi outlet</option>
+        <option>Promosi / kenaikan tanggung jawab</option>
+        <option>Perlu training ulang</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5: FOTO -->
+<div class="section-page" id="tab-5">
+  <div class="card">
+    <div class="card-title">Dokumentasi Foto Kunjungan</div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">Foto sebagai bukti audit. Beri label dan kategori setiap foto.</p>
+    <div id="photoSections"></div>
+    <button class="add-btn" onclick="addPhotoSlot()" style="margin-top:4px">+ Tambah Foto</button>
+  </div>
+</div>
+
+<!-- TAB 6: RINGKASAN -->
+<div class="section-page" id="tab-6">
+  <div id="summaryContent">
+    <div style="text-align:center;padding:40px 20px;color:var(--text3)">
+      <div style="font-size:32px;opacity:0.3;margin-bottom:12px">📋</div>
+      <div style="font-size:13px">Tap "Simpan & Generate Ringkasan"<br>untuk melihat report lengkap.</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="submit-wrap">
+  <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Simpan & Generate Ringkasan</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const INVENTORY=[
+  {cat:'Dapur — Utama',items:[
+    {name:'Kompor bakar',std:2,unit:'unit'},
+    {name:'Double fryer',std:1,unit:'unit'},
+    {name:'Blender',std:1,unit:'unit'},
+    {name:'Timbangan',std:1,unit:'pcs'},
+    {name:'Stockpot besar',std:1,unit:'pcs'},
+    {name:'Stockpot M',std:1,unit:'pcs'},
+  ]},
+  {cat:'Peralatan Masak',items:[
+    {name:'Spatula bakar',std:5,unit:'pcs'},
+    {name:'Spatula kulit',std:1,unit:'pcs'},
+    {name:'Pisau',std:3,unit:'pcs'},
+    {name:'Stainless tray (full)',std:1,unit:'pcs'},
+    {name:'Stainless tray ½',std:5,unit:'pcs'},
+    {name:'Stainless tray ¼',std:3,unit:'pcs'},
+    {name:'Alumunium tray',std:1,unit:'pcs'},
+    {name:'Stainless bowl',std:1,unit:'pcs'},
+    {name:'Stainless condiment',std:5,unit:'pcs'},
+    {name:'Tray plastik abu',std:3,unit:'pcs'},
+    {name:'Toples tum',std:2,unit:'pcs'},
+    {name:'Botol',std:10,unit:'pcs'},
+  ]},
+  {cat:'Penyimpanan & Utilitas',items:[
+    {name:'Freezer 600L',std:1,unit:'unit'},
+    {name:'Tabung gas',std:10,unit:'tabung'},
+    {name:'Regulator set',std:3,unit:'pcs'},
+    {name:'Dust bin',std:2,unit:'pcs'},
+    {name:'Jengkok',std:1,unit:'pcs'},
+  ]},
+  {cat:'Kasir & Teknologi',items:[
+    {name:'Cash drawer',std:1,unit:'unit'},
+    {name:'Printer struk',std:2,unit:'unit'},
+    {name:'CCTV interior',std:1,unit:'unit'},
+  ]},
+  {cat:'Exterior',items:[
+    {name:'Neon box',std:1,unit:'unit'},
+    {name:'Banner besar',std:1,unit:'pcs'},
+    {name:'Banner kecil',std:2,unit:'pcs'},
+    {name:'Lampu tembak',std:2,unit:'unit'},
+    {name:'CCTV exterior',std:1,unit:'unit'},
+    {name:'Gembok',std:2,unit:'pcs'},
+    {name:'Kursi plastik',std:6,unit:'pcs'},
+  ]},
+  {cat:'Kamar Mandi & Utilitas',items:[
+    {name:'Keran air',std:1,unit:'unit'},
+    {name:'Gayung',std:1,unit:'pcs'},
+    {name:'Meteran listrik',std:1,unit:'unit'},
+    {name:'Sambungan PDAM',std:1,unit:'unit'},
+    {name:'Internet / WiFi',std:1,unit:'unit'},
+  ]},
+];
+const PHOTO_TAGS=['exterior','dapur','stok','kasir','drip tray','karyawan','rusak','bersih','kotor','lainnya'];
+const EVAL_CRITERIA=[
+  {key:'punctual',label:'Ketepatan waktu & kehadiran'},
+  {key:'uniform',label:'Kerapian seragam & higienitas'},
+  {key:'speed',label:'Kecepatan & efisiensi kerja'},
+  {key:'quality',label:'Konsistensi kualitas produk'},
+  {key:'attitude',label:'Sikap & pelayanan pelanggan'},
+  {key:'sop',label:'Kepatuhan SOP & prosedur'},
+];
+
+let invState={},statusState={},employees=[],photos=[],photoCounter=0;
+
+function init(){
+  document.getElementById('visit_date').value=new Date().toISOString().split('T')[0];
+  renderInventory();
+  renderEmployees();
+  renderPhotoSlots();
+  updateProgress();
+}
+
+function renderInventory(){
+  let html='';
+  INVENTORY.forEach(cat=>{
+    html+=`<tr><td colspan="4" style="padding:10px 6px 4px;font-size:10px;font-family:var(--font-m);color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;border-bottom:1px solid var(--border2)">${cat.cat}</td></tr>`;
+    cat.items.forEach((item,i)=>{
+      const key=cat.cat+'_'+i;
+      const qty=invState[key+'_qty']!==undefined?invState[key+'_qty']:item.std;
+      const st=invState[key+'_st']||'ok';
+      html+=`<tr>
+        <td><div class="inv-item-name">${item.name}</div><div class="inv-cat">${item.std} ${item.unit}</div></td>
+        <td style="color:var(--text3);font-family:var(--font-m);font-size:11px">${item.std}</td>
+        <td><input class="qty-input" type="number" value="${qty}" min="0" onchange="setInvQty('${key}',this.value)"></td>
+        <td><span class="status-pill ${st==='ok'?'sp-ok':st==='warn'?'sp-warn':'sp-broken'}" onclick="cycleInvStatus('${key}',this)">${st==='ok'?'OK':st==='warn'?'Perlu Cek':'Rusak'}</span></td>
+      </tr>`;
+    });
+  });
+  document.getElementById('invBody').innerHTML=html;
+}
+
+function setInvQty(key,val){invState[key+'_qty']=parseInt(val)||0;}
+function cycleInvStatus(key,el){
+  const cur=invState[key+'_st']||'ok';
+  const next=cur==='ok'?'warn':cur==='warn'?'broken':'ok';
+  invState[key+'_st']=next;
+  el.className='status-pill '+(next==='ok'?'sp-ok':next==='warn'?'sp-warn':'sp-broken');
+  el.textContent=next==='ok'?'OK':next==='warn'?'Perlu Cek':'Rusak';
+}
+
+function setStatus(el,key,val){
+  statusState[key]=val;
+  el.parentElement.querySelectorAll('.status-opt').forEach(o=>{
+    o.className='status-opt';
+    if(o===el) o.classList.add(val==='ok'?'s-ok':val==='warn'?'s-warn':'s-broken');
+  });
+}
+
+function calcSales(){
+  const total=parseFloat(document.getElementById('sales_total').value)||0;
+  const trx=parseFloat(document.getElementById('sales_trx').value)||0;
+  const cash=parseFloat(document.getElementById('sales_cash').value)||0;
+  const counted=parseFloat(document.getElementById('cash_counted').value)||0;
+  const target=parseFloat(document.getElementById('sales_target').value)||0;
+  const avg=trx>0?Math.round(total/trx):0;
+  const diff=counted-cash;
+  const ach=target>0?Math.round(total/target*100)+'%':'—';
+  document.getElementById('avg_trx').textContent='Rp '+avg.toLocaleString('id-ID');
+  const de=document.getElementById('cash_diff');
+  de.textContent=(diff>=0?'+':'')+'Rp '+Math.abs(diff).toLocaleString('id-ID');
+  de.style.color=diff<0?'var(--red)':diff>0?'var(--amber)':'var(--green)';
+  document.getElementById('sales_ach').value=ach;
+}
+
+function addEmployee(){
+  const id='emp_'+Date.now();
+  employees.push({id,name:'',role:'Crew',scores:{},note:''});
+  renderEmployees();
+  setTimeout(()=>{const inp=document.getElementById('ename_'+id);if(inp)inp.focus();},80);
+}
+
+function renderEmployees(){
+  const container=document.getElementById('empList');
+  if(!employees.length){container.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Belum ada karyawan. Tap tombol di bawah.</div>`;return;}
+  container.innerHTML=employees.map(emp=>{
+    const total=EVAL_CRITERIA.reduce((s,c)=>s+(emp.scores[c.key]||0),0);
+    const max=EVAL_CRITERIA.length*5;
+    const pct=max>0?Math.round(total/max*100):0;
+    const sc=pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+    const ini=(emp.name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+    return `<div class="emp-card">
+      <div class="emp-header" onclick="toggleEmp('${emp.id}')">
+        <div class="emp-avatar">${ini||'?'}</div>
+        <div style="flex:1"><div class="emp-name">${emp.name||'(Nama belum diisi)'}</div><div class="emp-role">${emp.role}</div></div>
+        <span style="font-size:13px;font-weight:700;font-family:var(--font-m);padding:3px 9px;border-radius:6px;color:${sc};background:${sc}22;border:1px solid ${sc}44">${pct}%</span>
+      </div>
+      <div class="emp-body" id="eb_${emp.id}">
+        <div class="grid2" style="margin-bottom:10px">
+          <div class="field"><label>Nama</label><input type="text" id="ename_${emp.id}" value="${emp.name}" placeholder="Nama lengkap" oninput="updateEmp('${emp.id}','name',this.value)"></div>
+          <div class="field"><label>Posisi</label><select onchange="updateEmp('${emp.id}','role',this.value)">${['Crew','Kasir','Kepala Shift','Cook','Trainee'].map(r=>`<option${r===emp.role?' selected':''}>${r}</option>`).join('')}</select></div>
+        </div>
+        ${EVAL_CRITERIA.map(c=>`<div class="eval-row">
+          <div class="eval-label">${c.label}</div>
+          <div class="star-row">${[1,2,3,4,5].map(n=>`<div class="star${(emp.scores[c.key]||0)>=n?' lit':''}" onclick="setScore('${emp.id}','${c.key}',${n})">${n}</div>`).join('')}</div>
+        </div>`).join('')}
+        <div class="field" style="margin-top:10px"><label>Catatan evaluasi</label><textarea placeholder="Kelebihan, kekurangan, rekomendasi..." oninput="updateEmp('${emp.id}','note',this.value)">${emp.note}</textarea></div>
+        <button onclick="removeEmp('${emp.id}')" style="width:100%;padding:7px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:7px;color:var(--red);font-size:12px;cursor:pointer;margin-top:6px">Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleEmp(id){const b=document.getElementById('eb_'+id);if(b)b.classList.toggle('open');}
+function updateEmp(id,f,v){const e=employees.find(e=>e.id===id);if(e){e[f]=v;if(f==='name')renderEmployees();}}
+function setScore(eid,key,val){const e=employees.find(e=>e.id===eid);if(e){e.scores[key]=val;renderEmployees();setTimeout(()=>{const b=document.getElementById('eb_'+eid);if(b)b.classList.add('open');},10);}}
+function removeEmp(id){employees=employees.filter(e=>e.id!==id);renderEmployees();}
+
+function addPhotoSlot(){
+  const id='ph_'+photoCounter++;
+  photos.push({id,src:'',label:'',tags:[]});
+  renderPhotoSlots();
+}
+function renderPhotoSlots(){
+  const c=document.getElementById('photoSections');
+  if(!photos.length){c.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">Belum ada foto. Tap tombol di bawah.</div>`;return;}
+  c.innerHTML=photos.map((ph,pi)=>`
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:11px;color:var(--text3);font-family:var(--font-m)">FOTO ${pi+1}</span>
+        <button onclick="removePhoto('${ph.id}')" style="background:var(--red-bg);border:1px solid var(--red-border);border-radius:5px;color:var(--red);font-size:10px;padding:2px 8px;cursor:pointer">Hapus</button>
+      </div>
+      ${ph.src?`<div style="width:100%;aspect-ratio:4/3;border-radius:8px;overflow:hidden;margin-bottom:8px"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"></div>`:
+      `<label style="display:block;cursor:pointer">
+        <div class="photo-zone"><div class="photo-zone-icon">📷</div><div class="photo-zone-label">Ketuk untuk pilih foto</div><div class="photo-zone-sub">JPG, PNG, HEIC</div></div>
+        <input type="file" accept="image/*" style="display:none" onchange="loadPhoto('${ph.id}',this)">
+      </label>`}
+      <input class="photo-label-input" type="text" placeholder="Keterangan foto..." value="${ph.label}" oninput="updatePhoto('${ph.id}','label',this.value)">
+      <div style="margin-top:6px">${PHOTO_TAGS.map(t=>`<span class="photo-tag ${ph.tags.includes(t)?'ptag-selected':'ptag-normal'}" onclick="toggleTag('${ph.id}','${t}')">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+function loadPhoto(id,input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();r.onload=e=>{updatePhoto(id,'src',e.target.result);renderPhotoSlots();};r.readAsDataURL(file);
+}
+function updatePhoto(id,f,v){const p=photos.find(p=>p.id===id);if(p)p[f]=v;}
+function removePhoto(id){photos=photos.filter(p=>p.id!==id);renderPhotoSlots();}
+function toggleTag(id,tag){const p=photos.find(p=>p.id===id);if(!p)return;const i=p.tags.indexOf(tag);i>=0?p.tags.splice(i,1):p.tags.push(tag);renderPhotoSlots();}
+
+function updateProgress(){
+  let filled=0,total=4;
+  if(document.getElementById('spv_name')?.value)filled++;
+  if(document.getElementById('outlet_name')?.value)filled++;
+  if(document.getElementById('sales_total')?.value)filled++;
+  if(employees.length>0)filled++;
+  const pct=Math.round(filled/total*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progLabel').textContent=filled+' dari '+total+' bagian utama terisi';
+}
+
+function goTab(i){
+  document.querySelectorAll('.section-page').forEach((p,pi)=>p.classList.toggle('active',pi===i));
+  document.querySelectorAll('.stab').forEach((t,ti)=>t.classList.toggle('active',ti===i));
+  if(i===6)buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildSummary(){
+  const outlet=document.getElementById('outlet_name')?.value||'—';
+  const spv=document.getElementById('spv_name')?.value||'—';
+  const date=document.getElementById('visit_date')?.value||'—';
+  const t1=document.getElementById('time_arrive')?.value||'—';
+  const t2=document.getElementById('time_leave')?.value||'—';
+  const salesTotal=parseFloat(document.getElementById('sales_total')?.value)||0;
+  const salesTarget=parseFloat(document.getElementById('sales_target')?.value)||0;
+  const ach=salesTarget>0?Math.round(salesTotal/salesTarget*100):null;
+  const waste=parseFloat(document.getElementById('s_waste')?.value)||0;
+
+  const broken=[];
+  INVENTORY.forEach(cat=>cat.items.forEach((item,i)=>{
+    const key=cat.cat+'_'+i;
+    const st=invState[key+'_st']||'ok';
+    if(st==='broken')broken.push(item.name);
+    else if(st==='warn')broken.push(item.name+' (perlu cek)');
+  }));
+
+  let empAvg=0;
+  if(employees.length>0){
+    const t=employees.reduce((s,e)=>s+EVAL_CRITERIA.reduce((ss,c)=>ss+(e.scores[c.key]||0),0),0);
+    empAvg=Math.round(t/(employees.length*EVAL_CRITERIA.length*5)*100);
+  }
+
+  const flags=[];
+  if(statusState['cond_int']==='broken')flags.push({c:'red',t:'Kebersihan interior buruk — tindakan segera',s:'Kondisi Umum'});
+  if(statusState['cond_uniform']==='broken')flags.push({c:'red',t:'Karyawan tidak memakai seragam / hairnet — pelanggaran SOP',s:'Kondisi Umum'});
+  if(statusState['s_expired']==='broken')flags.push({c:'red',t:'Bahan expired masih digunakan — food safety violation',s:'Stok'});
+  if(broken.some(a=>a.includes('CCTV interior')))flags.push({c:'red',t:'CCTV interior rusak — aset keamanan tidak berfungsi',s:'Inventaris'});
+  if(broken.some(a=>a.includes('Timbangan')))flags.push({c:'red',t:'Timbangan rusak — porsi tidak terkontrol, food cost bocor',s:'Inventaris'});
+  const sc=parseFloat(document.getElementById('s_suhu_chiller')?.value);
+  if(sc&&sc>4)flags.push({c:'red',t:`Suhu chiller ${sc}°C — di atas batas aman 4°C`,s:'Stok'});
+  if(statusState['s_overall']==='broken')flags.push({c:'red',t:'Stok bahan baku dalam kondisi kritis',s:'Stok'});
+  if(ach&&ach<70)flags.push({c:'amber',t:`Pencapaian penjualan hanya ${ach}% dari target`,s:'Penjualan'});
+  if(waste>200000)flags.push({c:'amber',t:`Total waste Rp ${waste.toLocaleString('id-ID')} — di atas threshold`,s:'Stok'});
+  if(employees.length>0&&empAvg<60)flags.push({c:'amber',t:`Rata-rata skor karyawan ${empAvg}% — perlu coaching`,s:'Karyawan'});
+  if(broken.length>3)flags.push({c:'amber',t:`${broken.length} aset bermasalah ditemukan di outlet ini`,s:'Inventaris'});
+  if(!employees.length)flags.push({c:'amber',t:'Tidak ada evaluasi karyawan di-input',s:'Karyawan'});
+  if(!photos.length)flags.push({c:'amber',t:'Tidak ada foto dokumentasi kunjungan',s:'Foto'});
+  if(!flags.length)flags.push({c:'green',t:'Tidak ada red flag signifikan ditemukan saat kunjungan.',s:''});
+
+  document.getElementById('summaryContent').innerHTML=`
+    <div class="summary-header">
+      <div class="summary-outlet">${outlet}</div>
+      <div class="summary-meta">${date} &nbsp;|&nbsp; ${t1} – ${t2}</div>
+      <div class="summary-spv">Supervisor: ${spv}</div>
+    </div>
+    <div class="score-grid">
+      <div class="score-card"><div class="score-label">Penjualan</div>
+        <div class="score-val">Rp ${Math.round(salesTotal/1000)}k</div>
+        <div class="score-sub">${ach?ach+'% dari target':'Target belum diisi'}</div>
+      </div>
+      <div class="score-card"><div class="score-label">Skor Karyawan</div>
+        <div class="score-val" style="color:${empAvg>=80?'var(--green)':empAvg>=60?'var(--amber)':'var(--red)'}">${employees.length?empAvg+'%':'—'}</div>
+        <div class="score-sub">${employees.length} karyawan dievaluasi</div>
+      </div>
+      <div class="score-card"><div class="score-label">Aset Bermasalah</div>
+        <div class="score-val" style="color:${broken.length>0?'var(--red)':'var(--green)'}">${broken.length}</div>
+        <div class="score-sub">dari total inventaris</div>
+      </div>
+      <div class="score-card"><div class="score-label">Total Waste</div>
+        <div class="score-val" style="color:${waste>200000?'var(--red)':'var(--green)'}">Rp ${Math.round(waste/1000)}k</div>
+        <div class="score-sub">hari kunjungan</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Flag & Temuan Kunjungan</div>
+      ${flags.map(f=>`<div class="flag-item"><div class="flag-dot flag-${f.c}"></div><div><div class="flag-text">${f.t}</div>${f.s?`<div class="flag-source">${f.s}</div>`:''}</div></div>`).join('')}
+    </div>
+    ${broken.length?`<div class="card"><div class="card-title">Aset Bermasalah</div>${broken.map(a=>`<div style="font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2)">${a}</div>`).join('')}</div>`:''}
+    <div class="card">
+      <div class="card-title">Narasi SPV</div>
+      <textarea class="note-textarea" id="spv_narrative" placeholder="Tuliskan narasi singkat: temuan utama, tindakan di tempat, tindak lanjut yang diperlukan manajemen..."></textarea>
+    </div>
+    <div class="card" style="border-color:var(--amber-border)">
+      <div class="card-title" style="color:var(--amber)">Tindak Lanjut Wajib</div>
+      <textarea class="note-textarea" id="followup" placeholder="Apa yang HARUS dilakukan sebelum kunjungan berikutnya? Siapa PIC-nya? Kapan deadline-nya?"></textarea>
+    </div>`;
+}
+
+function handleSubmit(){
+  const spv=document.getElementById('spv_name')?.value;
+  const outlet=document.getElementById('outlet_name')?.value;
+  if(!spv||!outlet){showToast('Isi nama SPV dan outlet terlebih dahulu.');return;}
+  buildSummary();goTab(6);
+  const btn=document.getElementById('submitBtn');
+  btn.classList.add('done');btn.textContent='Report Tersimpan';
+  showToast('Report berhasil disimpan. Cek tab Ringkasan.');
+}
+
+function exportPDF(){
+  buildSummary();
+  const outlet=document.getElementById('outlet_name')?.value||'outlet';
+  const date=document.getElementById('visit_date')?.value||'tanggal';
+  document.title='SS_Report_SPV_'+outlet+'_'+date;
+  window.print();
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+init();
+</script>
+</body>
+</html>

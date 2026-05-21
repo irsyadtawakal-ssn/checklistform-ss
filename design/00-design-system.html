@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS Operations — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SS OPERATIONS — DESIGN SYSTEM
+   "Operational Almanac" aesthetic
+   ============================================================ */
+
+:root {
+  /* PAPER & INK */
+  --paper:        #f5f1e8;
+  --paper-2:      #ede7d6;
+  --paper-3:      #e2dac4;
+  --paper-4:      #d5cbb1;
+  --ink:          #1a1611;
+  --ink-2:        #3d352a;
+  --ink-3:        #6b6155;
+  --ink-4:        #9a8f7f;
+  --ink-5:        #c0b7a5;
+  --line:         rgba(26, 22, 17, 0.10);
+  --line-2:       rgba(26, 22, 17, 0.18);
+  --line-strong:  rgba(26, 22, 17, 0.55);
+
+  /* SIGNATURE ACCENT — SAFFRON */
+  --saffron:      #c45a1a;
+  --saffron-2:    #a84812;
+  --saffron-3:    #7d340a;
+  --saffron-soft: rgba(196, 90, 26, 0.08);
+  --saffron-edge: rgba(196, 90, 26, 0.32);
+
+  /* SEMANTIC — muted, antique */
+  --ok:           #5c6b2e;        /* olive */
+  --ok-soft:      rgba(92, 107, 46, 0.10);
+  --ok-edge:      rgba(92, 107, 46, 0.30);
+  --warn:         #b88412;        /* antique amber */
+  --warn-soft:    rgba(184, 132, 18, 0.12);
+  --warn-edge:    rgba(184, 132, 18, 0.34);
+  --danger:       #a83621;        /* brick */
+  --danger-soft:  rgba(168, 54, 33, 0.10);
+  --danger-edge:  rgba(168, 54, 33, 0.32);
+  --info:         #3a5468;        /* slate blue */
+  --info-soft:    rgba(58, 84, 104, 0.10);
+  --info-edge:    rgba(58, 84, 104, 0.28);
+
+  /* TYPE */
+  --display:  'Fraunces', 'Times New Roman', serif;
+  --body:     'Geist', system-ui, sans-serif;
+  --mono:     'Geist Mono', ui-monospace, monospace;
+
+  /* SPACE */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 20px;
+  --s-6: 24px; --s-7: 32px; --s-8: 40px;  --s-9: 56px;  --s-10: 80px;
+
+  /* RADIUS — minimal, almost square */
+  --r-1: 2px; --r-2: 4px; --r-3: 6px; --r-4: 10px;
+
+  /* MOTION */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* paper texture — subtle film grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(26,22,17,0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 60%, rgba(196,90,26,0.025) 1px, transparent 1px);
+  background-size: 4px 4px, 6px 6px;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================================
+   PAGE FRAME — Editorial Folio
+   ============================================================ */
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-7) var(--s-10);
+  position: relative;
+  z-index: 2;
+}
+
+.folio {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: var(--s-8);
+}
+.folio-mark {
+  display: flex; align-items: baseline; gap: var(--s-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.folio-mark .num {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  font-variation-settings: "opsz" 14, "SOFT" 0, "WONK" 0;
+  color: var(--ink);
+  letter-spacing: 0;
+}
+.folio-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.hero {
+  margin-bottom: var(--s-10);
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(56px, 11vw, 144px);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+  color: var(--ink);
+  margin-bottom: var(--s-4);
+}
+.hero h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  color: var(--saffron);
+}
+.hero .deck {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 0;
+  color: var(--ink-2);
+  max-width: 640px;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section { margin-bottom: var(--s-10); }
+.section-hd {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--s-5);
+  align-items: baseline;
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--line-2);
+  margin-bottom: var(--s-6);
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--saffron);
+  font-weight: 500;
+}
+.section-ttl {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 32, "SOFT" 20, "WONK" 0;
+  color: var(--ink);
+}
+.section-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-3); }
+.grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--s-2); }
+
+/* ============================================================
+   COLOR SWATCHES
+   ============================================================ */
+.swatch {
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.swatch-bar {
+  height: 92px;
+  position: relative;
+}
+.swatch-bar .star-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M30 5 L34 26 L55 30 L34 34 L30 55 L26 34 L5 30 L26 26 Z M30 12 L32 28 L48 30 L32 32 L30 48 L28 32 L12 30 L28 28 Z' fill='currentColor' opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 60px;
+  background-position: right -10px bottom -10px;
+  background-repeat: no-repeat;
+  color: var(--paper);
+}
+.swatch-meta {
+  padding: var(--s-3) var(--s-4) var(--s-4);
+  display: flex; flex-direction: column; gap: 2px;
+  border-top: 1px solid var(--line);
+}
+.swatch-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 15px;
+  font-variation-settings: "opsz" 14, "SOFT" 50;
+  color: var(--ink);
+}
+.swatch-hex {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+
+/* ============================================================
+   TYPE SPECIMENS
+   ============================================================ */
+.type-row {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: var(--s-5);
+  padding: var(--s-4) 0;
+  border-bottom: 1px dashed var(--line-2);
+  align-items: baseline;
+}
+.type-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  line-height: 1.6;
+}
+.type-meta strong {
+  display: block;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.type-sample { color: var(--ink); }
+.type-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.1em;
+}
+
+.t-display-xl { font-family: var(--display); font-weight: 400; font-size: 80px; line-height: 0.95; letter-spacing: -0.03em; font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 1; }
+.t-display-l  { font-family: var(--display); font-weight: 400; font-size: 48px; line-height: 1.05; letter-spacing: -0.02em; font-variation-settings: "opsz" 48, "SOFT" 30, "WONK" 0; }
+.t-display-m  { font-family: var(--display); font-weight: 500; font-size: 28px; line-height: 1.15; letter-spacing: -0.015em; font-variation-settings: "opsz" 28, "SOFT" 20, "WONK" 0; }
+.t-display-s  { font-family: var(--display); font-weight: 500; font-style: italic; font-size: 20px; line-height: 1.25; font-variation-settings: "opsz" 18, "SOFT" 100, "WONK" 0; }
+.t-body-l     { font-family: var(--body); font-weight: 400; font-size: 17px; line-height: 1.55; color: var(--ink-2); letter-spacing: -0.005em; }
+.t-body       { font-family: var(--body); font-weight: 400; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.t-body-s     { font-family: var(--body); font-weight: 400; font-size: 12px; line-height: 1.55; color: var(--ink-3); }
+.t-label      { font-family: var(--mono); font-size: 11px; line-height: 1.4; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+.t-num        { font-family: var(--mono); font-size: 32px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+
+/* ============================================================
+   COMPONENTS — Buttons
+   ============================================================ */
+.btn-row { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+
+.btn {
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 11px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--r-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  letter-spacing: -0.005em;
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  background: transparent;
+  color: var(--ink);
+  position: relative;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-primary:hover { background: var(--saffron); border-color: var(--saffron); }
+.btn-saffron {
+  background: var(--saffron);
+  color: #fff;
+  border-color: var(--saffron);
+}
+.btn-saffron:hover { background: var(--saffron-2); }
+.btn-ghost {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+.btn-ghost:hover { border-color: var(--ink); background: var(--paper-2); }
+.btn-text {
+  padding: 8px 0;
+  color: var(--saffron);
+  border-bottom: 1px solid var(--saffron-edge);
+  border-radius: 0;
+}
+.btn-text:hover { color: var(--saffron-2); border-bottom-color: var(--saffron-2); }
+.btn-sm { font-size: 12px; padding: 7px 14px; }
+
+/* ============================================================
+   COMPONENTS — Inputs
+   ============================================================ */
+.field {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.field label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.input,
+.select,
+.textarea {
+  background: var(--paper);
+  border: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--ink-3);
+  border-radius: 0;
+  padding: 10px 12px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  width: 100%;
+  outline: none;
+  transition: all 0.15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--saffron);
+  border-bottom-color: var(--saffron);
+  background: #fff;
+}
+.input[type="number"] { font-family: var(--mono); font-size: 15px; font-weight: 500; }
+.textarea { resize: vertical; min-height: 80px; font-size: 13px; line-height: 1.55; }
+
+.input-num-big {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  padding: 14px 14px 12px;
+}
+
+/* ============================================================
+   COMPONENTS — Tags / Badges / Pills
+   ============================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px 3px;
+  border-radius: var(--r-1);
+  border: 1px solid;
+  white-space: nowrap;
+  line-height: 1;
+  padding-block: 5px;
+}
+.tag-saffron { color: var(--saffron); border-color: var(--saffron-edge); background: var(--saffron-soft); }
+.tag-ok      { color: var(--ok); border-color: var(--ok-edge); background: var(--ok-soft); }
+.tag-warn    { color: var(--warn); border-color: var(--warn-edge); background: var(--warn-soft); }
+.tag-danger  { color: var(--danger); border-color: var(--danger-edge); background: var(--danger-soft); }
+.tag-info    { color: var(--info); border-color: var(--info-edge); background: var(--info-soft); }
+.tag-ink     { color: var(--ink); border-color: var(--line-strong); background: transparent; }
+
+.tag::before {
+  content: '';
+  width: 4px; height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Status pill (for inventory) */
+.pill {
+  display: inline-flex;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 5px 11px;
+  border-radius: 99px;
+  border: 1px solid;
+  cursor: pointer;
+  font-weight: 500;
+}
+.pill-ok { color: var(--ok); border-color: var(--ok-edge); background: var(--ok-soft); }
+.pill-warn { color: var(--warn); border-color: var(--warn-edge); background: var(--warn-soft); }
+.pill-danger { color: var(--danger); border-color: var(--danger-edge); background: var(--danger-soft); }
+
+/* ============================================================
+   COMPONENTS — Cards
+   ============================================================ */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line-2);
+  padding: var(--s-5);
+  position: relative;
+}
+.card-bordered-top {
+  border-top: 3px solid var(--ink);
+}
+.card-tab {
+  padding-top: var(--s-7);
+}
+.card-tab::before {
+  content: attr(data-tab);
+  position: absolute;
+  top: 0; left: 0;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 4px 12px 5px;
+  font-weight: 500;
+}
+.card-saffron::before { background: var(--saffron); color: #fff; }
+
+.kpi {
+  background: var(--paper);
+  border: 1px solid var(--line-2);
+  padding: var(--s-5);
+  display: flex; flex-direction: column; gap: var(--s-2);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.kpi-value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+  margin-block: 2px;
+}
+.kpi-value-mono {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 42px;
+  letter-spacing: -0.02em;
+}
+.kpi-delta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  display: flex; align-items: center; gap: var(--s-1);
+}
+.kpi-delta.up { color: var(--ok); }
+.kpi-delta.down { color: var(--danger); }
+.kpi-emblem {
+  position: absolute;
+  top: -8px; right: -8px;
+  opacity: 0.06;
+  color: var(--saffron);
+  pointer-events: none;
+}
+
+/* ============================================================
+   COMPONENTS — Checklist Item
+   ============================================================ */
+.check-item {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+  background: var(--paper);
+  cursor: pointer;
+  transition: background 0.1s var(--ease);
+}
+.check-item:hover { background: var(--paper-2); }
+.check-item:last-child { border-bottom: none; }
+.check-box {
+  width: 18px; height: 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--paper);
+  margin-top: 1px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s var(--ease);
+}
+.check-box svg { display: none; }
+.check-item.done .check-box { background: var(--ok); border-color: var(--ok); }
+.check-item.done .check-box svg { display: block; }
+.check-item.done .check-txt { color: var(--ink-4); text-decoration: line-through; text-decoration-thickness: 0.5px; }
+.check-txt { font-size: 14px; line-height: 1.5; color: var(--ink); }
+.check-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+.check-note.warn { color: var(--warn); }
+.check-note.danger { color: var(--danger); }
+
+/* ============================================================
+   COMPONENTS — Compliance Grid Cell
+   ============================================================ */
+.gc-cell {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--line-2);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--paper);
+  position: relative;
+  font-family: var(--mono);
+}
+.gc-cell.ok { background: var(--ok); color: #fff; border-color: var(--ok); }
+.gc-cell.warn { background: var(--warn-soft); border-color: var(--warn-edge); }
+.gc-cell.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.gc-cell.idle { background: var(--paper-2); }
+.gc-num { font-size: 11px; opacity: 0.7; }
+.gc-pct { font-size: 14px; font-weight: 600; }
+
+/* ============================================================
+   STAR EMBLEM (8-point Islamic motif) — signature
+   ============================================================ */
+.star-8 {
+  display: inline-block;
+  width: 1em; height: 1em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='currentColor'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* divider with star */
+.divider-star {
+  display: flex; align-items: center; gap: var(--s-3);
+  margin: var(--s-6) 0;
+  color: var(--ink-4);
+}
+.divider-star::before,
+.divider-star::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line-2);
+}
+.divider-star .star-8 { width: 12px; height: 12px; color: var(--saffron); }
+
+/* ============================================================
+   PROGRESS — Editorial style
+   ============================================================ */
+.prog {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.prog-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.prog-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.prog-pct {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 28, "SOFT" 30;
+}
+.prog-bar {
+  height: 4px;
+  background: var(--paper-3);
+  position: relative;
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: var(--saffron);
+  width: 0;
+  transition: width 0.4s var(--ease);
+}
+.prog-ticks {
+  display: flex; justify-content: space-between;
+}
+.prog-ticks span {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   STAR PATTERN (background ornament for empty states)
+   ============================================================ */
+.pattern-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23c45a1a' stroke-width='0.5' opacity='0.18'%3E%3Cpath d='M40 5 L48 32 L75 40 L48 48 L40 75 L32 48 L5 40 L32 32 Z'/%3E%3Cpath d='M40 15 L44 36 L65 40 L44 44 L40 65 L36 44 L15 40 L36 36 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  background-position: center;
+}
+
+/* responsive */
+@media (max-width: 720px) {
+  .page { padding: var(--s-5) var(--s-4) var(--s-9); }
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-6 { grid-template-columns: repeat(3, 1fr); }
+  .type-row { grid-template-columns: 1fr; gap: var(--s-2); }
+  .hero h1 { font-size: 56px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- FOLIO -->
+  <div class="folio">
+    <div class="folio-mark">
+      <span class="num">00</span>
+      <span>Design System Almanac</span>
+    </div>
+    <div class="folio-meta">SS Operations · v1.0 · 2026</div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1>The Operational <em>Almanac</em></h1>
+    <p class="deck">A precision instrument for the daily orchestration of nineteen shawarma outlets — designed to be opened a thousand times and never tire the eye.</p>
+  </header>
+
+  <!-- COLORS -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-ttl">Palette &amp; Pigments</h2>
+      <span class="section-sub">Paper · Ink · Saffron · Semantics</span>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:12px">Paper &amp; Ink</h3>
+    <div class="grid-4">
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--paper)"><div class="star-overlay" style="color:var(--paper-3)"></div></div>
+        <div class="swatch-meta"><span class="swatch-name">Paper</span><span class="swatch-hex">#F5F1E8</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--paper-2)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Paper 2</span><span class="swatch-hex">#EDE7D6</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--paper-3)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Paper 3</span><span class="swatch-hex">#E2DAC4</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--ink)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Ink</span><span class="swatch-hex">#1A1611</span></div>
+      </div>
+    </div>
+
+    <h3 class="t-label" style="margin:32px 0 12px">Signature — Saffron</h3>
+    <div class="grid-3">
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--saffron)"><div class="star-overlay" style="color:#fff"></div></div>
+        <div class="swatch-meta"><span class="swatch-name">Saffron</span><span class="swatch-hex">#C45A1A</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--saffron-2)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Saffron Deep</span><span class="swatch-hex">#A84812</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--saffron-3)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Saffron Burnt</span><span class="swatch-hex">#7D340A</span></div>
+      </div>
+    </div>
+
+    <h3 class="t-label" style="margin:32px 0 12px">Semantic — Antique Spectrum</h3>
+    <div class="grid-4">
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--ok)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Olive · OK</span><span class="swatch-hex">#5C6B2E</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--warn)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Amber · Warn</span><span class="swatch-hex">#B88412</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--danger)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Brick · Danger</span><span class="swatch-hex">#A83621</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-bar" style="background:var(--info)"></div>
+        <div class="swatch-meta"><span class="swatch-name">Slate · Info</span><span class="swatch-hex">#3A5468</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-ttl">The Letterpress</h2>
+      <span class="section-sub">Fraunces · Geist · Geist Mono</span>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta"><strong>Display XL</strong>Fraunces 400 / 80px<br>opsz 96 · SOFT 40</div>
+      <div class="type-sample t-display-xl">Suka <em style="font-style:italic;font-variation-settings:'opsz' 96,'SOFT' 100,'WONK' 1;color:var(--saffron)">Shawarma</em></div>
+      <div class="type-tag">/ HERO</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Display L</strong>Fraunces 400 / 48px</div>
+      <div class="type-sample t-display-l">Laporan kepatuhan harian</div>
+      <div class="type-tag">/ PAGE TTL</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Display M</strong>Fraunces 500 / 28px</div>
+      <div class="type-sample t-display-m">Pembukaan shift — keamanan &amp; akses</div>
+      <div class="type-tag">/ SECTION</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Display S Italic</strong>Fraunces 500 it / 20px</div>
+      <div class="type-sample t-display-s"><em>Catatan untuk shift berikutnya</em></div>
+      <div class="type-tag">/ CALLOUT</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Body L</strong>Geist 400 / 17px</div>
+      <div class="type-sample t-body-l">CCTV interior (2 unit) aktif dan merekam normal sebelum outlet dibuka untuk pelanggan.</div>
+      <div class="type-tag">/ ITEM</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Body</strong>Geist 400 / 14px</div>
+      <div class="type-sample t-body">Cek instalasi gas: regulator set, selang, tabung — tidak ada kebocoran. Bau gas adalah tanda bahaya yang tidak boleh diabaikan.</div>
+      <div class="type-tag">/ BODY</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Label · Mono</strong>Geist Mono 500 / 11px<br>tracking 0.14em</div>
+      <div class="type-sample t-label">Suhu Freezer · Stok Awal · Selisih Kas</div>
+      <div class="type-tag">/ META</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Number</strong>Geist Mono 500 / 32px</div>
+      <div class="type-sample t-num">Rp 4.728.000</div>
+      <div class="type-tag">/ DATA</div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-ttl">Action Stamps</h2>
+      <span class="section-sub">Buttons &amp; Inputs</span>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:14px">Buttons</h3>
+    <div class="btn-row" style="margin-bottom:32px">
+      <button class="btn btn-primary">Submit Checklist <span class="star-8" style="color:currentColor"></span></button>
+      <button class="btn btn-saffron">Kirim ke Supervisor</button>
+      <button class="btn btn-ghost">Batal</button>
+      <button class="btn btn-text">Lihat riwayat →</button>
+      <button class="btn btn-primary btn-sm">Save</button>
+      <button class="btn btn-ghost btn-sm">Reset</button>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:14px">Inputs</h3>
+    <div class="grid-3" style="margin-bottom:32px">
+      <div class="field">
+        <label>Nama PIC shift</label>
+        <input class="input" type="text" value="Ahmad Fauzi">
+      </div>
+      <div class="field">
+        <label>Suhu freezer (°C)</label>
+        <input class="input input-num-big" type="number" value="-19.4">
+      </div>
+      <div class="field">
+        <label>Outlet</label>
+        <select class="select">
+          <option>SS Kitchen</option>
+          <option>SS Empang</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Catatan handover</label>
+        <textarea class="textarea">Stok daging tinggal 2 spit. Sudah hubungi central kitchen jam 14:00.</textarea>
+      </div>
+      <div class="field">
+        <label>Kas kecil awal (Rp)</label>
+        <input class="input input-num-big" type="number" value="500000">
+      </div>
+    </div>
+  </section>
+
+  <!-- TAGS & PILLS -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-ttl">Marks &amp; Marginalia</h2>
+      <span class="section-sub">Tags · Pills · Badges</span>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:14px">Section tags</h3>
+    <div class="btn-row" style="margin-bottom:28px">
+      <span class="tag tag-danger">Kritikal</span>
+      <span class="tag tag-info">Operasional</span>
+      <span class="tag tag-saffron">Finansial</span>
+      <span class="tag tag-ok">Higiene</span>
+      <span class="tag tag-ink">Administrasi</span>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:14px">Item badges</h3>
+    <div class="btn-row" style="margin-bottom:28px">
+      <span class="tag tag-danger">Kritikal</span>
+      <span class="tag tag-info">Catat</span>
+      <span class="tag tag-warn">Foto</span>
+    </div>
+
+    <h3 class="t-label" style="margin-bottom:14px">Status pills</h3>
+    <div class="btn-row">
+      <span class="pill pill-ok">OK</span>
+      <span class="pill pill-warn">Perlu Cek</span>
+      <span class="pill pill-danger">Rusak</span>
+    </div>
+  </section>
+
+  <!-- KPI CARDS -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-ttl">Data Plinths</h2>
+      <span class="section-sub">KPI &amp; metric cards</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="kpi">
+        <span class="kpi-emblem star-8" style="width:80px;height:80px"></span>
+        <span class="kpi-label">Compliance · Hari ini</span>
+        <span class="kpi-value">94<span style="font-size:32px;color:var(--ink-3)">%</span></span>
+        <span class="kpi-delta up">▲ 6.2 pt vs kemarin</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-emblem star-8" style="width:80px;height:80px"></span>
+        <span class="kpi-label">Penjualan agregat</span>
+        <span class="kpi-value kpi-value-mono">Rp 38,4<span style="font-size:24px;color:var(--ink-3)">jt</span></span>
+        <span class="kpi-delta up">▲ 12% vs target</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-emblem star-8" style="width:80px;height:80px"></span>
+        <span class="kpi-label">Item kritikal terlewat</span>
+        <span class="kpi-value" style="color:var(--danger)">3</span>
+        <span class="kpi-delta down">2 outlet butuh tindak lanjut</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKLIST ITEM -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-ttl">Ledger Entries</h2>
+      <span class="section-sub">Checklist items</span>
+    </div>
+
+    <div class="card card-tab card-saffron" data-tab="Pembukaan · Keamanan &amp; Akses">
+      <div class="check-item done">
+        <div class="check-box"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="check-txt">Cek kondisi fisik outlet: pintu, kunci, jendela — tidak ada tanda pembobolan</div>
+        </div>
+        <span class="tag tag-danger">Kritikal</span>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="check-txt">Cek instalasi gas: regulator set (4 set), selang, tabung — tidak ada kebocoran</div>
+          <div class="check-note danger">Bau gas = jangan nyalakan apapun, buka ventilasi, hubungi supervisor segera.</div>
+        </div>
+        <span class="tag tag-danger">Kritikal</span>
+      </div>
+      <div class="check-item">
+        <div class="check-box"></div>
+        <div>
+          <div class="check-txt">Fire extinguisher: posisi aman, segel utuh, tanggal belum expired</div>
+          <div class="check-note warn">Expired = outlet tidak boleh buka.</div>
+        </div>
+        <span class="tag tag-danger">Kritikal</span>
+      </div>
+      <div class="check-item done">
+        <div class="check-box"><svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5 L4.5 8 L10 1" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="check-txt">Nyalakan exhaust fan (2 unit) &amp; kipas angin (2 unit), sirkulasi udara normal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-ttl">Meters &amp; Bars</h2>
+      <span class="section-sub">Progress indicators</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="prog">
+        <div class="prog-row">
+          <span class="prog-label">Pembukaan · 24 dari 32</span>
+          <span class="prog-pct">75<span style="font-size:18px;color:var(--ink-3)">%</span></span>
+        </div>
+        <div class="prog-bar"><div class="prog-bar-fill" style="width:75%"></div></div>
+        <div class="prog-ticks">
+          <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+        </div>
+      </div>
+      <div class="prog">
+        <div class="prog-row">
+          <span class="prog-label">Kritikal · 9 dari 9</span>
+          <span class="prog-pct" style="color:var(--ok)">100<span style="font-size:18px;color:var(--ok)">%</span></span>
+        </div>
+        <div class="prog-bar"><div class="prog-bar-fill" style="width:100%;background:var(--ok)"></div></div>
+        <div class="prog-ticks">
+          <span>Semua kritikal selesai</span><span class="star-8" style="width:8px;height:8px;color:var(--ok)"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE GRID -->
+  <section class="section">
+    <div class="section-hd">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-ttl">The Constellation</h2>
+      <span class="section-sub">Compliance grid · 19 outlet × 3 shift</span>
+    </div>
+
+    <div class="grid-6">
+      <div class="gc-cell ok"><span class="gc-num">SS Kitchen · Open</span><span class="gc-pct">100%</span></div>
+      <div class="gc-cell ok"><span class="gc-num">SS Empang · Open</span><span class="gc-pct">100%</span></div>
+      <div class="gc-cell warn"><span class="gc-num">SS Paledang · Open</span><span class="gc-pct">88%</span></div>
+      <div class="gc-cell danger"><span class="gc-num">SS Cimanggu · Open</span><span class="gc-pct">71%</span></div>
+      <div class="gc-cell ok"><span class="gc-num">SS Beji · Open</span><span class="gc-pct">100%</span></div>
+      <div class="gc-cell idle"><span class="gc-num">SS Sawangan · Open</span><span class="gc-pct">—</span></div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="divider-star">
+    <span class="star-8"></span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="display:flex;justify-content:space-between;align-items:baseline;margin-top:48px;padding-top:16px;border-top:1px solid var(--line)">
+    <div class="folio-mark">
+      <span class="num">∎</span>
+      <span>Fin — Design System</span>
+    </div>
+    <div class="folio-meta">Lembar 1 dari 6</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

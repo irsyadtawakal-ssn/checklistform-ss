@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Kunjungan SPV · SS Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f1e8; --paper-2:#ede7d6; --paper-3:#e2dac4; --paper-4:#d5cbb1;
+  --ink:#1a1611; --ink-2:#3d352a; --ink-3:#6b6155; --ink-4:#9a8f7f; --ink-5:#c0b7a5;
+  --line:rgba(26,22,17,0.10); --line-2:rgba(26,22,17,0.18); --line-strong:rgba(26,22,17,0.55);
+  --saffron:#c45a1a; --saffron-2:#a84812;
+  --saffron-soft:rgba(196,90,26,0.08); --saffron-edge:rgba(196,90,26,0.32);
+  --ok:#5c6b2e; --ok-soft:rgba(92,107,46,0.10); --ok-edge:rgba(92,107,46,0.30);
+  --warn:#b88412; --warn-soft:rgba(184,132,18,0.12); --warn-edge:rgba(184,132,18,0.34);
+  --danger:#a83621; --danger-soft:rgba(168,54,33,0.10); --danger-edge:rgba(168,54,33,0.32);
+  --info:#3a5468; --info-soft:rgba(58,84,104,0.10); --info-edge:rgba(58,84,104,0.28);
+  --display:'Fraunces',serif; --body:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+body{padding-bottom:120px;min-height:100vh}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(26,22,17,0.03) 1px,transparent 1px),radial-gradient(circle at 80% 60%,rgba(196,90,26,0.025) 1px,transparent 1px);
+  background-size:4px 4px,6px 6px;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+}
+
+/* MASTHEAD */
+.masthead{background:var(--paper);border-bottom:1px solid var(--line-strong);position:sticky;top:0;z-index:50}
+.mast-strip{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 16px;
+  background:var(--ink);color:var(--paper-3);
+  font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+}
+.mast-strip .l,.mast-strip .r{display:flex;align-items:center;gap:14px}
+.mast-strip .dot{width:5px;height:5px;background:var(--saffron);border-radius:50%}
+.mast-strip .sep{color:var(--ink-4)}
+
+.mast-main{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;gap:12px}
+.mast-brand{display:flex;align-items:center;gap:10px}
+.mast-logo{
+  width:36px;height:36px;background:var(--saffron);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:700;color:#fff;font-size:16px;
+  font-variation-settings:"opsz" 24;letter-spacing:-0.04em;
+}
+.mast-text{display:flex;flex-direction:column;line-height:1.1}
+.mast-title{font-family:var(--display);font-weight:500;font-size:15px;letter-spacing:-0.01em;font-variation-settings:"opsz" 14,"SOFT" 20;color:var(--ink)}
+.mast-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);margin-top:2px}
+.mast-actions{display:flex;gap:8px}
+.btn-pdf{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  border:1px solid var(--line-strong);background:transparent;color:var(--ink-2);
+  padding:7px 12px;cursor:pointer;font-weight:500;
+  transition:all 0.18s var(--ease);
+}
+.btn-pdf:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* Tab navigation */
+.tabs{
+  display:flex;overflow-x:auto;border-top:1px solid var(--line);
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:11px 16px 9px;
+  border:none;background:transparent;cursor:pointer;
+  font-family:var(--body);font-weight:500;font-size:13px;
+  color:var(--ink-3);letter-spacing:-0.005em;
+  border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;
+  transition:all 0.18s var(--ease);
+  display:flex;align-items:center;gap:8px;
+}
+.tab .num{
+  font-family:var(--mono);font-size:9px;color:var(--ink-4);
+  letter-spacing:0.1em;
+}
+.tab.active{color:var(--ink);border-bottom-color:var(--saffron)}
+.tab.active .num{color:var(--saffron)}
+.tab.done{color:var(--ok)}
+.tab.done .num{color:var(--ok)}
+.tab:not(.active):hover{color:var(--ink-2);background:var(--paper-2)}
+
+.prog-strip{
+  padding:10px 16px;background:var(--paper-2);border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.prog-strip .left{display:flex;align-items:center;gap:12px}
+.prog-strip .step-cnt{
+  font-family:var(--display);font-size:28px;font-weight:500;letter-spacing:-0.02em;
+  color:var(--ink);font-variation-settings:"opsz" 28,"SOFT" 30;line-height:1;
+}
+.prog-strip .step-cnt em{font-style:italic;color:var(--saffron);font-variation-settings:"opsz" 28,"SOFT" 100,"WONK" 1}
+.prog-strip .step-l{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);
+}
+.prog-strip-mini{
+  flex:1;max-width:200px;margin-left:18px;
+  height:2px;background:var(--paper-4);position:relative;overflow:hidden;
+}
+.prog-strip-mini > div{height:100%;background:var(--saffron);width:43%}
+
+/* PAGE */
+.page{padding:18px 16px 0;max-width:920px;margin:0 auto;position:relative;z-index:2}
+
+/* TAB PAGES */
+.tab-page{display:none}
+.tab-page.active{display:block}
+
+/* CARD */
+.card{
+  background:var(--paper);border:1px solid var(--line-2);
+  margin-bottom:16px;position:relative;padding:30px 18px 18px;
+}
+.card::before{
+  position:absolute;top:0;left:0;
+  background:var(--ink);color:var(--paper);
+  font-family:var(--mono);font-size:10px;letter-spacing:0.16em;
+  padding:5px 14px;font-weight:500;
+}
+.card.saffron::before{background:var(--saffron);color:#fff}
+
+.card[data-label]::before{content:attr(data-label)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.span-2{grid-column:span 2}
+.span-3{grid-column:span 3}
+
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.field label .u{color:var(--ink-4);font-size:9px;letter-spacing:0.08em}
+.input,.select,.textarea{
+  background:var(--paper-2);border:1px solid var(--line);border-bottom:1px solid var(--ink-3);
+  border-radius:0;padding:9px 11px;font-family:var(--body);font-size:14px;color:var(--ink);
+  width:100%;outline:none;transition:all 0.15s var(--ease);
+}
+.input[type="number"]{font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:-0.01em}
+.input:focus,.select:focus,.textarea:focus{background:#fff;border-color:var(--saffron);border-bottom-color:var(--saffron)}
+.textarea{resize:vertical;min-height:64px;font-size:13px;line-height:1.5}
+.select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6155' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+
+/* Status row */
+.status-row{display:flex;gap:6px;margin-top:2px}
+.status-opt{
+  flex:1;padding:8px 6px;
+  border:1px solid var(--line-2);background:var(--paper);
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;
+  text-align:center;cursor:pointer;color:var(--ink-3);
+  transition:all 0.15s var(--ease);
+}
+.status-opt:hover{border-color:var(--ink-3)}
+.status-opt.sel-ok{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+.status-opt.sel-warn{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+.status-opt.sel-danger{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+
+/* INVENTORY TABLE */
+.inv-table{width:100%;border-collapse:collapse;margin-top:8px}
+.inv-table th{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;padding:8px 6px;
+  border-bottom:1px solid var(--line-strong);font-weight:500;
+}
+.inv-table td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.inv-table tr:last-child td{border-bottom:none}
+.inv-cat-row td{
+  padding:14px 6px 6px;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--saffron);border-bottom:1px solid var(--line-2);
+}
+.inv-name{font-size:13px;color:var(--ink);line-height:1.3;letter-spacing:-0.003em}
+.inv-std{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:1px;letter-spacing:0.04em}
+.qty-input{
+  width:54px;background:var(--paper-2);border:1px solid var(--line);
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  border-radius:0;padding:4px 6px;text-align:center;outline:none;
+}
+.qty-input:focus{border-color:var(--saffron);background:#fff}
+.pill{
+  display:inline-flex;font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:0.04em;padding:4px 9px;border:1px solid;cursor:pointer;
+}
+.pill-ok{color:var(--ok);border-color:var(--ok-edge);background:var(--ok-soft)}
+.pill-warn{color:var(--warn);border-color:var(--warn-edge);background:var(--warn-soft)}
+.pill-danger{color:var(--danger);border-color:var(--danger-edge);background:var(--danger-soft)}
+
+/* SCORE BAR */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.score-card{
+  background:var(--paper-2);border:1px solid var(--line);
+  padding:12px 14px;display:flex;flex-direction:column;gap:3px;
+}
+.score-label{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.score-value{
+  font-family:var(--display);font-size:30px;font-weight:500;letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 32,"SOFT" 30;color:var(--ink);
+}
+.score-value.ok{color:var(--ok)}
+.score-value.danger{color:var(--danger)}
+.score-sub{font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:0.06em}
+
+/* EMPLOYEE CARD */
+.emp-card{
+  background:var(--paper);border:1px solid var(--line-2);
+  margin-bottom:10px;overflow:hidden;
+}
+.emp-hd{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;cursor:pointer;background:var(--paper-2);
+  border-bottom:1px solid var(--line);
+}
+.emp-no{
+  font-family:var(--display);font-style:italic;font-size:18px;
+  color:var(--saffron);font-variation-settings:"opsz" 14,"SOFT" 80,"WONK" 1;
+  width:24px;font-weight:500;
+}
+.emp-name{flex:1;font-size:14px;font-weight:500;color:var(--ink);letter-spacing:-0.005em}
+.emp-role{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3)}
+.emp-body{padding:14px}
+.eval-row{
+  display:grid;grid-template-columns:1fr auto;gap:10px;
+  padding:8px 0;border-bottom:1px dashed var(--line-2);align-items:center;
+}
+.eval-row:last-child{border-bottom:none}
+.eval-label{font-size:13px;color:var(--ink-2);line-height:1.35}
+.stars{display:flex;gap:3px}
+.star{
+  width:24px;height:24px;border:1px solid var(--line-2);background:var(--paper-2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--mono);font-size:11px;color:var(--ink-4);
+  transition:all 0.15s var(--ease);
+}
+.star.on{
+  background:var(--saffron-soft);border-color:var(--saffron-edge);color:var(--saffron);
+}
+.star:hover{border-color:var(--saffron)}
+
+/* PHOTO ZONE */
+.photo-empty{
+  border:1px dashed var(--line-strong);
+  padding:32px 20px;text-align:center;background:var(--paper-2);
+  cursor:pointer;transition:all 0.15s var(--ease);
+}
+.photo-empty:hover{background:var(--paper-3);border-color:var(--saffron)}
+.photo-empty .ic{
+  display:inline-block;width:36px;height:36px;margin-bottom:10px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b6155' stroke-width='1.4'%3E%3Crect x='3' y='5' width='18' height='14' rx='1'/%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3Cpath d='M9 5 L10 3 L14 3 L15 5'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;opacity:0.6;
+}
+.photo-empty .ttl{font-family:var(--display);font-size:18px;font-weight:500;letter-spacing:-0.01em;color:var(--ink);margin-bottom:4px;font-variation-settings:"opsz" 18,"SOFT" 30}
+.photo-empty .sub{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.1em;text-transform:uppercase}
+
+.photo-info{
+  background:var(--info-soft);border-left:2px solid var(--info);
+  padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--info);line-height:1.5;
+}
+.photo-info b{font-weight:600}
+
+/* SUMMARY (auto-flags) */
+.summary-head{
+  background:var(--paper);border:1px solid var(--saffron-edge);border-top:3px solid var(--saffron);
+  padding:24px 18px;text-align:center;margin-bottom:14px;position:relative;
+}
+.summary-head::before{
+  content:'';position:absolute;
+  top:8px;right:8px;width:14px;height:14px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='%23c45a1a'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+.summary-outlet{
+  font-family:var(--display);font-weight:500;font-size:32px;letter-spacing:-0.02em;
+  color:var(--saffron);font-variation-settings:"opsz" 32,"SOFT" 30,"WONK" 0;
+}
+.summary-outlet em{font-style:italic;font-variation-settings:"opsz" 32,"SOFT" 100,"WONK" 1}
+.summary-meta{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
+.summary-spv{font-size:13px;color:var(--ink-2);margin-top:8px}
+
+.flag-list{padding:4px 0}
+.flag-item{
+  display:flex;gap:12px;padding:11px 14px;align-items:flex-start;
+  border-bottom:1px solid var(--line);
+}
+.flag-item:last-child{border-bottom:none}
+.flag-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;
+}
+.fd-red{background:var(--danger)}
+.fd-amber{background:var(--warn)}
+.fd-green{background:var(--ok)}
+.flag-txt{flex:1;font-size:13px;line-height:1.5;color:var(--ink-2);letter-spacing:-0.003em}
+.flag-src{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:3px;letter-spacing:0.06em;text-transform:uppercase}
+
+/* SUBMIT */
+.submit-bay{
+  position:fixed;bottom:0;left:0;right:0;
+  padding:14px 16px 24px;
+  background:linear-gradient(to top,var(--paper) 70%,rgba(245,241,232,0));
+  z-index:40;
+}
+.submit-btn{
+  width:100%;background:var(--ink);color:var(--paper);border:none;
+  padding:16px 20px;font-family:var(--body);font-size:14px;font-weight:500;letter-spacing:0.04em;
+  cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  transition:all 0.2s var(--ease);position:relative;overflow:hidden;
+}
+.submit-btn::before{content:'';position:absolute;inset:0;background:var(--saffron);transform:translateX(-101%);transition:transform 0.32s var(--ease)}
+.submit-btn:hover::before{transform:translateX(0)}
+.submit-btn > *{position:relative;z-index:2}
+.submit-btn .l{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase}
+.submit-btn .a{font-family:var(--display);font-size:22px;line-height:1;font-variation-settings:"opsz" 24}
+
+@media (max-width: 640px){
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .span-3{grid-column:span 2}
+  .summary-outlet{font-size:24px}
+  .score-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 480px){
+  .grid-2{grid-template-columns:1fr}
+  .grid-3,.grid-4{grid-template-columns:1fr}
+  .span-2,.span-3{grid-column:span 1}
+  .status-row{flex-direction:column;gap:5px}
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mast-strip">
+    <div class="l">
+      <span class="dot"></span>
+      <span>Suka Shawarma</span>
+      <span class="sep">·</span>
+      <span>Lembar 03 — Laporan Kunjungan SPV</span>
+    </div>
+    <div class="r"><span>15 Mei 2026</span></div>
+  </div>
+  <div class="mast-main">
+    <div class="mast-brand">
+      <div class="mast-logo">SS</div>
+      <div class="mast-text">
+        <div class="mast-title">Laporan Kunjungan</div>
+        <div class="mast-sub">SPV · Field Audit · 2026</div>
+      </div>
+    </div>
+    <div class="mast-actions">
+      <button class="btn-pdf">↓ Simpan PDF</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="go(0,this)"><span class="num">i</span>Info</button>
+    <button class="tab" onclick="go(1,this)"><span class="num">ii</span>Inventaris</button>
+    <button class="tab" onclick="go(2,this)"><span class="num">iii</span>Penjualan</button>
+    <button class="tab" onclick="go(3,this)"><span class="num">iv</span>Stok</button>
+    <button class="tab" onclick="go(4,this)"><span class="num">v</span>Karyawan</button>
+    <button class="tab" onclick="go(5,this)"><span class="num">vi</span>Foto</button>
+    <button class="tab" onclick="go(6,this)"><span class="num">vii</span>Ringkasan</button>
+  </div>
+  <div class="prog-strip">
+    <div class="left">
+      <span class="step-cnt"><em>3</em>/7</span>
+      <span class="step-l">Tab terisi · 43% lengkap</span>
+    </div>
+    <div class="prog-strip-mini"><div></div></div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- TAB 0: INFO -->
+  <div class="tab-page active">
+    <div class="card" data-label="§ INFORMASI KUNJUNGAN">
+      <div class="grid-2">
+        <div class="field">
+          <label>Nama SPV</label>
+          <input class="input" type="text" value="Bayu Pratama">
+        </div>
+        <div class="field">
+          <label>Tanggal kunjungan</label>
+          <input class="input" type="date" value="2026-05-15">
+        </div>
+        <div class="field">
+          <label>Jam tiba</label>
+          <input class="input" type="time" value="10:24">
+        </div>
+        <div class="field">
+          <label>Jam keluar</label>
+          <input class="input" type="time" value="12:50">
+        </div>
+        <div class="field span-2">
+          <label>Outlet</label>
+          <select class="select">
+            <optgroup label="INTERNAL">
+              <option>SS Kitchen</option>
+              <option selected>SS Empang</option>
+              <option>SS Paledang</option>
+              <option>SS Cimanggu</option>
+            </optgroup>
+            <optgroup label="MITRA">
+              <option>Mitra Cibinong</option>
+              <option>Mitra Citayam</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label>Shift yang dikunjungi</label>
+          <select class="select">
+            <option>Pembukaan</option>
+            <option selected>Operasional</option>
+            <option>Penutupan</option>
+            <option>Full Day</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>PIC / kasir yang ditemui</label>
+          <input class="input" type="text" placeholder="Nama karyawan" value="Rina Wulandari">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-label="§ KONDISI UMUM OUTLET">
+      <div class="grid-2">
+        <div class="field">
+          <label>Kebersihan exterior</label>
+          <div class="status-row">
+            <div class="status-opt sel-ok">OK</div>
+            <div class="status-opt">Perlu Perhatian</div>
+            <div class="status-opt">Buruk</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Kebersihan dapur / interior</label>
+          <div class="status-row">
+            <div class="status-opt">OK</div>
+            <div class="status-opt sel-warn">Perlu Perhatian</div>
+            <div class="status-opt">Buruk</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Kebersihan kamar mandi</label>
+          <div class="status-row">
+            <div class="status-opt sel-ok">OK</div>
+            <div class="status-opt">Perlu Perhatian</div>
+            <div class="status-opt">Buruk</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Kepatuhan seragam &amp; higiene</label>
+          <div class="status-row">
+            <div class="status-opt sel-ok">OK</div>
+            <div class="status-opt">Tidak Lengkap</div>
+            <div class="status-opt">Tidak Pakai</div>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>Catatan kondisi umum</label>
+          <textarea class="textarea" placeholder="Deskripsikan temuan kondisi outlet...">Drip tray di bawah spit belum dibersihkan dari sisa lemak kemarin. Sudah disarankan PIC untuk segera dibersihkan sebelum continue operasional.</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: INVENTARIS (hidden by default - first tab shown) -->
+  <div class="tab-page">
+    <div class="card" data-label="§ INVENTARIS ASET — TAP STATUS UNTUK UBAH">
+      <table class="inv-table">
+        <thead>
+          <tr><th style="width:42%">Aset</th><th style="width:12%">Std</th><th style="width:18%">Ada</th><th style="width:28%">Status</th></tr>
+        </thead>
+        <tbody>
+          <tr class="inv-cat-row"><td colspan="4">— Dapur · Utama</td></tr>
+          <tr><td><div class="inv-name">Kompor bakar</div><div class="inv-std">2 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">2</td><td><input class="qty-input" type="number" value="2"></td><td><span class="pill pill-ok">OK</span></td></tr>
+          <tr><td><div class="inv-name">Double fryer</div><div class="inv-std">1 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">1</td><td><input class="qty-input" type="number" value="1"></td><td><span class="pill pill-warn">Perlu Cek</span></td></tr>
+          <tr><td><div class="inv-name">Blender</div><div class="inv-std">1 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">1</td><td><input class="qty-input" type="number" value="1"></td><td><span class="pill pill-ok">OK</span></td></tr>
+          <tr class="inv-cat-row"><td colspan="4">— Peralatan Masak</td></tr>
+          <tr><td><div class="inv-name">Spatula bakar</div><div class="inv-std">5 pcs</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">5</td><td><input class="qty-input" type="number" value="3"></td><td><span class="pill pill-danger">Rusak</span></td></tr>
+          <tr><td><div class="inv-name">Pisau</div><div class="inv-std">3 pcs</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">3</td><td><input class="qty-input" type="number" value="3"></td><td><span class="pill pill-ok">OK</span></td></tr>
+          <tr class="inv-cat-row"><td colspan="4">— Kasir &amp; Teknologi</td></tr>
+          <tr><td><div class="inv-name">Cash drawer</div><div class="inv-std">1 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">1</td><td><input class="qty-input" type="number" value="1"></td><td><span class="pill pill-ok">OK</span></td></tr>
+          <tr><td><div class="inv-name">Printer struk</div><div class="inv-std">2 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">2</td><td><input class="qty-input" type="number" value="2"></td><td><span class="pill pill-ok">OK</span></td></tr>
+          <tr><td><div class="inv-name">CCTV interior</div><div class="inv-std">1 unit</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">1</td><td><input class="qty-input" type="number" value="1"></td><td><span class="pill pill-ok">OK</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" data-label="§ CATATAN INVENTARIS">
+      <div class="field" style="margin-bottom:12px">
+        <label>Aset rusak / hilang yang perlu ditindaklanjuti</label>
+        <textarea class="textarea" placeholder="Contoh: Spatula bakar 2pcs rusak — perlu diganti sebelum weekend. CCTV interior harus ditukar segera.">2 spatula bakar bengkok dan tidak layak pakai. Perlu replacement minggu ini.</textarea>
+      </div>
+      <div class="field">
+        <label>Estimasi biaya penggantian <span class="u">Rp</span></label>
+        <input class="input" type="number" value="240000">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: PENJUALAN -->
+  <div class="tab-page">
+    <div class="card" data-label="§ DATA PENJUALAN HARIAN">
+      <div class="grid-3">
+        <div class="field span-3"><label>Total penjualan <span class="u">Rp</span></label><input class="input" type="number" value="4728000"></div>
+        <div class="field"><label>Jumlah transaksi</label><input class="input" type="number" value="142"></div>
+        <div class="field"><label>Penjualan tunai <span class="u">Rp</span></label><input class="input" type="number" value="1820000"></div>
+        <div class="field"><label>QRIS / transfer <span class="u">Rp</span></label><input class="input" type="number" value="1450000"></div>
+        <div class="field"><label>GoFood <span class="u">Rp</span></label><input class="input" type="number" value="780000"></div>
+        <div class="field"><label>GrabFood <span class="u">Rp</span></label><input class="input" type="number" value="528000"></div>
+        <div class="field"><label>ShopeeFood <span class="u">Rp</span></label><input class="input" type="number" value="150000"></div>
+        <div class="field"><label>Kas fisik terhitung <span class="u">Rp</span></label><input class="input" type="number" value="1810000"></div>
+      </div>
+      <div class="score-grid">
+        <div class="score-card">
+          <span class="score-label">Avg Transaction</span>
+          <span class="score-value">Rp 33.296</span>
+          <span class="score-sub">per transaksi</span>
+        </div>
+        <div class="score-card">
+          <span class="score-label">Selisih Kas</span>
+          <span class="score-value danger">(10.000)</span>
+          <span class="score-sub">kurang Rp 10.000</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" data-label="§ TARGET VS AKTUAL">
+      <div class="grid-2">
+        <div class="field"><label>Target harian <span class="u">Rp</span></label><input class="input" type="number" value="4500000"></div>
+        <div class="field"><label>Pencapaian</label>
+          <input class="input" type="text" value="105% — di atas target" readonly style="background:var(--ok-soft);color:var(--ok);font-weight:600">
+        </div>
+        <div class="field span-2">
+          <label>Kondisi penjualan hari ini</label>
+          <select class="select">
+            <option selected>Sesuai target</option>
+            <option>Di atas ekspektasi</option>
+            <option>Di bawah target</option>
+          </select>
+        </div>
+        <div class="field span-2">
+          <label>Faktor yang mempengaruhi</label>
+          <textarea class="textarea" placeholder="Contoh: Hujan deras jam 11–14...">Cuaca baik, online dominan hari ini. Promo GoFood Cashback efektif menarik order.</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3, 4, 5: placeholder (collapsed) -->
+  <div class="tab-page">
+    <div class="card" data-label="§ STOK BAHAN BAKU">Stok content...</div>
+  </div>
+
+  <div class="tab-page">
+    <div class="card" data-label="§ EVALUASI KARYAWAN" class="saffron">
+      <div class="emp-card">
+        <div class="emp-hd">
+          <span class="emp-no">i.</span>
+          <span class="emp-name">Rina Wulandari</span>
+          <span class="emp-role">Kasir</span>
+        </div>
+        <div class="emp-body">
+          <div class="eval-row">
+            <div class="eval-label">Ketepatan waktu &amp; kehadiran</div>
+            <div class="stars">
+              <div class="star on">1</div><div class="star on">2</div><div class="star on">3</div><div class="star on">4</div><div class="star">5</div>
+            </div>
+          </div>
+          <div class="eval-row">
+            <div class="eval-label">Kerapian seragam &amp; higienitas</div>
+            <div class="stars">
+              <div class="star on">1</div><div class="star on">2</div><div class="star on">3</div><div class="star on">4</div><div class="star on">5</div>
+            </div>
+          </div>
+          <div class="eval-row">
+            <div class="eval-label">Kecepatan &amp; efisiensi kerja</div>
+            <div class="stars">
+              <div class="star on">1</div><div class="star on">2</div><div class="star on">3</div><div class="star">4</div><div class="star">5</div>
+            </div>
+          </div>
+          <div class="eval-row">
+            <div class="eval-label">Kepatuhan SOP &amp; prosedur</div>
+            <div class="stars">
+              <div class="star on">1</div><div class="star on">2</div><div class="star on">3</div><div class="star on">4</div><div class="star">5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="emp-card">
+        <div class="emp-hd">
+          <span class="emp-no">ii.</span>
+          <span class="emp-name">Adi Setiawan</span>
+          <span class="emp-role">Helper Bakar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: FOTO -->
+  <div class="tab-page">
+    <div class="card" data-label="§ DOKUMENTASI FOTO">
+      <div class="photo-info">
+        <b>Catatan:</b> Foto bersifat <b>opsional</b> — unggah hanya jika ada temuan tidak normal (kerusakan, kotor, anomali). Setiap foto wajib diberi keterangan &amp; kategori.
+      </div>
+      <div class="photo-empty">
+        <span class="ic"></span>
+        <div class="ttl">Tap untuk unggah foto temuan</div>
+        <div class="sub">Atau drag &amp; drop · max 10MB</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: RINGKASAN -->
+  <div class="tab-page">
+    <div class="summary-head">
+      <div class="summary-outlet">SS <em>Empang</em></div>
+      <div class="summary-meta">Sel, 15 Mei 2026 · Operasional Shift · 10:24 – 12:50</div>
+      <div class="summary-spv">Disusun oleh <b>Bayu Pratama</b></div>
+    </div>
+
+    <div class="card" data-label="§ TEMUAN UTAMA — AUTO-FLAG">
+      <div class="flag-list">
+        <div class="flag-item">
+          <span class="flag-dot fd-red"></span>
+          <div>
+            <div class="flag-txt">Drip tray spit belum dibersihkan dari sisa lemak kemarin — fire hazard, wajib segera ditangani.</div>
+            <div class="flag-src">Sumber · Tab Info · Kondisi dapur</div>
+          </div>
+        </div>
+        <div class="flag-item">
+          <span class="flag-dot fd-red"></span>
+          <div>
+            <div class="flag-txt">2 spatula bakar rusak — peralatan kritis tidak memenuhi standar.</div>
+            <div class="flag-src">Sumber · Tab Inventaris</div>
+          </div>
+        </div>
+        <div class="flag-item">
+          <span class="flag-dot fd-amber"></span>
+          <div>
+            <div class="flag-txt">Selisih kas Rp 10.000 kurang — perlu rekonsiliasi end-of-shift.</div>
+            <div class="flag-src">Sumber · Tab Penjualan</div>
+          </div>
+        </div>
+        <div class="flag-item">
+          <span class="flag-dot fd-green"></span>
+          <div>
+            <div class="flag-txt">Penjualan 105% dari target harian — performa di atas ekspektasi.</div>
+            <div class="flag-src">Sumber · Tab Penjualan</div>
+          </div>
+        </div>
+        <div class="flag-item">
+          <span class="flag-dot fd-green"></span>
+          <div>
+            <div class="flag-txt">Higienitas karyawan baik — seragam lengkap, hairnet dipakai, cuci tangan dilakukan.</div>
+            <div class="flag-src">Sumber · Tab Info · Tab Karyawan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-label="§ REKOMENDASI TINDAK LANJUT">
+      <div class="field">
+        <label>Catatan penutup untuk owner</label>
+        <textarea class="textarea" style="min-height:120px" placeholder="Rangkuman tindak lanjut yang perlu dieksekusi minggu ini...">Prioritas minggu ini:
+1. Ganti spatula bakar (Rp 240.000)
+2. Briefing tim tentang SOP pembersihan drip tray
+3. Review SOP kas closing untuk hindari selisih</textarea>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="submit-bay">
+  <button class="submit-btn">
+    <span class="l">Simpan &amp; arsipkan laporan</span>
+    <span class="a">→</span>
+  </button>
+</div>
+
+<script>
+function go(i,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-page')[i].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.status-opt').forEach(o=>{
+  o.addEventListener('click',function(){
+    this.parentNode.querySelectorAll('.status-opt').forEach(x=>x.className='status-opt');
+    // toggle based on position
+    const idx = [...this.parentNode.children].indexOf(this);
+    this.className = 'status-opt ' + ['sel-ok','sel-warn','sel-danger'][idx];
+  });
+});
+document.querySelectorAll('.pill').forEach(p=>{
+  p.addEventListener('click',function(){
+    const states=['pill-ok','pill-warn','pill-danger'];
+    const labels=['OK','Perlu Cek','Rusak'];
+    const cur=states.findIndex(s=>this.classList.contains(s));
+    const next=(cur+1)%3;
+    this.className='pill '+states[next];
+    this.textContent=labels[next];
+  });
+});
+document.querySelectorAll('.stars').forEach(s=>{
+  const stars=[...s.children];
+  stars.forEach((st,i)=>{
+    st.addEventListener('click',()=>{
+      stars.forEach((s2,j)=>s2.classList.toggle('on',j<=i));
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+Options -Indexes
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Kalau file .php-nya ada, serve langsung
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# URL tanpa ekstensi → coba tambahkan .php
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]

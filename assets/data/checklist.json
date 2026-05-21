@@ -1,0 +1,286 @@
+{
+  "checklist": {
+    "open": [
+      {
+        "id": "o1",
+        "title": "Keamanan & Akses",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"o1a","text":"Cek kondisi fisik outlet: pintu, kunci, jendela — tidak ada tanda pembobolan","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"o1b","text":"CCTV interior (2 unit) aktif dan merekam normal","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"o1c","text":"CCTV exterior (1 unit) aktif dan merekam normal","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"o1d","text":"Cek instalasi gas: regulator set (4 set), selang, tabung — tidak ada kebocoran","badge":"ibadge-crit","btext":"kritikal","note":"Bau gas = jangan nyalakan apapun, buka ventilasi, hubungi supervisor segera","noteType":"danger"},
+          {"id":"o1e","text":"Fire extinguisher: posisi aman, segel utuh, tanggal belum expired","badge":"ibadge-crit","btext":"kritikal","note":"Expired = outlet tidak boleh buka","noteType":"danger"},
+          {"id":"o1f","text":"Nyalakan exhaust fan (2 unit) & kipas angin (2 unit), sirkulasi udara normal"},
+          {"id":"o1g","text":"Gembok (2 pcs) dikembalikan ke tempat setelah outlet dibuka"}
+        ]
+      },
+      {
+        "id": "o2",
+        "title": "Stok & Bahan Baku",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"o2a","text":"Cek suhu freezer ≤ -18°C — catat di log","badge":"ibadge-crit","btext":"kritikal","note":"Di luar range = jangan gunakan bahan, lapor segera","noteType":"danger"},
+          {"id":"o2b","text":"Hitung stok daging spit (kg): sisa kemarin + kiriman hari ini","badge":"ibadge-rec","btext":"catat"},
+          {"id":"o2c","text":"Timbang daging dengan timbangan digital (2 unit) — catat berat awal spit"},
+          {"id":"o2d","text":"Cek tanggal kadaluarsa semua bahan: roti, saus, sayuran — buang yang expired","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"o2e","text":"Pasang daging ke spit: tidak ada sisa hangus atau busuk dari kemarin"},
+          {"id":"o2f","text":"Mise en place: sayuran dicuci & dipotong, saus dalam botol bersih berlabel tanggal"},
+          {"id":"o2g","text":"Cek stok botol saus (6), mayo (6), tomat (4), samyang (1) — isi ulang jika perlu"},
+          {"id":"o2h","text":"Cek stok tabung gas — minimal 8 tabung tersedia sebelum buka","note":"Jika < 5 tabung, hubungi supplier sebelum outlet buka","noteType":"warn"},
+          {"id":"o2i","text":"Verifikasi DO dari central kitchen (jika ada): cocokkan fisik dengan surat jalan","badge":"ibadge-rec","btext":"catat"}
+        ]
+      },
+      {
+        "id": "o3",
+        "title": "Peralatan Masak",
+        "tag": "tag-ops",
+        "tagText": "OPERASIONAL",
+        "items": [
+          {"id":"o3a","text":"Grill stove / kompor bakar (2 unit): nyala normal, tidak ada kebocoran api"},
+          {"id":"o3b","text":"Single fryer (1 unit) & double fryer (1 unit): minyak bersih, suhu stabil"},
+          {"id":"o3c","text":"Spatula bakar (4 pcs) & spatula kulit (2 pcs): kondisi baik, tidak ada yang bengkok/rusak"},
+          {"id":"o3d","text":"Pisau (4 pcs): tajam, bersih, tersimpan di tempat yang benar"},
+          {"id":"o3e","text":"Cutting board / talenan (2 pcs): bersih, tidak retak"},
+          {"id":"o3f","text":"Stainless tray full (2), tray ½ (4), tray ¼ (4): bersih, tidak penyok"},
+          {"id":"o3g","text":"Service tong / jepitan (2 pcs), ladle (3 pcs), saringan minyak (2 pcs): tersedia dan bersih"},
+          {"id":"o3h","text":"Keranjang sayur (1 unit): bersih"},
+          {"id":"o3i","text":"Stockpot besar (1) & kecil (1): bersih, siap pakai"},
+          {"id":"o3j","text":"Blender (1 unit): bersih, pisau blender tidak longgar"},
+          {"id":"o3k","text":"MUG elektrik (1 unit): bersih, berfungsi normal"}
+        ]
+      },
+      {
+        "id": "o4",
+        "title": "Kebersihan Pre-Opening",
+        "tag": "tag-hygiene",
+        "tagText": "HIGIENE",
+        "items": [
+          {"id":"o4a","text":"Lap & sanitasi semua permukaan counter dengan food-grade sanitizer"},
+          {"id":"o4b","text":"Kain lap (6 pcs): tersedia bersih untuk shift ini"},
+          {"id":"o4c","text":"Exhaust hood & drip tray di bawah spit: dibersihkan dari sisa lemak kemarin","badge":"ibadge-crit","btext":"kritikal","note":"Drip tray kotor = fire hazard. Wajib dibersihkan setiap hari.","noteType":"danger"},
+          {"id":"o4d","text":"Area cuci piring: sabun tersedia, air mengalir normal"},
+          {"id":"o4e","text":"Tempat sampah (3 pcs): sudah dikosongkan, plastik baru terpasang"},
+          {"id":"o4f","text":"Kamar mandi: keran OK, closet bersih, lampu nyala"},
+          {"id":"o4g","text":"Semua karyawan: seragam bersih, rambut terikat / hairnet, sudah cuci tangan","badge":"ibadge-crit","btext":"kritikal"}
+        ]
+      },
+      {
+        "id": "o5",
+        "title": "Kasir, Digital & Signage",
+        "tag": "tag-fin",
+        "tagText": "FINANSIAL",
+        "items": [
+          {"id":"o5a","text":"Hitung uang kembalian (kas kecil): nominal lengkap sesuai standar","badge":"ibadge-rec","btext":"catat"},
+          {"id":"o5b","text":"Cash drawer (1 unit): berfungsi, terkunci"},
+          {"id":"o5c","text":"Printer struk (2 unit): ada kertas, berfungsi normal"},
+          {"id":"o5d","text":"Tablet (1 unit) + stand tab: menyala, app kasir / Pawoon loaded"},
+          {"id":"o5e","text":"Sound box Pawoon (1 unit): berfungsi, volume sesuai"},
+          {"id":"o5f","text":"Mesin EDC (1 unit): berfungsi, koneksi normal"},
+          {"id":"o5g","text":"Handphone outlet (1 unit): baterai cukup, notifikasi GoFood/GrabFood aktif"},
+          {"id":"o5h","text":"GoFood / GrabFood / ShopeeFood: status BUKA, jam operasional benar","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"o5i","text":"Cek semua signage terpasang: Halal, QRIS, Jam Operasional, Price List, CCTV, dll"},
+          {"id":"o5j","text":"Neon box (1 unit): menyala normal"},
+          {"id":"o5k","text":"Lampu tembak exterior (4 unit) & LED strip: kondisi OK (jika jam buka malam)"}
+        ]
+      },
+      {
+        "id": "o6",
+        "title": "ATK & Administrasi",
+        "tag": "tag-admin",
+        "tagText": "ADMIN",
+        "items": [
+          {"id":"o6a","text":"Buku petty cash tersedia, pulpen (6 pcs) tersedia di meja kasir"},
+          {"id":"o6b","text":"Kertas laporan (stok 100 lbr), amplop omset tersedia"},
+          {"id":"o6c","text":"Alat shalat tersedia: sajadah, peci, Al-Qur'an"},
+          {"id":"o6d","text":"Alat kebersihan tersedia: sapu (2), kain pel (2), wiper (1), sikat WC (1)"}
+        ]
+      }
+    ],
+    "ops": [
+      {
+        "id": "p1",
+        "title": "Kontrol Produksi & Kualitas",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"p1a","text":"Suhu daging spit cek tiap jam: bagian dalam ≥ 75°C sebelum dipotong","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p1b","text":"Kontrol porsi protein per sajian dengan timbangan digital — bukan estimasi visual","note":"Deviasi > 10g per porsi = lapor supervisor. Food cost langsung terdampak.","noteType":"warn"},
+          {"id":"p1c","text":"Kualitas roti pita: tidak gosong, tidak sobek, suhu press sesuai standar"},
+          {"id":"p1d","text":"Saus dibuat segar hari ini — tidak pakai sisa kemarin yang sudah > 24 jam","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p1e","text":"Daging yang sudah dipotong tidak boleh di suhu ruang lebih dari 30 menit","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p1f","text":"Catat jam mulai dan jam habis setiap spit daging","badge":"ibadge-rec","btext":"catat"},
+          {"id":"p1g","text":"Minyak fryer: cek warna dan bau — ganti jika sudah gelap atau berbau tengik","badge":"ibadge-crit","btext":"kritikal"}
+        ]
+      },
+      {
+        "id": "p2",
+        "title": "Waste & Food Cost",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"p2a","text":"Catat semua bahan yang dibuang: nama, jumlah, alasan (expired/rusak/salah produksi)","badge":"ibadge-rec","btext":"catat","note":"Waste log = data COGS aktual. Tanpa ini food cost tidak bisa dihitung.","noteType":"warn"},
+          {"id":"p2b","text":"Tidak ada bahan expired yang diselamatkan dengan cara dimasak atau dicampur","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p2c","text":"Penjualan lambat: turunkan suhu spit untuk memperlambat pengeringan daging"},
+          {"id":"p2d","text":"Catat berat awal vs berat terjual setiap spit habis (actual yield)","badge":"ibadge-rec","btext":"catat"}
+        ]
+      },
+      {
+        "id": "p3",
+        "title": "Pelayanan & Standar",
+        "tag": "tag-ops",
+        "tagText": "OPERASIONAL",
+        "items": [
+          {"id":"p3a","text":"Waktu tunggu dine-in: maksimal 5 menit dari order ke penyajian"},
+          {"id":"p3b","text":"Online order: tidak ada auto-cancel karena keterlambatan dapur"},
+          {"id":"p3c","text":"Setiap sajian sesuai resep standar: komposisi, saus, tampilan konsisten"},
+          {"id":"p3d","text":"Komplain ditangani langsung: dengarkan, minta maaf, ganti jika layak — catat di log","badge":"ibadge-rec","btext":"catat"},
+          {"id":"p3e","text":"Pantau ulasan GoFood / GrabFood tiap 2 jam — respon negatif dalam 30 menit"},
+          {"id":"p3f","text":"Pastikan sign \"CREW SEDANG SHALAT\" dipakai saat waktu shalat"}
+        ]
+      },
+      {
+        "id": "p4",
+        "title": "Monitoring Stok Mid-Shift",
+        "tag": "tag-ops",
+        "tagText": "OPERASIONAL",
+        "items": [
+          {"id":"p4a","text":"Stock count cepat jam 14:00: daging, roti, saus, gas — catat di log","badge":"ibadge-rec","btext":"catat"},
+          {"id":"p4b","text":"Sisa daging < 2 spit: segera hubungi central kitchen untuk pengiriman sore"},
+          {"id":"p4c","text":"Update stok di platform online agar tidak oversell","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p4d","text":"Cek level minyak fryer: tambah atau ganti jika perlu"},
+          {"id":"p4e","text":"Botol saus: isi ulang jika < 30% — jangan biarkan kosong saat peak hour"}
+        ]
+      },
+      {
+        "id": "p5",
+        "title": "Transaksi & Penjualan",
+        "tag": "tag-fin",
+        "tagText": "FINANSIAL",
+        "items": [
+          {"id":"p5a","text":"Semua transaksi masuk kasir / Pawoon — tidak ada penjualan off-system tanpa struk","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p5b","text":"Rekap penjualan per jam: jam ramai tapi penjualan rendah = red flag segera lapor"},
+          {"id":"p5c","text":"Hitung fisik uang tunai vs laporan kasir setiap 4 jam — catat selisih","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p5d","text":"Tidak ada diskon atau promo tanpa otorisasi manajemen","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"p5e","text":"Amplop omset disiapkan untuk setoran akhir shift"}
+        ]
+      },
+      {
+        "id": "p6",
+        "title": "Kebersihan Mid-Shift",
+        "tag": "tag-hygiene",
+        "tagText": "HIGIENE",
+        "items": [
+          {"id":"p6a","text":"Lap permukaan counter setiap 2 jam atau setelah tumpahan"},
+          {"id":"p6b","text":"Drip tray spit: cek level lemak — buang jika sudah 70% penuh","note":"Drip tray overflow = fire hazard.","noteType":"warn"},
+          {"id":"p6c","text":"Tempat sampah: kosongkan jika sudah 80% penuh, jangan tunggu penuh"},
+          {"id":"p6d","text":"Parkiran: cek tidak ada genangan atau sampah berserakan yang mengganggu pelanggan"}
+        ]
+      }
+    ],
+    "close": [
+      {
+        "id": "c1",
+        "title": "Rekap Keuangan Akhir Hari",
+        "tag": "tag-fin",
+        "tagText": "FINANSIAL",
+        "items": [
+          {"id":"c1a","text":"Print / screenshot laporan penjualan harian dari kasir / Pawoon","badge":"ibadge-rec","btext":"catat"},
+          {"id":"c1b","text":"Hitung fisik uang tunai, cocokkan dengan sistem — catat selisih over/(short)","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c1c","text":"Masukkan uang ke amplop omset, segel, tulis nominal dan tanggal"},
+          {"id":"c1d","text":"Setor ke brankas sesuai prosedur — dilarang membawa uang outlet keluar","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c1e","text":"Catat total penjualan per channel (tunai, QRIS, GoFood, GrabFood, ShopeeFood)","badge":"ibadge-rec","btext":"catat"},
+          {"id":"c1f","text":"Submit daily sales report ke supervisor sebelum keluar","badge":"ibadge-crit","btext":"kritikal"}
+        ]
+      },
+      {
+        "id": "c2",
+        "title": "Rekap Stok & Waste Akhir Hari",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"c2a","text":"Timbang sisa daging spit dengan timbangan digital — catat sebagai stok akhir","badge":"ibadge-rec","btext":"catat"},
+          {"id":"c2b","text":"Hitung sisa roti pita, saus, sayuran — catat semua dengan jujur","badge":"ibadge-rec","btext":"catat","note":"Manipulasi data stok = food cost tidak akurat = audit gagal.","noteType":"danger"},
+          {"id":"c2c","text":"Pisahkan bahan layak (simpan freezer/chiller) vs dibuang — jangan campur"},
+          {"id":"c2d","text":"Label ulang semua container sisa: nama bahan, tanggal, jam simpan"},
+          {"id":"c2e","text":"Lengkapi waste log hari ini: total bahan terbuang dalam Rp estimasi","badge":"ibadge-rec","btext":"catat"},
+          {"id":"c2f","text":"Cek stok gas sisa: jika < 5 tabung, order sekarang untuk besok"}
+        ]
+      },
+      {
+        "id": "c3",
+        "title": "Pembersihan Akhir Hari",
+        "tag": "tag-hygiene",
+        "tagText": "HIGIENE",
+        "items": [
+          {"id":"c3a","text":"Grill stove / kompor bakar: matikan, bersihkan dari sisa pembakaran"},
+          {"id":"c3b","text":"Spit rotisserie: matikan, lepas drip tray, buang lemak, lap dengan degreaser","note":"Drip tray tidak dibersihkan tiap hari = fire hazard serius.","noteType":"danger","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c3c","text":"Fryer (single & double): matikan, saring minyak, bersihkan basket"},
+          {"id":"c3d","text":"Sanitasi seluruh permukaan counter, meja, talenan"},
+          {"id":"c3e","text":"Cuci semua peralatan masak (tray, bowl, ladle, spatula, pisau), keringkan, simpan"},
+          {"id":"c3f","text":"Sapu dan pel lantai dapur dan area pelanggan dengan larutan pembersih"},
+          {"id":"c3g","text":"Kosongkan semua tempat sampah (3 pcs), bawa ke tempat pembuangan"},
+          {"id":"c3h","text":"Bersihkan kamar mandi: sikat WC, lap, kuras bak jika perlu"},
+          {"id":"c3i","text":"Tidak ada bahan makanan tertinggal di luar freezer/chiller setelah tutup","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c3j","text":"Cek exterior: parkiran bersih, tidak ada sampah berserakan"}
+        ]
+      },
+      {
+        "id": "c4",
+        "title": "Keamanan Akhir Hari",
+        "tag": "tag-fatal",
+        "tagText": "KRITIKAL",
+        "items": [
+          {"id":"c4a","text":"Matikan semua kompor & tutup katup tabung gas rapat-rapat","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c4b","text":"Matikan semua peralatan listrik: fryer, mug elektrik, lampu display, exhaust fan — kecuali freezer","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c4c","text":"CCTV interior (2 unit) & exterior (1 unit): masih aktif dan merekam"},
+          {"id":"c4d","text":"Matikan kipas angin (2 unit) dan lampu interior (4 pcs) sebelum keluar"},
+          {"id":"c4e","text":"Kunci semua pintu dan jendela — cek dua kali, pasang gembok (2 pcs)","badge":"ibadge-crit","btext":"kritikal"},
+          {"id":"c4f","text":"Foto kondisi outlet saat ditinggalkan sebagai bukti kondisi","badge":"ibadge-rec","btext":"foto"}
+        ]
+      },
+      {
+        "id": "c5",
+        "title": "Evaluasi & Handover",
+        "tag": "tag-ops",
+        "tagText": "OPERASIONAL",
+        "items": [
+          {"id":"c5a","text":"Isi form handover: masalah hari ini, stok kritis, peralatan bermasalah","badge":"ibadge-rec","btext":"catat"},
+          {"id":"c5b","text":"Laporkan insiden atau keluhan pelanggan yang belum terselesaikan ke supervisor"},
+          {"id":"c5c","text":"Catat kebutuhan stok besok berdasarkan tren penjualan hari ini"},
+          {"id":"c5d","text":"Konfirmasi jadwal karyawan shift besok — tidak ada kekosongan posisi kritis"},
+          {"id":"c5e","text":"Buku petty cash: catat pengeluaran hari ini, saldo akhir"}
+        ]
+      }
+    ]
+  },
+  "dataFields": {
+    "open": [
+      {"id":"stok_daging_awal","label":"Stok daging awal (kg)","type":"number"},
+      {"id":"kiriman_daging","label":"Kiriman central kitchen (kg)","type":"number"},
+      {"id":"suhu_freezer","label":"Suhu freezer (°C)","type":"number"},
+      {"id":"stok_gas","label":"Stok tabung gas","type":"number"},
+      {"id":"kas_kecil","label":"Uang kas kecil awal (Rp)","type":"number"},
+      {"id":"stok_roti","label":"Stok roti pita awal (pcs)","type":"number"}
+    ],
+    "ops": [
+      {"id":"penjualan_jam12","label":"Penjualan s/d jam 12:00 (Rp)","type":"number"},
+      {"id":"spit_sisa_jam14","label":"Sisa spit jam 14:00","type":"number"},
+      {"id":"suhu_spit","label":"Suhu daging spit (°C)","type":"number"},
+      {"id":"waste_ops","label":"Total waste bahan (Rp)","type":"number"},
+      {"id":"komplain","label":"Jumlah komplain","type":"number"},
+      {"id":"catatan_ops","label":"Catatan operasional","type":"text"}
+    ],
+    "close": [
+      {"id":"total_penjualan","label":"Total penjualan harian (Rp)","type":"number"},
+      {"id":"penjualan_online","label":"Penjualan platform online (Rp)","type":"number"},
+      {"id":"selisih_kas","label":"Selisih kas over/(short) (Rp)","type":"number"},
+      {"id":"stok_daging_sisa","label":"Sisa stok daging akhir (kg)","type":"number"},
+      {"id":"total_waste","label":"Total waste hari ini (Rp)","type":"number"},
+      {"id":"jumlah_spit","label":"Spit yang digunakan hari ini","type":"number"},
+      {"id":"catatan_tutup","label":"Catatan insiden / masalah","type":"text"}
+    ]
+  }
+}

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuk · SS Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f1e8; --paper-2:#ede7d6; --paper-3:#e2dac4; --paper-4:#d5cbb1;
+  --ink:#1a1611; --ink-2:#3d352a; --ink-3:#6b6155; --ink-4:#9a8f7f; --ink-5:#c0b7a5;
+  --line:rgba(26,22,17,0.10); --line-2:rgba(26,22,17,0.18); --line-strong:rgba(26,22,17,0.55);
+  --saffron:#c45a1a; --saffron-2:#a84812; --saffron-3:#7d340a;
+  --saffron-soft:rgba(196,90,26,0.08); --saffron-edge:rgba(196,90,26,0.32);
+  --ok:#5c6b2e; --warn:#b88412; --danger:#a83621; --info:#3a5468;
+  --display:'Fraunces',serif; --body:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{
+  font-feature-settings:"ss01","cv11";
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 30%,rgba(26,22,17,0.03) 1px,transparent 1px),radial-gradient(circle at 80% 60%,rgba(196,90,26,0.025) 1px,transparent 1px);
+  background-size:4px 4px,6px 6px;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+}
+
+.shell{
+  display:grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-height:100vh;
+  position:relative;z-index:2;
+}
+
+/* ============================================================
+   LEFT — POSTER PANEL
+   ============================================================ */
+.poster{
+  background: var(--ink);
+  color: var(--paper);
+  padding: 56px 64px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+}
+/* Subtle large star ornament */
+.poster::before{
+  content:'';
+  position:absolute;
+  width:780px;height:780px;
+  right:-280px; bottom:-280px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%23c45a1a' stroke-width='0.7' opacity='0.42'%3E%3Cpath d='M100 10 L120 80 L190 100 L120 120 L100 190 L80 120 L10 100 L80 80 Z'/%3E%3Cpath d='M100 30 L114 84 L168 100 L114 116 L100 170 L86 116 L32 100 L86 84 Z'/%3E%3Cpath d='M100 50 L108 88 L150 100 L108 112 L100 150 L92 112 L50 100 L92 88 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:contain;
+  background-repeat:no-repeat;
+  pointer-events:none;
+}
+/* tiny constellation */
+.poster::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(245,241,232,0.18) 0.5px, transparent 1.5px),
+    radial-gradient(circle at 36% 78%, rgba(245,241,232,0.14) 0.5px, transparent 1.5px),
+    radial-gradient(circle at 72% 42%, rgba(245,241,232,0.10) 0.5px, transparent 1.5px),
+    radial-gradient(circle at 88% 18%, rgba(245,241,232,0.16) 0.5px, transparent 1.5px),
+    radial-gradient(circle at 12% 88%, rgba(245,241,232,0.12) 0.5px, transparent 1.5px);
+  pointer-events:none;
+}
+
+.poster-top{
+  position:relative;z-index:2;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.brand-mark{
+  display:flex;align-items:center;gap:12px;
+}
+.brand-mono{
+  width:42px;height:42px;
+  background:var(--saffron);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);
+  font-weight:700;
+  font-size:20px;
+  color:#fff;
+  font-variation-settings:"opsz" 24,"SOFT" 0;
+  letter-spacing:-0.04em;
+}
+.brand-name{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--paper);
+  font-weight:500;
+}
+.brand-name b{display:block;color:var(--ink-5);font-weight:400}
+
+.folio-mark-dark{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink-4);
+}
+
+.poster-mid{
+  position:relative;z-index:2;
+  max-width:540px;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--saffron);
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{
+  content:'';width:32px;height:1px;background:var(--saffron);display:inline-block;
+}
+.poster-h1{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(54px,7vw,96px);
+  line-height:0.92;
+  letter-spacing:-0.035em;
+  font-variation-settings:"opsz" 144,"SOFT" 40,"WONK" 1;
+  margin-bottom:28px;
+  color:var(--paper);
+}
+.poster-h1 em{
+  font-style:italic;
+  font-variation-settings:"opsz" 144,"SOFT" 100,"WONK" 1;
+  color:var(--saffron);
+  display:block;
+}
+.poster-deck{
+  font-family:var(--display);
+  font-style:italic;
+  font-weight:300;
+  font-size:19px;
+  font-variation-settings:"opsz" 24,"SOFT" 100;
+  line-height:1.4;
+  color:var(--ink-5);
+  max-width:440px;
+  letter-spacing:-0.005em;
+}
+
+.poster-bottom{
+  position:relative;z-index:2;
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.14em;
+  color:var(--ink-4);
+}
+.poster-bottom .stat{
+  display:flex;flex-direction:column;gap:6px;
+}
+.poster-bottom .stat .n{
+  font-family:var(--display);
+  font-size:34px;
+  font-weight:500;
+  color:var(--paper);
+  letter-spacing:-0.02em;
+  font-variation-settings:"opsz" 32,"SOFT" 30;
+}
+.poster-bottom .stat .l{
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-4);
+  font-size:10px;
+}
+
+/* ============================================================
+   RIGHT — FORM PANEL
+   ============================================================ */
+.form-panel{
+  padding: 56px 72px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+}
+
+.form-folio{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+}
+.form-folio .num{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--ink);
+  font-variation-settings:"opsz" 14;
+}
+
+.form-body{
+  max-width:420px;
+  margin: 32px 0;
+  width:100%;
+}
+.form-eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--saffron);
+  margin-bottom:16px;
+}
+.form-title{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:54px;
+  line-height:0.98;
+  letter-spacing:-0.025em;
+  font-variation-settings:"opsz" 60,"SOFT" 30,"WONK" 0;
+  color:var(--ink);
+  margin-bottom:12px;
+}
+.form-title em{
+  font-style:italic;
+  color:var(--saffron);
+  font-variation-settings:"opsz" 60,"SOFT" 100,"WONK" 1;
+}
+.form-deck{
+  font-family:var(--display);
+  font-style:italic;
+  font-weight:300;
+  font-size:18px;
+  font-variation-settings:"opsz" 18,"SOFT" 100;
+  color:var(--ink-3);
+  line-height:1.4;
+  margin-bottom:40px;
+  max-width:380px;
+}
+
+.field{
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:22px;
+}
+.field label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:500;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.field label .helper{
+  color:var(--ink-4);
+  font-size:9px;
+  letter-spacing:0.1em;
+}
+.input{
+  background:transparent;
+  border:none;
+  border-bottom:1px solid var(--line-strong);
+  padding:12px 0;
+  font-family:var(--body);
+  font-size:18px;
+  color:var(--ink);
+  width:100%;
+  outline:none;
+  transition:all 0.18s var(--ease);
+  letter-spacing:-0.005em;
+}
+.input:focus{
+  border-bottom-color:var(--saffron);
+}
+.input::placeholder{color:var(--ink-4);}
+.input-pw-wrap{position:relative}
+.input-pw-toggle{
+  position:absolute;right:0;top:50%;transform:translateY(-50%);
+  background:transparent;border:none;cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-3);padding:4px 0;
+}
+.input-pw-toggle:hover{color:var(--saffron)}
+
+.row-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:36px;
+  margin-top:-4px;
+}
+.checkrow{
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
+}
+.checkrow .cb{
+  width:16px;height:16px;
+  border:1px solid var(--line-strong);
+  background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s var(--ease);
+}
+.checkrow.on .cb{background:var(--ink);border-color:var(--ink)}
+.checkrow.on .cb::after{content:'';width:7px;height:4px;border-left:1.5px solid var(--paper);border-bottom:1.5px solid var(--paper);transform:rotate(-45deg);margin-top:-2px;}
+.checkrow span{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--ink-2)}
+.link-text{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  color:var(--saffron);
+  text-decoration:none;
+  border-bottom:1px solid var(--saffron-edge);
+  padding-bottom:1px;
+  transition:all 0.15s var(--ease);
+}
+.link-text:hover{color:var(--saffron-2);border-bottom-color:var(--saffron-2)}
+
+.btn-submit{
+  width:100%;
+  background:var(--ink);
+  color:var(--paper);
+  border:none;
+  padding:18px 24px;
+  font-family:var(--body);
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:0.04em;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all 0.2s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;background:var(--saffron);
+  transform:translateX(-101%);transition:transform 0.32s var(--ease);
+}
+.btn-submit:hover::before{transform:translateX(0)}
+.btn-submit > *{position:relative;z-index:2}
+.btn-submit .label{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+}
+.btn-submit .ar{
+  font-family:var(--display);
+  font-size:22px;
+  line-height:1;
+  font-variation-settings:"opsz" 24;
+}
+
+.support-row{
+  margin-top:20px;
+  display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.06em;
+  color:var(--ink-3);
+}
+.support-row .star-8{
+  width:12px;height:12px;color:var(--saffron);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 L14 9 L22 11 L14 13 L12 23 L10 13 L2 11 L10 9 Z' fill='currentColor'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+  display:inline-block;
+}
+.support-row a{color:var(--ink);border-bottom:1px dotted var(--ink-3);text-decoration:none}
+.support-row a:hover{color:var(--saffron);border-bottom-color:var(--saffron)}
+
+.form-foot{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-4);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 960px){
+  .shell{grid-template-columns:1fr}
+  .poster{
+    padding:36px 28px 48px;
+    min-height:auto;
+  }
+  .poster::before{
+    width:480px;height:480px;
+    right:-180px;bottom:-180px;
+  }
+  .poster-h1{font-size:54px}
+  .poster-deck{font-size:16px}
+  .poster-bottom{margin-top:36px}
+  .form-panel{padding:40px 28px 44px}
+  .form-body{margin:24px 0}
+  .form-title{font-size:42px}
+}
+
+@media (max-width: 500px){
+  .poster{padding:28px 24px 36px}
+  .poster-mid{margin-top:32px}
+  .poster-h1{font-size:44px}
+  .poster-bottom{flex-direction:column;align-items:flex-start;gap:18px}
+  .form-panel{padding:32px 24px 36px}
+  .form-title{font-size:36px}
+  .form-deck{font-size:15px;margin-bottom:28px}
+  .row-bottom{flex-direction:column;align-items:flex-start;gap:14px}
+}
+
+/* ============================================================
+   LOAD ANIM
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.poster-h1, .poster-deck, .eyebrow, .form-eyebrow, .form-title, .form-deck, .field, .row-bottom, .btn-submit, .support-row {
+  opacity: 0;
+  animation: rise 0.7s var(--ease) forwards;
+}
+.eyebrow { animation-delay: 0.05s }
+.poster-h1 { animation-delay: 0.15s }
+.poster-deck { animation-delay: 0.3s }
+.form-eyebrow { animation-delay: 0.2s }
+.form-title { animation-delay: 0.3s }
+.form-deck { animation-delay: 0.4s }
+.field:nth-of-type(1){animation-delay:0.5s}
+.field:nth-of-type(2){animation-delay:0.58s}
+.row-bottom{animation-delay:0.66s}
+.btn-submit{animation-delay:0.72s}
+.support-row{animation-delay:0.8s}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ========== POSTER (LEFT) ========== -->
+  <aside class="poster">
+    <div class="poster-top">
+      <div class="brand-mark">
+        <div class="brand-mono">SS</div>
+        <div class="brand-name">Suka Shawarma<b>Operations · MMXXVI</b></div>
+      </div>
+      <div class="folio-mark-dark">Lembar · 01</div>
+    </div>
+
+    <div class="poster-mid">
+      <div class="eyebrow">Operational Almanac</div>
+      <h1 class="poster-h1">
+        Pegang kendali,
+        <em>setiap shift.</em>
+      </h1>
+      <p class="poster-deck">Sembilan belas outlet, tiga shift sehari, satu standar kepatuhan. Setiap halaman buku ini dirancang untuk dibuka seribu kali — dan tetap menenangkan mata.</p>
+    </div>
+
+    <div class="poster-bottom">
+      <div class="stat">
+        <span class="n">19</span>
+        <span class="l">Outlet aktif</span>
+      </div>
+      <div class="stat">
+        <span class="n">3×</span>
+        <span class="l">Shift harian</span>
+      </div>
+      <div class="stat">
+        <span class="n">365</span>
+        <span class="l">Hari setahun</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== FORM (RIGHT) ========== -->
+  <main class="form-panel">
+
+    <div class="form-folio">
+      <span><span class="num">§</span>&nbsp;&nbsp;Masuk ke sistem</span>
+      <span>EN · ID</span>
+    </div>
+
+    <div class="form-body">
+      <div class="form-eyebrow">— Akses Internal</div>
+      <h2 class="form-title">Selamat <em>kembali.</em></h2>
+      <p class="form-deck">Masukkan kredensial akun untuk membuka jurnal harian outlet Anda.</p>
+
+      <form onsubmit="event.preventDefault();handleLogin()">
+        <div class="field">
+          <label>Username <span class="helper">akun outlet / spv / owner / admin</span></label>
+          <input class="input" type="text" placeholder="ss_kitchen" autocomplete="username" required>
+        </div>
+
+        <div class="field">
+          <label>Password <span class="helper">minimal 8 karakter</span></label>
+          <div class="input-pw-wrap">
+            <input class="input" id="pw" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button class="input-pw-toggle" type="button" onclick="togglePw()" id="pwToggle">Tampilkan</button>
+          </div>
+        </div>
+
+        <div class="row-bottom">
+          <label class="checkrow" id="remember" onclick="this.classList.toggle('on')">
+            <span class="cb"></span>
+            <span>Ingat perangkat ini selama 12 jam</span>
+          </label>
+          <a class="link-text" href="#">Lupa password?</a>
+        </div>
+
+        <button class="btn-submit" type="submit">
+          <span class="label">Masuk ke jurnal harian</span>
+          <span class="ar">→</span>
+        </button>
+      </form>
+
+      <div class="support-row">
+        <span class="star-8"></span>
+        <span>Butuh bantuan akses? Hubungi admin di <a href="mailto:admin@sukashawarma.com">admin@sukashawarma.com</a></span>
+      </div>
+    </div>
+
+    <div class="form-foot">
+      <span>Ops · v1.0</span>
+      <span>© Suka Shawarma · MMXXVI</span>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+function togglePw(){
+  const pw=document.getElementById('pw');
+  const btn=document.getElementById('pwToggle');
+  if(pw.type==='password'){pw.type='text';btn.textContent='Sembunyikan'}
+  else{pw.type='password';btn.textContent='Tampilkan'}
+}
+function handleLogin(){
+  // Demo only
+  const btn=document.querySelector('.btn-submit');
+  btn.style.background='var(--saffron)';
+  btn.innerHTML='<span class="label">Memverifikasi...</span><span class="ar">∎</span>';
+  setTimeout(()=>{
+    btn.innerHTML='<span class="label">Berhasil masuk ✓</span><span class="ar">→</span>';
+  },800)
+}
+</script>
+
+</body>
+</html>

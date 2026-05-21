@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"D:\\\\MIT\\\\CLAUDE CODE PROJECT\\\\CHECKLIST FORM & DASHBOARD SS\" -Recurse -File | Where-Object { $_.LastWriteTime -gt \\(Get-Date\\).AddDays\\(-3\\) } | Select-Object FullName, LastWriteTime | Sort-Object LastWriteTime -Descending | Select-Object -First 30)",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"D:\\\\MIT\\\\CLAUDE CODE PROJECT\\\\CHECKLIST FORM & DASHBOARD SS\\\\assets\\\\css\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"D:\\\\MIT\\\\CLAUDE CODE PROJECT\\\\CHECKLIST FORM & DASHBOARD SS\\\\assets\\\\js\")",
+      "Skill(anthropic-skills:consolidate-memory)",
+      "Skill(anthropic-skills:consolidate-memory:*)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\lu.DESKTOP-HRO3RNS\\\\.claude\" -Recurse -File | Select-Object FullName, @{n=\"Lines\";e={\\(Get-Content $_.FullName -ErrorAction SilentlyContinue | Measure-Object -Line\\).Lines}} | Format-Table -AutoSize)",
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:brainstorming:*)",
+      "Bash(not exist *)"
+    ]
+  }
+}

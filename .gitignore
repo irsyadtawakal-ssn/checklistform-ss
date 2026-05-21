@@ -1,0 +1,34 @@
+# ===== Uploads (user-generated files) =====
+uploads/*
+!uploads/.gitkeep
+
+# ===== Secrets & Environment =====
+.env
+*.env.local
+config/database.php
+
+# ===== PHP & Server =====
+vendor/
+*.log
+*.cache
+error_log
+logs/*
+!logs/.gitkeep
+
+# ===== OS & Editor =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ===== Backup & Exports =====
+backup/
+*.sql.gz
+*.sql.bak
+
+# ===== Temporary =====
+tmp/*
+!tmp/.gitkeep
+temp/
