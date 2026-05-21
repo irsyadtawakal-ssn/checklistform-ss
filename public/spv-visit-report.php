@@ -296,7 +296,7 @@ $printTitle = 'Laporan Kunjungan SPV — ' . $visit['outlet_name'] . ' — ' . $
     <div class="payload-grid">
       <?php foreach ($payload as $key => $val):
         $isNote  = stripos($key, 'catatan') !== false || stripos($key, 'note') !== false || stripos($key, 'temuan') !== false;
-        $display = is_array($val) ? implode(', ', $val) : (string) $val;
+        $display = is_array($val) ? json_encode($val, JSON_UNESCAPED_UNICODE) : (string) $val;
         if (empty(trim($display))) continue;
       ?>
       <div class="payload-item <?= $isNote ? 'payload-full' : '' ?>">
