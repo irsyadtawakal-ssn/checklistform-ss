@@ -37,32 +37,46 @@ if ($ref !== 'refs/heads/main') {
     exit('Ignored: not main branch');
 }
 
-// ─── Jalankan git pull + deploy ───────────────────────────────────────────
+// ─── Cek exec() tersedia ──────────────────────────────────────────────────
 $timestamp = date('Y-m-d H:i:s');
-$output    = [];
+$debug     = [];
 
-exec('cd ' . escapeshellarg(REPO_PATH) . ' && git pull origin main 2>&1', $output, $exitCode);
+if (!function_exists('exec') || !is_callable('exec')) {
+    http_response_code(500);
+    exit("[{$timestamp}] ERROR: exec() dinonaktifkan di server ini");
+}
 
-$log = "[{$timestamp}] git pull exit={$exitCode}\n" . implode("\n", $output) . "\n";
+$debug[] = "exec() tersedia";
+$debug[] = "REPO_PATH=" . REPO_PATH;
+$debug[] = "repo_exists=" . (is_dir(REPO_PATH) ? 'ya' : 'TIDAK ADA');
+$debug[] = "DEPLOY_PATH=" . DEPLOY_PATH;
+$debug[] = "deploy_exists=" . (is_dir(DEPLOY_PATH) ? 'ya' : 'TIDAK ADA');
 
-if ($exitCode === 0) {
-    // Copy semua file ke public_html/ops (kecuali .git dan deploy.php itu sendiri)
-    $cpOutput = [];
+// ─── Jalankan git pull ────────────────────────────────────────────────────
+$pullOutput = [];
+exec('cd ' . escapeshellarg(REPO_PATH) . ' && git pull origin main 2>&1', $pullOutput, $pullExit);
+$debug[] = "git pull exit={$pullExit}";
+$debug[] = implode(' | ', $pullOutput);
+
+if ($pullExit === 0) {
+    // Copy semua file ke public_html/ops
+    $rsyncOutput = [];
     exec(
         'rsync -a --exclude=".git" --exclude="deploy.php" --exclude=".env" ' .
         escapeshellarg(REPO_PATH . '/') . ' ' . escapeshellarg(DEPLOY_PATH . '/') . ' 2>&1',
-        $cpOutput,
-        $cpExit
+        $rsyncOutput,
+        $rsyncExit
     );
-    $log .= "[{$timestamp}] rsync exit={$cpExit}\n" . implode("\n", $cpOutput) . "\n";
-    $log .= "[{$timestamp}] Deploy SUCCESS\n---\n";
+    $debug[] = "rsync exit={$rsyncExit}";
+    $debug[] = implode(' | ', $rsyncOutput);
 
-    file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
+    $log = "[{$timestamp}] SUCCESS\n" . implode("\n", $debug) . "\n---\n";
+    @file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
     http_response_code(200);
-    echo 'Deploy OK';
+    echo "Deploy OK\n" . implode("\n", $debug);
 } else {
-    $log .= "[{$timestamp}] Deploy FAILED\n---\n";
-    file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
+    $log = "[{$timestamp}] FAILED\n" . implode("\n", $debug) . "\n---\n";
+    @file_put_contents(LOG_FILE, $log, FILE_APPEND | LOCK_EX);
     http_response_code(500);
-    echo 'Deploy failed — cek logs/deploy.log';
+    echo "Deploy FAILED\n" . implode("\n", $debug);
 }
