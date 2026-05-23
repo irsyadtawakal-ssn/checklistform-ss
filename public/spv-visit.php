@@ -978,8 +978,8 @@ async function handleSubmit() {
     }
 
   } catch(e) {
-    showToast((e?.name ?? '?') + ': ' + (e?.message ?? 'unknown'));
-    console.error('handleSubmit error:', e);
+    const msg = e?.name === 'TypeError' ? 'Koneksi gagal. Periksa internet dan coba lagi.' : 'Gagal menyimpan. Coba lagi.';
+    showToast(msg);
     btn.disabled    = false;
     btn.textContent = 'Simpan & Kirim Report';
   }
@@ -1005,6 +1005,10 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function getCsrfToken() {
+  return document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 }
 
 init();
