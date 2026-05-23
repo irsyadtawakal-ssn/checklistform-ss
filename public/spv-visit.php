@@ -978,8 +978,8 @@ async function handleSubmit() {
     }
 
   } catch(e) {
-    const msg = e?.name === 'TypeError' ? 'Koneksi gagal. Periksa internet dan coba lagi.' : 'Gagal menyimpan. Coba lagi.';
-    showToast(msg);
+    showToast((e?.name ?? '?') + ': ' + (e?.message ?? 'unknown'));
+    console.error('handleSubmit error:', e);
     btn.disabled    = false;
     btn.textContent = 'Simpan & Kirim Report';
   }
