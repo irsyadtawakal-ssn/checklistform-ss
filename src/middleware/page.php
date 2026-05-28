@@ -8,6 +8,10 @@ declare(strict_types=1);
  */
 function pageRequireAuth(): array
 {
+    // Cegah LiteSpeed/proxy cache halaman yang pakai session
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+
     startSession();
     $user = currentUser();
 

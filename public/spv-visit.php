@@ -922,11 +922,9 @@ async function handleSubmit() {
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': getCsrfToken() },
       body:    JSON.stringify(payload),
     });
-    const rawText = await res.text();
-    console.log('API response:', res.status, rawText);
     let data;
-    try { data = JSON.parse(rawText); }
-    catch (_) { showToast('[' + res.status + '] ' + rawText.substring(0, 120)); btn.disabled = false; btn.textContent = 'Simpan & Kirim Report'; return; }
+    try { data = await res.json(); }
+    catch (_) { showToast('Server error — minta admin cek error log.'); btn.disabled = false; btn.textContent = 'Simpan & Kirim Report'; return; }
     if (!res.ok) { showToast(data.message || 'Gagal menyimpan visit.'); btn.disabled = false; btn.textContent = 'Simpan & Kirim Report'; return; }
 
     savedVisitId = data.data.visit_id;
