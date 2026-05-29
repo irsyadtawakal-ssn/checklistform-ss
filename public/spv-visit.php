@@ -592,7 +592,22 @@ function renderEmployees() {
 }
 
 function toggleEmp(id) { const b = document.getElementById('eb_' + id); if (b) b.classList.toggle('open'); }
-function updateEmp(id, f, v) { const e = employees.find(e => e.id === id); if (e) { e[f] = v; if (f === 'name') renderEmployees(); } }
+function updateEmp(id, f, v) {
+  const e = employees.find(e => e.id === id);
+  if (!e) return;
+  e[f] = v;
+  if (f === 'name') {
+    // Update in-place tanpa rebuild DOM agar keyboard tidak collapse
+    const card   = document.getElementById('eb_' + id)?.closest('.emp-card');
+    if (card) {
+      const ini = (v || '?').split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase() || '?';
+      const nameEl   = card.querySelector('.emp-name');
+      const avatarEl = card.querySelector('.emp-avatar');
+      if (nameEl)   nameEl.textContent   = v || '(Nama belum diisi)';
+      if (avatarEl) avatarEl.textContent = ini;
+    }
+  }
+}
 function setScore(eid, key, val) {
   const e = employees.find(e => e.id === eid);
   if (e) { e.scores[key] = val; renderEmployees(); setTimeout(() => { const b = document.getElementById('eb_' + eid); if (b) b.classList.add('open'); }, 10); }
