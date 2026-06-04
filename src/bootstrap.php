@@ -57,3 +57,14 @@ set_exception_handler(function (Throwable $e): void {
     echo json_encode($body, JSON_UNESCAPED_UNICODE);
     exit;
 });
+
+// ─── Auto-include helpers wajib ───────────────────────────────────────────
+require_once ROOT_PATH . '/src/helpers/db.php';
+require_once ROOT_PATH . '/src/helpers/response.php';
+require_once ROOT_PATH . '/src/helpers/csrf.php';
+require_once ROOT_PATH . '/src/helpers/auth.php';
+require_once ROOT_PATH . '/src/middleware/role.php';
+require_once ROOT_PATH . '/src/helpers/audit.php';
+require_once ROOT_PATH . '/src/helpers/notify.php';
+require_once ROOT_PATH . '/src/helpers/password.php';
+require_once ROOT_PATH . '/src/helpers/compliance.php';
