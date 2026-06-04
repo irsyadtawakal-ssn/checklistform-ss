@@ -2,10 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../src/bootstrap.php';
-require_once ROOT_PATH . '/src/helpers/db.php';
-require_once ROOT_PATH . '/src/helpers/response.php';
-require_once ROOT_PATH . '/src/helpers/csrf.php';
-require_once ROOT_PATH . '/src/middleware/role.php';
 
 $user   = requireRole('admin');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -110,16 +106,3 @@ if ($method === 'PUT') {
 }
 
 jsonError('Method tidak didukung', 405);
-
-// ── Helpers ────────────────────────────────────────────────────────────────
-function auditLog(\PDO $pdo, int $userId, string $action, string $targetType, int $targetId, array $payload = []): void
-{
-    $pdo->prepare(
-        "INSERT INTO audit_log (user_id, action, target_type, target_id, payload_json, ip)
-         VALUES (?, ?, ?, ?, ?, ?)"
-    )->execute([
-        $userId, $action, $targetType, $targetId,
-        $payload ? json_encode($payload, JSON_UNESCAPED_UNICODE) : null,
-        $_SERVER['REMOTE_ADDR'] ?? null,
-    ]);
-}
