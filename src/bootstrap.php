@@ -68,3 +68,8 @@ require_once ROOT_PATH . '/src/helpers/audit.php';
 require_once ROOT_PATH . '/src/helpers/notify.php';
 require_once ROOT_PATH . '/src/helpers/password.php';
 require_once ROOT_PATH . '/src/helpers/compliance.php';
+require_once ROOT_PATH . '/src/repositories/checklist.php';
+require_once ROOT_PATH . '/src/repositories/spv_visit.php';
+require_once ROOT_PATH . '/src/repositories/user.php';
+require_once ROOT_PATH . '/src/validators/checklist.php';
+require_once ROOT_PATH . '/src/validators/user.php';
