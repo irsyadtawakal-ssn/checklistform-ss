@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../src/bootstrap.php';
-require_once ROOT_PATH . '/src/helpers/db.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 
