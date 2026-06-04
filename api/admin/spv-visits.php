@@ -2,9 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../src/bootstrap.php';
-require_once ROOT_PATH . '/src/helpers/db.php';
-require_once ROOT_PATH . '/src/helpers/response.php';
-require_once ROOT_PATH . '/src/middleware/role.php';
 
 $user   = requireRole('spv', 'admin');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
