@@ -88,6 +88,7 @@ if ($method === 'PUT') {
     }
 
     // Update fields
+    validateUserUpdate($body);
     $fields = [];
     $params = [];
 

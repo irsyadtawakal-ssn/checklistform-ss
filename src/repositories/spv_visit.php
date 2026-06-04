@@ -18,7 +18,7 @@ function repo_createVisit(int $outletId, int $spvId, array $data): int
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())'
     )->execute([
         $outletId, $spvId,
-        $data['visit_date'],
+        $data['visit_date'] ?? date('Y-m-d'),
         $data['time_arrive']  ?: null,
         $data['time_leave']   ?: null,
         $data['visit_shift']  ?: null,
